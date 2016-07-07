@@ -50,7 +50,7 @@ public class GUI extends JFrame{
 		fileNames.setVisible(false);
 		addFiles.addActionListener((e)->{
 			chooser.setMultiSelectionEnabled(true);
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			chooser.setDialogTitle("Select files to copy.");
 			int r= chooser.showOpenDialog(panel);
 			if(r != JFileChooser.APPROVE_OPTION)
@@ -58,7 +58,7 @@ public class GUI extends JFrame{
 			for(File f:chooser.getSelectedFiles())
 			{
 				files.add(f);
-				String name = f.getName();
+				String name = f.getName()+ (f.isDirectory()?" (Folder)":"");
 				model.addElement(name);				
 			}		
 			selectedFile = files.get(0);

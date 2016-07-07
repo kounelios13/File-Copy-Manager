@@ -14,3 +14,4 @@ main method of GUI class consists of 3 states:
 ## v1.5.0.4
 	* When deleting all files from list the combobox vanishes and then the success message appears
 	* When drag n drop a folder the name "(Folder) " appears after its name in the combobox 	
+# Write changelog for new version in the morning	
