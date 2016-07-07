@@ -1,0 +1,2 @@
+New log:::
+java.nio.file.DirectoryNotEmptyException: C:\Users\manos_000\Documents\demos\FileSaver.js
