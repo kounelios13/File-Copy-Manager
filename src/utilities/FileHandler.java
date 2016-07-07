@@ -27,12 +27,15 @@ import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"unused","static-access"})
 public class FileHandler extends Thread{
 
+	private File selectedFile = null;
 	private ArrayList<File> filesToCopy=null;
 	private XProgressBar pBar = new XProgressBar();
 	private String dest=null;
 	private int  copied = 0;
 	private Date date = new Date();
 	private Message msg = new Message();
+	private DefaultComboBoxModel<String> model=new DefaultComboBoxModel<>();
+	private JComboBox<String> comboBox = new JComboBox<>(model);
 	public FileHandler(){
 		
 	}
@@ -42,6 +45,9 @@ public class FileHandler extends Thread{
 	}
 	public FileHandler(ArrayList<File> fs,JComboBox<String> combo,DefaultComboBoxModel<String>model){
 		filesToCopy = fs;
+		comboBox = combo;
+		this.model=model;
+		comboBox.setModel(model);
 	}
 	public void log(String message){
 		File logFile = new File("app\\log.txt");
