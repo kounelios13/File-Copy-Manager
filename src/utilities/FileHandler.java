@@ -77,7 +77,7 @@ public class FileHandler extends Thread{
 	}
 
 
-	public void saveList(ArrayList<File> files,File destFile){
+	public void saveList(ProgramState ps,File destFile){
 	
 		System.out.println(destFile.getAbsolutePath());
 	
@@ -86,14 +86,14 @@ public class FileHandler extends Thread{
 			msg.error(null, "Destination folder has not been selected", "Destination Empty");
 			return;
 		}
-		if(files == null || files.size()< 1)
+		if(ps.getFiles()==null || ps.getFiles().size() < 1)
 		{
 			msg.error(null,"No files have been selected","Empty list");
 			return;
 		}
 		try {
 			ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(f));
-			out.writeObject(files);
+			out.writeObject(ps);
 			out.close();
 		} catch (FileNotFoundException exc) {
 			// TODO Auto-generated catch block
@@ -190,6 +190,10 @@ public class FileHandler extends Thread{
 				mod.addElement(f.getName());
 			}
 		}
+		
+	}
+	public void loadList() {
+		// TODO Auto-generated method stub
 		
 	}
 

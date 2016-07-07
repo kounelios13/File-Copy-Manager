@@ -134,10 +134,11 @@ public class GUI extends JFrame{
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					msg.error(panel, "Cannot save list.", "Error");
-					e1.printStackTrace();
+					fHandler.log(e1.getMessage());
 				}
 			}
-			controller.saveList(files, listFile);			
+			ProgramState ps = new ProgramState(files,selectedFileIndex,destinationPath);
+			controller.saveList(ps,listFile);			
 		});
 		loadList.addActionListener((e)->{
 			//Hack to avoid ArrayOutOfBoundsException
@@ -167,6 +168,7 @@ public class GUI extends JFrame{
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				msg.error(panel, "Cannot read fileList.dat","Error");
+				e1.printStackTrace();
 				return;			
 			}
 			finally{
@@ -179,11 +181,13 @@ public class GUI extends JFrame{
 		new FileDrop(dragPanel,new FileDrop.Listener() {			
 			@Override
 			public void filesDropped(File[] draggedFiles) {
-				FileHandler handler = new FileHandler();
 				try{
 					for(File f:draggedFiles){
 						//Check if any file dropped here is a directory to get its inner files
-						handler.customSearch(f,files,model);
+						/*handler.customSearch(f,files,model);*/
+						files.add(f);
+						String name = f.isDirectory()?" (Folder)":"";
+						model.addElement(f.getName()+name);
 						/*deepSearch may cause nullpointerexception if too many files are passed*/
 					}
 				}
