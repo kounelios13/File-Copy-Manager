@@ -1,7 +1,6 @@
 # changelog
 
-# Write changelog for new version in the morning	
-
+ 
 ## v1.5.0.6
 	* Copy multiple directories and files
 	* When you press "Add files to copy" you can select directories and files
