@@ -41,7 +41,7 @@ public class GUI extends JFrame{
 		copyFiles = new JButton("Copy all files");
 		deleteFile = new JButton("Delete file from list");
 		selectDestination = new JButton("Select Destination Folder");
-		openDestinationFolder = new JButton("Open Destination Folder.");
+		openDestinationFolder = new JButton("Open Destination Folder");
 		deleteAll = new JButton("Delete all files from list");
 		dragLabel = new JLabel("Drag files  here");
 		model = new DefaultComboBoxModel<String>();
@@ -51,7 +51,7 @@ public class GUI extends JFrame{
 		addFiles.addActionListener((e)->{
 			chooser.setMultiSelectionEnabled(true);
 			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			chooser.setDialogTitle("Select files to copy.");
+			chooser.setDialogTitle("Select files to copy");
 			int r= chooser.showOpenDialog(panel);
 			if(r != JFileChooser.APPROVE_OPTION)
 				return;
@@ -75,16 +75,16 @@ public class GUI extends JFrame{
 				selectedFileIndex = fileNames.getSelectedIndex();
 				selectedFile =selectedFileIndex != -1 ? files.get(selectedFileIndex):null;
 			}
-			System.out.println(selectedFile != null?selectedFile.getName():"No name");
+			//System.out.println(selectedFile != null?selectedFile.getName():"No name");
 		});
 		copyFile = new JButton("Copy selected file");
 		copyFile.addActionListener((e)->{
 			if(destinationPath == null ||  selectedFile==null)
 			{
 				if(selectedFile == null)
-					JOptionPane.showMessageDialog(null,"Please select a file first.","No file selected",JOptionPane.ERROR_MESSAGE);
+					msg.error(null,"Please select a file first.","No file selected");
 				else
-					JOptionPane.showMessageDialog(null,"Please select a directory","No directory selected",JOptionPane.ERROR_MESSAGE);
+					msg.error(null,"Please select a directory","No directory selected");
 				return;
 			}
 			fHandler.copy(selectedFile,destinationPath);
@@ -102,9 +102,17 @@ public class GUI extends JFrame{
 			/*if(!destinationPath.isEmpty()){
 				System.out.println("Dir is not empty");
 			}*/
-			for(File f:files){
-				fHandler.copy(f,destinationPath);	
-			}		
+			
+			try
+			{
+				for(File f:files){
+					fHandler.copy(f,destinationPath);	
+				}		
+			}
+			catch(Exception e1){
+				fHandler.log(e1.getMessage());
+			}
+			
 		});
 	
 		deleteFile.addActionListener((e)->{

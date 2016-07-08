@@ -61,7 +61,7 @@ public class FileHandler extends Thread{
 			}
 	
 			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
 				StringBuilder str = new StringBuilder();
 				str.append("New log:::"+System.lineSeparator()+message);
 				writer.write(str.toString());

@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 import messages.Message;
+import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access","serial","unused"})
 public class PreferencesManager extends JFrame implements UIPreferences{
 	private GUI f;
@@ -35,12 +36,15 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 	private	CustomColorChooser colorChooser = new CustomColorChooser(null);
 	private File settingsFile = new File("app\\settings.dat"),dir = new File("app");
 	private Settings settings = new Settings();
-	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<>();
-	private JComboBox<String> fontCombo = new JComboBox<>(fontModel);
+	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
+	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
 	private JButton saveSettings=new JButton("Save settings"),applySettings = new JButton("Apply Settings"),loadSettings = new JButton("Load settings");
+	private Settings s=null;
+	private final JLabel fontNameLabel = new JLabel("Font Name");
 	private void init(){
 		GraphicsEnvironment ee = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Font[] fonts=ee.getAllFonts();//get all system fonts
+
 		for(Font f:fonts)
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e)->{
@@ -50,20 +54,36 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 			loadPreferences();
 		});
 		applySettings.addActionListener((e)->{
+			if(s==null)
+				return;
+			String fontName = s.getFontName();
+			if(fontName == null)
+				return;
 			for(JButton b:f.getButtons())
-				System.out.println(b.getText());
+			{
+				b.setFont(new Font(fontName,Font.PLAIN,16));
+			}
+		});
+		fontCombo.addActionListener((e)->{
+			settings.setFontName((String) fontCombo.getSelectedItem());
 		});
 	}
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public PreferencesManager(GUI frame){
 		super("Preferences");
 		f=frame;
 		init();
-	    prefPanel.add(loadSettings);
-		prefPanel.add(saveSettings);
-		prefPanel.add(fontCombo);
-		prefPanel.add(applySettings);
+	    prefPanel.setLayout(new MigLayout("", "[97px][97px][28px][101px]", "[][23px][][]"));
+		
+		prefPanel.add(fontNameLabel, "cell 2 0");
+		prefPanel.add(loadSettings, "flowy,cell 0 1,alignx left,aligny top");
+		prefPanel.add(fontCombo, "cell 2 1,alignx left,aligny center");
 	   
 		this.setContentPane(prefPanel);
+		prefPanel.add(saveSettings, "cell 0 3,alignx left,aligny top");
+		prefPanel.add(applySettings, "cell 2 3,alignx left,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setSize(1200,1080);
 		this.pack();
@@ -134,6 +154,12 @@ class Settings implements Serializable{
 		for(JLabel lbl:lbls)
 			lbl.setFont(f);
 	}
+	public String getFontName(){
+		return fManager.getFontName();
+	}
+	public void setFontName(String n){
+		fManager.setName(n);
+	}
 	public void setBtnFontSize(double btnFontSize) {
 		fManager.setButtonSize( btnFontSize );
 	}
@@ -163,6 +189,9 @@ class FontManager implements Serializable{
 	}
 	public void setName(String name){
 		fontName = name;
+	}
+	public String getFontName(){
+		return fontName;
 	}
 	public FontManager(String name,double btn,double lbl){
 		fontName = name;
