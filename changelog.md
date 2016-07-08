@@ -1,6 +1,8 @@
 # changelog
 
- 
+## v1.5.0.7
+	*Changed Look and Feel class to Nimbus
+
 ## v1.5.0.6
 	* Copy multiple directories and files
 	* When you press "Add files to copy" you can select directories and files
