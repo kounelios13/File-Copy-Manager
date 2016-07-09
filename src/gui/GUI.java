@@ -171,11 +171,19 @@ public class GUI extends JFrame{
 				in.close();
 				this.pack();
 				//state.restore(files, selectedFile, destinationPath, fileNames, model);
-			} catch (Exception e1) {
+			}
+			catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
-				msg.error(panel, "Cannot read fileList.dat","Error");
-				e1.printStackTrace();
-				return;			
+				msg.error(panel, "File not found","Error");
+				fHandler.log(e1.getMessage());		
+			}
+			catch(ClassNotFoundException cn){
+				msg.error(panel,"Corrupted file found","Error");
+				fHandler.log(cn.getMessage());
+			}
+			catch(IOException io){
+				msg.error(panel,"IO exception occured","Error");
+				fHandler.log(io.getMessage());
 			}
 			finally{
 				fileNames.setVisible(files.size() > 0);

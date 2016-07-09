@@ -12,6 +12,7 @@ public class CustomColorChooser extends JDialog {
     /**
 	 * 
 	 */
+
 	private static final long serialVersionUID = -7374804525631377356L;
 	JComponent targetComponent;
     JColorChooser colorChooser;

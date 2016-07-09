@@ -45,6 +45,7 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 	private  JLabel lblLabelFontSize = new JLabel("Label font size");
 	private  JButton btnSample = new JButton("Button Sample");
 	private  JLabel lblSample = new JLabel("Label Sample");
+	private boolean foundSettings = true;
 	private void init(){
 		GraphicsEnvironment ee = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Font[] fonts=ee.getAllFonts();//get all system fonts
@@ -52,15 +53,26 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		//System.out.println(fonts[0].getFontName());
 		for(Font f:fonts)
 			fontModel.addElement(f.getFontName());
-		saveSettings.addActionListener((e)->savePreferences());
-		loadSettings.addActionListener((e)->loadPreferences());
-		applySettings.addActionListener((e)->applySettings());
+		saveSettings.addActionListener((e)->{
+			foundSettings = true;
+			savePreferences();
+		});
+		loadSettings.addActionListener((e)->{
+			foundSettings = true;
+			loadPreferences();
+		});
+		applySettings.addActionListener((e)->{
+			foundSettings = true;
+			applySettings();
+		});
 		fontCombo.addActionListener((e)->{
+			foundSettings = true;
 			settings.setFontName((String) fontCombo.getSelectedItem());
 			updatePreview();
 		});
 		chooseColors.addActionListener((e)->colorChooser.setVisible(true));
 		buttonSlider.addChangeListener((e)->{
+			foundSettings = true;
 			int value = buttonSlider.getValue();
 			settings.setBtnFontSize(value);
 			btnSample.setFont(getFont().deriveFont((float)value));
@@ -68,11 +80,13 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 			this.pack();
 		});
 		labelSlider.addChangeListener((e)->{
+			foundSettings = true;
 			int value = labelSlider.getValue();
 			settings.setLblFontSize(value);
 			lblSample.setFont(getFont().deriveFont((float)value));
 			updatePreview();
 			this.pack();
+			
 		});
 	}
 	/**
@@ -105,6 +119,11 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		this.pack();
 	}
 	public void loadPreferences(){
+		if(!settingsFile.exists())
+		{
+			foundSettings = false;
+			return;
+		}
 		ObjectInputStream in;
 		try{
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
@@ -116,9 +135,11 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		catch(IOException | ClassNotFoundException e){
 			msg.error(prefPanel, "Can't load preferences", "Error");
 		}
+		
 	}
 
 	public void savePreferences(){
+		foundSettings = true;
 		if(!dir.exists())
 			dir.mkdirs();
 		try{
@@ -155,6 +176,8 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		this.setVisible(true);
 	}
 	public void applySettings(){
+		if(!foundSettings)
+			return;
 		for (JButton b:f.getButtons()){
 			b.setFont(settings.getButtonFont());
 			bgColor = settings.getBgColor();

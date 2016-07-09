@@ -1,4 +1,10 @@
 # changelog
+# todo
+* rework preferences manager to remove duplicates and unused code
+* make Settings from inner class to a new one class to be able to use it in other classes
+* keep font manager class as inner class of setings class
+# ideas
+pass a Settings object to customColorChooser to set its bg and fg color directly in the settings object
 ## v1.5.0.9
 	* Change font size for buttons and labels
 	* Setting bgcolor and fgColor partially working
