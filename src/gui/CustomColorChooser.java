@@ -2,8 +2,6 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
@@ -31,13 +29,12 @@ public class CustomColorChooser extends JDialog {
     public CustomColorChooser(JComponent targetComponent) {
         this.targetComponent = targetComponent;
         colorChooser = new JColorChooser();
-        ButtonActionListener listener = new ButtonActionListener();
-        backgroundButton = new JButton("Χρώμα  υποβαθρου");
-        backgroundButton.addActionListener(listener);
-        foregroundButton = new JButton("Χρώμα κειμένου");
-        foregroundButton.addActionListener(listener);
-        okButton = new JButton("Εφαρμογή ρυθμίσεων");
-        okButton.addActionListener(listener);
+        backgroundButton = new JButton("Background Color");
+        backgroundButton.addActionListener((e)->bgColor = colorChooser.getColor());
+        foregroundButton = new JButton("Foreground Color");
+        foregroundButton.addActionListener((e)->fgColor = colorChooser.getColor());
+        okButton = new JButton("Apply");
+        okButton.addActionListener((e)->dispose());
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(backgroundButton);
         buttonPanel.add(foregroundButton);
@@ -47,24 +44,5 @@ public class CustomColorChooser extends JDialog {
         pack();
         setModal(true);
         setLocationRelativeTo(targetComponent);
-
-    }
-    
-
-    private class ButtonActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(backgroundButton)) {
-                //targetComponent.setBackground(colorChooser.getColor());
-                bgColor=colorChooser.getColor();
-            } else if (e.getSource().equals(foregroundButton)) {
-                //targetComponent.setForeground(colorChooser.getColor());
-                fgColor=colorChooser.getColor();
-            } else if (e.getSource().equals(okButton)) {           	
-                dispose();
-            }
-        }
-    }
-    
-
+    }    
 }

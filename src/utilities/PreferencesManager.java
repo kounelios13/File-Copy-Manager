@@ -38,21 +38,22 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 	private Settings settings = new Settings();
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
 	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
-	private JButton saveSettings=new JButton("Save settings"),applySettings = new JButton("Apply Settings"),loadSettings = new JButton("Load settings");
+	private JButton saveSettings=new JButton("Save settings")
+	,applySettings = new JButton("Apply Settings"),loadSettings = new JButton("Load settings"),
+	chooseColors = new JButton("Choose colors");
 	private Settings s=null;
-	private final JLabel fontNameLabel = new JLabel("Font Name");
+	private  JLabel lblButtonFontSize = new JLabel("Button font size");
+	private  JLabel lblLabelFontSize = new JLabel("Label font size");
+	private  JButton btnSample = new JButton("Button Sample");
+	private  JLabel lblSample = new JLabel("Label Sample");
 	private void init(){
 		GraphicsEnvironment ee = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Font[] fonts=ee.getAllFonts();//get all system fonts
 
 		for(Font f:fonts)
 			fontModel.addElement(f.getFontName());
-		saveSettings.addActionListener((e)->{
-			savePreferences();
-		});
-		loadSettings.addActionListener((e)->{
-			loadPreferences();
-		});
+		saveSettings.addActionListener((e)->savePreferences());
+		loadSettings.addActionListener((e)->loadPreferences());
 		applySettings.addActionListener((e)->{
 			if(s==null)
 				return;
@@ -64,40 +65,59 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 				b.setFont(new Font(fontName,Font.PLAIN,16));
 			}
 		});
-		fontCombo.addActionListener((e)->{
-			settings.setFontName((String) fontCombo.getSelectedItem());
+		fontCombo.addActionListener((e)->settings.setFontName((String) fontCombo.getSelectedItem()));
+		chooseColors.addActionListener((e)->colorChooser.setVisible(true));
+		buttonSlider.addChangeListener((e)->{
+			int value = buttonSlider.getValue();
+			settings.setBtnFontSize(value);
+			btnSample.setFont(getFont().deriveFont((float)value));
+			this.pack();
+		});
+		labelSlider.addChangeListener((e)->{
+			int value = labelSlider.getValue();
+			settings.setLblFontSize(value);
+			lblSample.setFont(getFont().deriveFont((float)value));
+			this.pack();
 		});
 	}
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreferencesManager(GUI frame){
+	public PreferencesManager(GUI frame,File sFile){
 		super("Preferences");
 		f=frame;
 		init();
-	    prefPanel.setLayout(new MigLayout("", "[97px][97px][28px][101px]", "[][23px][][]"));
+		if(sFile != null && sFile.isFile() && sFile.canWrite() && sFile.canRead())
+			settingsFile = sFile;
+	    prefPanel.setLayout(new MigLayout("", "[97px][97px]", "[][][][][][23px][][]"));
+	    prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
+	    prefPanel.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
+	    prefPanel.add(buttonSlider, "cell 0 2,growx");
+	    
+	    prefPanel.add(btnSample, "cell 1 2");
+	    
+	    prefPanel.add(lblLabelFontSize, "cell 0 3,alignx center,aligny center");
+	    prefPanel.add(labelSlider, "cell 0 4,growx");
 		
-		prefPanel.add(fontNameLabel, "cell 2 0");
-		prefPanel.add(loadSettings, "flowy,cell 0 1,alignx left,aligny top");
-		prefPanel.add(fontCombo, "cell 2 1,alignx left,aligny center");
+		prefPanel.add(lblSample, "cell 1 4,alignx center");
+		prefPanel.add(loadSettings, "flowy,cell 0 5,growx,aligny top");
 	   
 		this.setContentPane(prefPanel);
-		prefPanel.add(saveSettings, "cell 0 3,alignx left,aligny top");
-		prefPanel.add(applySettings, "cell 2 3,alignx left,aligny top");
+		prefPanel.add(chooseColors, "cell 1 5,growx,aligny top");
+		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
+		prefPanel.add(applySettings, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setSize(1200,1080);
+		//this.setSize(268,217);
 		this.pack();
 		//this.setVisible(true);
-	}
-	public PreferencesManager(File sFile){
-		if(sFile != null && sFile.isFile() && sFile.canWrite() && sFile.canRead())
-			settingsFile = sFile;			
 	}
 	public void loadPreferences(){
 		ObjectInputStream in;
 		try{
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
 			settings =(Settings)in.readObject();
+			bgColor = settings.getBgColor();
+			fgColor = settings.getFgColor();
 		}
 		catch(IOException | ClassNotFoundException e){
 			
@@ -124,8 +144,7 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 					msg.info(null, "Created preferences file", "Status");
 					//Created needed file.Re-execute to save
 					savePreferences();
-				}
-					
+				}	
 			}
 		}
 		catch(IOException io){
@@ -138,11 +157,13 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		// TODO Auto-generated method stub
 		this.setVisible(true);
 	}
-	
+	public void updatePreview(){
+		
+	}
 }
 @SuppressWarnings({"serial"})
 class Settings implements Serializable{
-
+	private Color bg,fg;
 	private FontManager fManager = new FontManager(null,0,0);
 	public void applyButtonFont(ArrayList<JButton> btns){
 		Font f = fManager.getBtnFont();
@@ -166,7 +187,18 @@ class Settings implements Serializable{
 	public void setLblFontSize(double lblFontSize) {
 		fManager.setLabelSize(lblFontSize);
 	}
-	
+	public Color getBgColor(){
+		return bg;
+	}
+	public Color getFgColor(){
+		return fg;
+	}
+	public void setBgColor(Color c){
+		bg=c;
+	}
+	public void setFgColor(Color c){
+		fg=c;
+	}
 }
 @SuppressWarnings("serial")
 class FontManager implements Serializable{
