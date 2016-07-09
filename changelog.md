@@ -1,5 +1,7 @@
 # changelog
-
+## v1.5.0.9
+	* Change font size for buttons and labels
+	* Setting bgcolor and fgColor partially working
 ## v1.5.0.7
 	*Changed Look and Feel class to Nimbus
 
