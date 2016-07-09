@@ -253,13 +253,18 @@ public class GUI extends JFrame{
 			}
 		});
 	}
+	public ArrayList<JLabel> getLabels() {
+		// TODO Auto-generated method stub
+		JLabel[] labels = {dragLabel};
+		return new ArrayList<JLabel>(Arrays.asList(labels));
+	}	
 	public ArrayList<JButton> getButtons(){
-		if(!initiated){
+		/*if(!initiated){
 			init();
 			initiated = true;
 		}
 		else
-			System.out.println("Already init()");
+			System.out.println("Already init()");*/
 		JButton[] array = {addFiles,selectDestination,copyFile,copyFiles,deleteFile,deleteAll,openDestinationFolder};
 		ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
 		return btns;
@@ -300,5 +305,6 @@ public class GUI extends JFrame{
 			e.printStackTrace();
 		}
 		GUI gui = new GUI();
-	}	
+	}
+	
 }

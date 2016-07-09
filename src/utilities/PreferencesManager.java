@@ -26,7 +26,7 @@ import javax.swing.JSlider;
 
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-@SuppressWarnings({"static-access","serial","unused"})
+@SuppressWarnings({"static-access","serial"})
 public class PreferencesManager extends JFrame implements UIPreferences{
 	private GUI f;
 	private Color bgColor,fgColor;
@@ -41,7 +41,6 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 	private JButton saveSettings=new JButton("Save settings")
 	,applySettings = new JButton("Apply Settings"),loadSettings = new JButton("Load settings"),
 	chooseColors = new JButton("Choose colors");
-	private Settings s=null;
 	private  JLabel lblButtonFontSize = new JLabel("Button font size");
 	private  JLabel lblLabelFontSize = new JLabel("Label font size");
 	private  JButton btnSample = new JButton("Button Sample");
@@ -50,22 +49,34 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		GraphicsEnvironment ee = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Font[] fonts=ee.getAllFonts();//get all system fonts
 
+		//System.out.println(fonts[0].getFontName());
 		for(Font f:fonts)
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e)->savePreferences());
 		loadSettings.addActionListener((e)->loadPreferences());
 		applySettings.addActionListener((e)->{
-			if(s==null)
-				return;
-			String fontName = s.getFontName();
-			if(fontName == null)
-				return;
-			for(JButton b:f.getButtons())
-			{
-				b.setFont(new Font(fontName,Font.PLAIN,16));
+			//TODO
+			for (JButton b:f.getButtons()){
+				b.setFont(settings.getButtonFont());
+				if(bgColor != null || fgColor != null)
+				{
+					if(bgColor != null)
+						b.setBackground(bgColor);
+					if(fgColor != null)
+						b.setForeground(fgColor);
+				}						
 			}
+			for(JLabel lbl:f.getLabels()){
+				lbl.setFont(settings.getLabelFont());
+				if(bgColor != null)
+					lbl.setBackground(bgColor);
+			}
+			f.pack();
 		});
-		fontCombo.addActionListener((e)->settings.setFontName((String) fontCombo.getSelectedItem()));
+		fontCombo.addActionListener((e)->{
+			settings.setFontName((String) fontCombo.getSelectedItem());
+			updatePreview();
+		});
 		chooseColors.addActionListener((e)->colorChooser.setVisible(true));
 		buttonSlider.addChangeListener((e)->{
 			int value = buttonSlider.getValue();
@@ -107,9 +118,7 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
 		prefPanel.add(applySettings, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		//this.setSize(268,217);
 		this.pack();
-		//this.setVisible(true);
 	}
 	public void loadPreferences(){
 		ObjectInputStream in;
@@ -118,9 +127,10 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 			settings =(Settings)in.readObject();
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
+			updatePreview();
 		}
 		catch(IOException | ClassNotFoundException e){
-			
+			msg.error(prefPanel, "Can't load preferences", "Error");
 		}
 	}
 
@@ -158,6 +168,11 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		this.setVisible(true);
 	}
 	public void updatePreview(){
+		Font bFont=settings.getButtonFont();
+		Font lFont=settings.getLabelFont();
+		btnSample.setFont(bFont);
+		lblSample.setFont(lFont);
+		this.pack();
 		
 	}
 }
@@ -186,6 +201,12 @@ class Settings implements Serializable{
 	}
 	public void setLblFontSize(double lblFontSize) {
 		fManager.setLabelSize(lblFontSize);
+	}
+	public Font getButtonFont(){
+		return fManager.getBtnFont();
+	}
+	public Font getLabelFont(){
+		return fManager.getLblFont();
 	}
 	public Color getBgColor(){
 		return bg;
