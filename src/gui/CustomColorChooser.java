@@ -26,6 +26,9 @@ public class CustomColorChooser extends JDialog {
     public Color getFgColor(){
     	return fgColor;
     }
+    public CustomColorChooser(){
+    	this(null);
+    }
     public CustomColorChooser(JComponent targetComponent) {
         this.targetComponent = targetComponent;
         colorChooser = new JColorChooser();

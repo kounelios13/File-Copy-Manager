@@ -64,12 +64,14 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 			int value = buttonSlider.getValue();
 			settings.setBtnFontSize(value);
 			btnSample.setFont(getFont().deriveFont((float)value));
+			updatePreview();
 			this.pack();
 		});
 		labelSlider.addChangeListener((e)->{
 			int value = labelSlider.getValue();
 			settings.setLblFontSize(value);
 			lblSample.setFont(getFont().deriveFont((float)value));
+			updatePreview();
 			this.pack();
 		});
 	}
@@ -98,7 +100,7 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		this.setContentPane(prefPanel);
 		prefPanel.add(chooseColors, "cell 1 5,growx,aligny top");
 		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
-		prefPanel.add(applySettings, "cell 1 7,growx,aligny top");
+		prefPanel.add(applySettings, "cell 1 7,growx,aligny top"); 
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.pack();
 	}
@@ -121,6 +123,8 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 			dir.mkdirs();
 		try{
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(settingsFile));
+			settings.setBgColor(colorChooser.getBgColor());
+			settings.setFgColor(colorChooser.getFgColor());
 			out.writeObject(settings);
 			out.close();
 		}
@@ -137,6 +141,7 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 					//Created needed file.Re-execute to save
 					savePreferences();
 				}	
+				applySettings();
 			}
 		}
 		catch(IOException io){
@@ -152,6 +157,8 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 	public void applySettings(){
 		for (JButton b:f.getButtons()){
 			b.setFont(settings.getButtonFont());
+			bgColor = settings.getBgColor();
+			fgColor = settings.getFgColor();
 			if(bgColor != null || fgColor != null)
 			{
 				if(bgColor != null)
@@ -172,8 +179,12 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 		Font lFont=settings.getLabelFont();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
+		settings.setBgColor(colorChooser.getBgColor());
+		settings.setFgColor(colorChooser.getFgColor());
+		btnSample.setBackground(colorChooser.getBgColor());
+		btnSample.setForeground(colorChooser.getFgColor());
+		lblSample.setBackground(colorChooser.getBackground());
 		this.pack();
-		
 	}
 }
 @SuppressWarnings({"serial"})
