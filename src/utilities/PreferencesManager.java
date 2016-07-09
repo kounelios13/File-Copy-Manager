@@ -54,25 +54,7 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e)->savePreferences());
 		loadSettings.addActionListener((e)->loadPreferences());
-		applySettings.addActionListener((e)->{
-			//TODO
-			for (JButton b:f.getButtons()){
-				b.setFont(settings.getButtonFont());
-				if(bgColor != null || fgColor != null)
-				{
-					if(bgColor != null)
-						b.setBackground(bgColor);
-					if(fgColor != null)
-						b.setForeground(fgColor);
-				}						
-			}
-			for(JLabel lbl:f.getLabels()){
-				lbl.setFont(settings.getLabelFont());
-				if(bgColor != null)
-					lbl.setBackground(bgColor);
-			}
-			f.pack();
-		});
+		applySettings.addActionListener((e)->applySettings());
 		fontCombo.addActionListener((e)->{
 			settings.setFontName((String) fontCombo.getSelectedItem());
 			updatePreview();
@@ -166,6 +148,24 @@ public class PreferencesManager extends JFrame implements UIPreferences{
 	public void editPreferences() {
 		// TODO Auto-generated method stub
 		this.setVisible(true);
+	}
+	public void applySettings(){
+		for (JButton b:f.getButtons()){
+			b.setFont(settings.getButtonFont());
+			if(bgColor != null || fgColor != null)
+			{
+				if(bgColor != null)
+					b.setBackground(bgColor);
+				if(fgColor != null)
+					b.setForeground(fgColor);
+			}						
+		}
+		for(JLabel lbl:f.getLabels()){
+			lbl.setFont(settings.getLabelFont());
+			if(bgColor != null)
+				lbl.setBackground(bgColor);
+		}
+		f.pack();
 	}
 	public void updatePreview(){
 		Font bFont=settings.getButtonFont();

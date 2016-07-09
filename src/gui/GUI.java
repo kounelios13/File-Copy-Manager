@@ -1,14 +1,13 @@
 package gui;
 import java.awt.Desktop;
 import java.io.*;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utilities.*;
-@SuppressWarnings({"serial","static-access","unused"})
+@SuppressWarnings({"serial","static-access"})
 public class GUI extends JFrame{
 	Controller controller = new Controller();
 	private FileHandler fHandler = new FileHandler();
@@ -26,11 +25,10 @@ public class GUI extends JFrame{
 	private JComboBox<String> fileNames;
 	private DefaultComboBoxModel<String> model;
 	private boolean loaded =false;
-	private int copied=0,selectedFileIndex;
+	private int selectedFileIndex;
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
 	private File listFile = new File("app\\userList.dat");
-	private boolean initiated = false;
 	private void init(){
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -259,12 +257,6 @@ public class GUI extends JFrame{
 		return new ArrayList<JLabel>(Arrays.asList(labels));
 	}	
 	public ArrayList<JButton> getButtons(){
-		/*if(!initiated){
-			init();
-			initiated = true;
-		}
-		else
-			System.out.println("Already init()");*/
 		JButton[] array = {addFiles,selectDestination,copyFile,copyFiles,deleteFile,deleteAll,openDestinationFolder};
 		ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
 		return btns;
@@ -292,6 +284,7 @@ public class GUI extends JFrame{
 	}
 	public GUI preload(){
 		pManager.loadPreferences();
+		pManager.applySettings();
 		return this;
 	}
 	public GUI(){
@@ -304,7 +297,7 @@ public class GUI extends JFrame{
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		GUI gui = new GUI();
+		new GUI();
 	}
 	
 }
