@@ -5,6 +5,11 @@
 * keep font manager class as inner class of setings class
 # ideas
 pass a Settings object to customColorChooser to set its bg and fg color directly in the settings object
+## v1.6.0.0
+	* Removed XProgressBar class and relevant constructor in FileHandler class
+	* Now using File.seperator instead of "\\" or "//"
+	* Removed DragFrame Class.
+	* Still working on PreferencesManager class.
 ## v1.5.0.9
 	* Change font size for buttons and labels
 	* Setting bgcolor and fgColor partially working
