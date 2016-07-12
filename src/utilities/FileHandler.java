@@ -1,7 +1,5 @@
 package utilities;
 
-import gui.XProgressBar;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +27,6 @@ public class FileHandler extends Thread{
 
 	private File selectedFile = null;
 	private ArrayList<File> filesToCopy=null;
-	private XProgressBar pBar = new XProgressBar();
 	private String dest=null;
 	private int  copied = 0;
 	private Date date = new Date();
@@ -39,10 +36,7 @@ public class FileHandler extends Thread{
 	public FileHandler(){
 		
 	}
-	public FileHandler(XProgressBar bar,ArrayList<File> fs){
-		filesToCopy = fs;
-		pBar = bar;
-	}
+
 	public FileHandler(ArrayList<File> fs,JComboBox<String> combo,DefaultComboBoxModel<String>model){
 		filesToCopy = fs;
 		comboBox = combo;
@@ -144,11 +138,7 @@ public class FileHandler extends Thread{
 	public void run() {
 		// TODO Auto-generated method stub	
 		for(File f:filesToCopy){
-			boolean plus = copySingleFile(f,dest);
-			if(plus)
-				copied++;
-			pBar.setValue(copied / filesToCopy.size()); 
-			
+			copySingleFile(f,dest);				
 		}
 		
 	}
