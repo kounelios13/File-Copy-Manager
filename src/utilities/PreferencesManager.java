@@ -34,7 +34,7 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private GUI f;
-	private String sep = File.pathSeparator + File.pathSeparator;
+	private String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
 	private JPanel prefPanel = new JPanel();
