@@ -29,6 +29,9 @@ public class GUI extends JFrame{
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
 	private File listFile = new File("app\\userList.dat");
+	public void showFiles(){
+		fileNames.setVisible(files.size()> 0);
+	}
 	private void init(){
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -170,7 +173,6 @@ public class GUI extends JFrame{
 				fileNames.setSelectedIndex(selectedFileIndex);
 				in.close();
 				this.pack();
-				//state.restore(files, selectedFile, destinationPath, fileNames, model);
 			}
 			catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -289,6 +291,7 @@ public class GUI extends JFrame{
 		this.setContentPane(panel);
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//new DragFrame(this,files,model);
 	}
 	public GUI preload(){
 		pManager.loadPreferences();
