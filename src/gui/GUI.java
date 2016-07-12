@@ -53,7 +53,8 @@ public class GUI extends JFrame {
 	private int selectedFileIndex;
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
-	private File listFile = new File("app\\userList.dat");
+	String sep = File.separator;
+	private File listFile = new File("app"+sep+sep+"userList.dat");
 	public void showFiles() {
 		fileNames.setVisible(files.size() > 0);
 	}
