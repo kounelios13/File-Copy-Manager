@@ -40,7 +40,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JPanel prefPanel = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
-	private CustomColorChooser colorChooser = new CustomColorChooser(null);
+	private CustomColorChooser colorChooser = new CustomColorChooser(f,this);
 	public  static File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
 	private Settings settings = new Settings();
@@ -219,7 +219,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;
-	private int lblSize,btnSize;
+	private int lblSize=12,btnSize=18;
 	public void setBgColor(Color e){
 		bg = e;
 	}

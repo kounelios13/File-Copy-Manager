@@ -2,11 +2,14 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+
+import utilities.PreferencesManager;
 public class CustomColorChooser extends JDialog {
 
     /**
@@ -14,6 +17,8 @@ public class CustomColorChooser extends JDialog {
 	 */
 
 	private static final long serialVersionUID = -7374804525631377356L;
+	GUI gui;
+	PreferencesManager pMan;
 	JComponent targetComponent;
     JColorChooser colorChooser;
     JButton backgroundButton;
@@ -25,10 +30,13 @@ public class CustomColorChooser extends JDialog {
     	return bgColor;
     }
     public Color getFgColor(){
-    	return fgColor;
+    	return fgColor; 
     }
-    public CustomColorChooser(){
-    	this(null);
+    public CustomColorChooser(GUI g,PreferencesManager p){
+    	this((JComponent)null);
+    	gui = g;
+    	pMan = p;
+    	
     }
     public CustomColorChooser(JComponent targetComponent) {
         this.targetComponent = targetComponent;
@@ -37,8 +45,11 @@ public class CustomColorChooser extends JDialog {
         backgroundButton.addActionListener((e)->bgColor = colorChooser.getColor());
         foregroundButton = new JButton("Foreground Color");
         foregroundButton.addActionListener((e)->fgColor = colorChooser.getColor());
-        okButton = new JButton("Apply");
-        okButton.addActionListener((e)->dispose());
+        okButton = new JButton("OK");
+        okButton.addActionListener((e)->{
+        	dispose();
+        	pMan.updatePreview();
+        });
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(backgroundButton);
         buttonPanel.add(foregroundButton);
@@ -48,5 +59,6 @@ public class CustomColorChooser extends JDialog {
         pack();
         setModal(true);
         setLocationRelativeTo(targetComponent);
-    }    
+    }
+   
 }
