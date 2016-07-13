@@ -80,13 +80,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		chooseColors.addActionListener((e) -> colorChooser.setVisible(true));
 		buttonSlider.addChangeListener((e) -> {
 			updateSliders();
-			btnSample.setFont(settings.getButtonFont());
 			updatePreview();
 			this.pack();
 		});
 		labelSlider.addChangeListener((e) -> {			
 			updateSliders();
-			lblSample.setFont(settings.getLabelFont());
 			updatePreview();
 			this.pack();
 		});
@@ -98,14 +96,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		super("Preferences");
 		f = frame;
 		init();
-		if (sFile != null && sFile.isFile() && sFile.canWrite()
-				&& sFile.canRead())
+		if (sFile != null && sFile.isFile() && sFile.canWrite()&& sFile.canRead())
 			settingsFile = sFile;
-		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
-				"[][][][][][23px][][]"));
+		prefPanel.setLayout(new MigLayout("", "[97px][97px]","[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
-		prefPanel
-				.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
+		prefPanel.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
 		prefPanel.add(buttonSlider, "cell 0 2,growx");
 		prefPanel.add(btnSample, "cell 1 2");
 		prefPanel.add(lblLabelFontSize, "cell 0 3,alignx center,aligny center");
@@ -130,6 +125,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			settings = (Settings) in.readObject();
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
+			System.out.println(bgColor);
+			System.out.println(fgColor);
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
 			updatePreview();
@@ -144,17 +141,13 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		catch (IOException  e) {
 			msg.error(prefPanel, "Can't load preferences", "Error");
 		}
-
 	}
-
 	@Override
 	public void savePreferences() {
-		
 		if (!dir.exists())
 			dir.mkdirs();
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(
-					new FileOutputStream(settingsFile));
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(settingsFile));
 			settings.setBgColor(colorChooser.getBgColor());
 			settings.setFgColor(colorChooser.getFgColor());
 			out.writeObject(settings);
@@ -188,17 +181,15 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			b.setFont(settings.getButtonFont());
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
-			if (bgColor != null || fgColor != null) {
-				if (bgColor != null)
-					b.setBackground(bgColor);
-				if (fgColor != null)
-					b.setForeground(fgColor);
-			}
+			if(bgColor != null)
+				b.setBackground(bgColor);
+			if(fgColor != null)
+				b.setForeground(fgColor);
 		}
 		for (JLabel lbl : f.getLabels()) {
 			lbl.setFont(settings.getLabelFont());
-			if (bgColor != null)
-				lbl.setBackground(bgColor);
+			if (fgColor != null)
+				lbl.setForeground(settings.getFgColor());
 		}
 		f.pack();
 	}
@@ -211,7 +202,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		settings.setFgColor(colorChooser.getFgColor());
 		btnSample.setBackground(colorChooser.getBgColor());
 		btnSample.setForeground(colorChooser.getFgColor());
-		lblSample.setBackground(colorChooser.getBackground());
+		lblSample.setForeground(colorChooser.getFgColor());
 		this.pack();
 	}
 }
