@@ -119,54 +119,35 @@ public class GUI extends JFrame {
 			fHandler.copy(selectedFile, destinationPath);
 		});
 
-		copyFiles
-				.addActionListener((e) -> {
-					if (destinationPath == null || files.size() == 0) {
-						if (files.size() == 0)
-							JOptionPane.showMessageDialog(null,
-									"No files to copy", "Empty file list",
-									JOptionPane.ERROR_MESSAGE);
-						else
-							JOptionPane.showMessageDialog(null,
-									"Please Select a directory",
-									"No directory selected",
-									JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					/*
-					 * if(!destinationPath.isEmpty()){
-					 * System.out.println("Dir is not empty"); }
-					 */
+		copyFiles.addActionListener((e) -> {
+			
+			if(destinationPath == null)
+				msg.error(panel, "Please select a destination folder","No destination folder selected");
+			try{
+				for(File f:files)
+					fHandler.copy(f,destinationPath);
+			}
+			catch(Exception ee){
+				msg.error(panel, "Error occured.Se log file for more", "Error");
+				fHandler.log(ee.getMessage());
+			}
+			
+		});
 
-					try {
-						for (File f : files) {
-							fHandler.copy(f, destinationPath);
-						}
-					} catch (Exception e1) {
-						fHandler.log(e1.getMessage());
-					}
+		deleteFile.addActionListener((e) -> {
+			if (selectedFile == null) {
+				msg.error(null, "No file is selected", "Error");
+				return;
+			}
+			boolean go = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete the selected item from the list?") == JOptionPane.OK_OPTION;
+			if (go) {
+				int index = fileNames.getSelectedIndex();
+				model.removeElementAt(index);
+				files.remove(index);
+			}
 
-				});
-
-		deleteFile
-				.addActionListener((e) -> {
-					// Todo
-					// check before execute if selected file is null
-					if (selectedFile == null) {
-						msg.error(null, "No file is selected", "Error");
-						return;
-					}
-					boolean go = JOptionPane
-							.showConfirmDialog(null,
-									"Are you sure you want to delete the selected item from the list?") == JOptionPane.OK_OPTION;
-					if (go) {
-						int index = fileNames.getSelectedIndex();
-						model.removeElementAt(index);
-						files.remove(index);
-					}
-
-					fileNames.setVisible(files.size() > 0);
-				});
+			fileNames.setVisible(files.size() > 0);
+		});
 		saveList.addActionListener((e) -> {
 			File dir = listFile.getParentFile();
 			if (!dir.exists())
@@ -200,9 +181,7 @@ public class GUI extends JFrame {
 				files = state.getFiles();
 				selectedFile = state.getSelectedFile();
 				for (File f : files) {
-
-					String name = f.getName()
-							+ (f.isDirectory() ? " (Folder)" : "");
+					String name = f.getName()+ (f.isDirectory() ? " (Folder)" : "");
 					model.addElement(name);
 				}
 				selectedFileIndex = state.getSindex();
@@ -255,30 +234,23 @@ public class GUI extends JFrame {
 			}
 		});
 
-		deleteAll
-				.addActionListener((e) -> {
-					if (files.size() < 1) {
-						msg.info(panel,
-								"There are no files to remove from list",
-								"Warning");
-						return;
-					}
-					boolean go = JOptionPane
-							.showConfirmDialog(null,
-									"Are you sure you want to delete tall files from list?") == JOptionPane.OK_OPTION;
-					if (go) {
-						files.clear();
-						model.removeAllElements();
-						fileNames.setVisible(false);
-						msg.info(panel,
-								"Files removed from list succcessfully",
-								"Status");
-						selectedFile = null;
-						selectedFileIndex = -1;
-					} else
-						msg.info(null, "Operation cancelled by user", "Status");
+		deleteAll.addActionListener((e) -> {
+			if (files.size() < 1) {
+				msg.info(panel,"There are no files to remove from list","Warning");
+				return;
+			}
+			boolean go = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete tall files from list?") == JOptionPane.OK_OPTION;
+			if (go) {
+				files.clear();
+				model.removeAllElements();
+				fileNames.setVisible(false);
+				msg.info(panel,"Files removed from list succcessfully","Status");
+				selectedFile = null;
+				selectedFileIndex = -1;
+			} else
+				msg.info(null, "Operation cancelled by user", "Status");
 
-				});
+		});
 		selectDestination.addActionListener((e) -> {
 			chooser.setDialogTitle("Select destination folder");
 			chooser.setMultiSelectionEnabled(false);
@@ -291,8 +263,7 @@ public class GUI extends JFrame {
 		});
 		openDestinationFolder.addActionListener((e) -> {
 			if (selectedFile == null) {
-				msg.error(panel, "No folder selected",
-						"Missing destination folder");
+				msg.error(panel, "No folder selected","Missing destination folder");
 				return;
 			}
 			try {
@@ -339,8 +310,10 @@ public class GUI extends JFrame {
 		// new DragFrame(this,files,model);
 	}
 	public GUI preload() {
-		pManager.loadPreferences();
-		pManager.applySettings();
+		if(pManager.settingsFile.exists()){
+			pManager.loadPreferences();
+			pManager.applySettings();
+		}
 		return this;
 	}
 	public GUI() {

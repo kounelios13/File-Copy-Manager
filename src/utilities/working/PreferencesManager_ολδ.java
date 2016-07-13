@@ -16,10 +16,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -34,14 +34,14 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private GUI f;
-	public  static String sep = File.separator + File.separator;
+	private String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
 	private JPanel prefPanel = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 10),
 			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 10);
 	private CustomColorChooser colorChooser = new CustomColorChooser(null);
-	public  static File settingsFile = new File("app" + sep + "settings.dat"),
+	private File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
 	private Settings settings = new Settings();
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
@@ -79,16 +79,16 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		buttonSlider.addChangeListener((e) -> {
 			foundSettings = true;
 			int value = buttonSlider.getValue();
-			settings.setBtnSize(value);
-			btnSample.setFont(settings.getButtonFont());
+			settings.setBtnFontSize(value);
+			btnSample.setFont(getFont().deriveFont((float) value));
 			updatePreview();
 			this.pack();
 		});
 		labelSlider.addChangeListener((e) -> {
 			foundSettings = true;
 			int value = labelSlider.getValue();
-			settings.setLblSize(value);
-			lblSample.setFont(settings.getLabelFont());
+			settings.setLblFontSize(value);
+			lblSample.setFont(getFont().deriveFont((float) value));
 			updatePreview();
 			this.pack();
 		});
@@ -134,14 +134,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
 			updatePreview();
-		}
-		catch(InvalidClassException | ClassNotFoundException e){
-			boolean d=settingsFile.delete();
-			msg.error(prefPanel, "Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'", "Unsupported settings");
-			if(d)
-				msg.info(prefPanel, "Old file deleted", "Success");
-		}
-		catch (IOException  e) {
+		} catch (IOException | ClassNotFoundException e) {
 			msg.error(prefPanel, "Can't load preferences", "Error");
 		}
 
@@ -220,43 +213,76 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 @SuppressWarnings({"serial"})
 class Settings implements Serializable {
 	private Color bg, fg;
-	private String fontName;
-	private int lblSize,btnSize;
-	public void setBgColor(Color e){
-		bg = e;
+	private FontManager fManager = new FontManager(null, 0, 0);
+	public void applyButtonFont(ArrayList<JButton> btns) {
+		Font f = fManager.getBtnFont();
+		for (JButton btn : btns)
+			btn.setFont(f);
 	}
-	public void setFgColor(Color e){
-		fg = e;
+	public void applyLabelFont(ArrayList<JLabel> lbls) {
+		Font f = fManager.getLblFont();
+		for (JLabel lbl : lbls)
+			lbl.setFont(f);
 	}
-	public Color getBgColor(){
+	public String getFontName() {
+		return fManager.getFontName();
+	}
+	public void setFontName(String n) {
+		fManager.setName(n);
+	}
+	public void setBtnFontSize(double btnFontSize) {
+		fManager.setButtonSize(btnFontSize);
+	}
+	public void setLblFontSize(double lblFontSize) {
+		fManager.setLabelSize(lblFontSize);
+	}
+	public Font getButtonFont() {
+		return fManager.getBtnFont();
+	}
+	public Font getLabelFont() {
+		return fManager.getLblFont();
+	}
+	public Color getBgColor() {
 		return bg;
 	}
-	public Color getFgColor(){
+	public Color getFgColor() {
 		return fg;
 	}
-	public int getLblSize() {
-		return lblSize;
+	public void setBgColor(Color c) {
+		bg = c;
 	}
-	public void setLblSize(int lblSize) {
-		this.lblSize = lblSize;
+	public void setFgColor(Color c) {
+		fg = c;
 	}
-	public int getBtnSize() {
-		return btnSize;
+}
+@SuppressWarnings("serial")
+class FontManager implements Serializable {
+	/**
+	 * A class that holds any font relevant information
+	 */
+	private String fontName;
+	private double btnFontSize, lblFontSize;
+	public Font getBtnFont() {
+		return new Font(fontName, Font.PLAIN, (int) btnFontSize);
 	}
-	public void setBtnSize(int btnSize) {
-		this.btnSize = btnSize;
+	public Font getLblFont() {
+		return new Font(fontName, Font.PLAIN, (int) lblFontSize);
+	}
+	public void setButtonSize(double b) {
+		btnFontSize = b;
+	}
+	public void setLabelSize(double l) {
+		lblFontSize = l;
+	}
+	public void setName(String name) {
+		fontName = name;
 	}
 	public String getFontName() {
 		return fontName;
 	}
-	public void setFontName(String fontName) {
-		this.fontName = fontName;
-	}
-	public Font getButtonFont(){
-		return new Font(fontName,Font.PLAIN,btnSize);
-	}
-	public Font getLabelFont(){
-		return new Font(fontName,Font.PLAIN,lblSize);
+	public FontManager(String name, double btn, double lbl) {
+		fontName = name;
+		btnFontSize = btn;
+		lblFontSize = lbl;
 	}
 }
-

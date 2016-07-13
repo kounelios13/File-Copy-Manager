@@ -10,6 +10,7 @@ pass a Settings object to customColorChooser to set its bg and fg color directly
 	* Now using File.seperator instead of "\\" or "//"
 	* Removed DragFrame Class.
 	* Still working on PreferencesManager class.
+	* Planning to remove FontManager and assign all variables and methods to Settings class.
 ## v1.5.0.9
 	* Change font size for buttons and labels
 	* Setting bgcolor and fgColor partially working
