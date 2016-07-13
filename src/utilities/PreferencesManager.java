@@ -127,6 +127,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			fgColor = settings.getFgColor();
 			System.out.println(bgColor);
 			System.out.println(fgColor);
+			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
 			updatePreview();
