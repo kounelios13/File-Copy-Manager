@@ -54,7 +54,7 @@ public class GUI extends JFrame {
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
 	String sep = File.separator;
-	private File listFile = new File("app"+sep+sep+"userList.dat");
+	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	public void showFiles() {
 		fileNames.setVisible(files.size() > 0);
 	}

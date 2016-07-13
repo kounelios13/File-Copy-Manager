@@ -38,8 +38,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
 	private JPanel prefPanel = new JPanel();
-	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 10),
-			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 10);
+	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
+			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
 	private CustomColorChooser colorChooser = new CustomColorChooser(null);
 	public  static File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
@@ -54,6 +54,12 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblLabelFontSize = new JLabel("Label font size");
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
+	private void updateSliders(){
+		int bv = buttonSlider.getValue();
+		int lv = labelSlider.getValue();
+		settings.setBtnSize(bv);
+		settings.setLblSize(lv);
+	}
 	private void init() {
 		GraphicsEnvironment ee = GraphicsEnvironment
 				.getLocalGraphicsEnvironment();
@@ -62,31 +68,24 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> {
-			
 			loadPreferences();
 		});
 		applySettings.addActionListener((e) -> {
-			
 			applySettings();
 		});
 		fontCombo.addActionListener((e) -> {
-			
 			settings.setFontName((String) fontCombo.getSelectedItem());
 			updatePreview();
 		});
 		chooseColors.addActionListener((e) -> colorChooser.setVisible(true));
 		buttonSlider.addChangeListener((e) -> {
-			
-			int value = buttonSlider.getValue();
-			settings.setBtnSize(value);
+			updateSliders();
 			btnSample.setFont(settings.getButtonFont());
 			updatePreview();
 			this.pack();
 		});
-		labelSlider.addChangeListener((e) -> {
-			
-			int value = labelSlider.getValue();
-			settings.setLblSize(value);
+		labelSlider.addChangeListener((e) -> {			
+			updateSliders();
 			lblSample.setFont(settings.getLabelFont());
 			updatePreview();
 			this.pack();
