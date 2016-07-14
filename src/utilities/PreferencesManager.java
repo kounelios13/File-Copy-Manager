@@ -149,8 +149,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			dir.mkdirs();
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(settingsFile));
-			settings.setBgColor(colorChooser.getBgColor());
-			settings.setFgColor(colorChooser.getFgColor());
+/*			settings.setBgColor(colorChooser.getBgColor());
+			settings.setFgColor(colorChooser.getFgColor());*/
 			out.writeObject(settings);
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -199,11 +199,9 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		Font lFont = settings.getLabelFont();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
-		/*settings.setBgColor(colorChooser.getBgColor());
-		settings.setFgColor(colorChooser.getFgColor());*/
-		btnSample.setBackground(colorChooser.getBgColor());
-		btnSample.setForeground(colorChooser.getFgColor());
-		lblSample.setForeground(colorChooser.getFgColor());
+		btnSample.setBackground(settings.getBgColor());
+		btnSample.setForeground(settings.getFgColor());
+		lblSample.setForeground(settings.getFgColor());
 		this.pack();
 	}
 	public void setBg(Color c){
