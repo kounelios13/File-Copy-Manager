@@ -1,10 +1,9 @@
 # changelog
 # todo
 * rework preferences manager to remove duplicates and unused code
-* make Settings from inner class to a new one class to be able to use it in other classes
-* keep font manager class as inner class of setings class
-# ideas
-pass a Settings object to customColorChooser to set its bg and fg color directly in the settings object
+## v1.6.0.5
+	* Now you can set colors for the buttons and labels available in the main GUI.
+	* These colors will be saved and be available next time you open the program. 
 ## v1.6.0.0
 	* Removed XProgressBar class and relevant constructor in FileHandler class
 	* Now using File.seperator instead of "\\" or "//"
