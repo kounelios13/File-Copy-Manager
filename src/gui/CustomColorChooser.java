@@ -11,11 +11,9 @@ import javax.swing.JPanel;
 
 import utilities.PreferencesManager;
 public class CustomColorChooser extends JDialog {
-
     /**
 	 * 
 	 */
-
 	private static final long serialVersionUID = -7374804525631377356L;
 	GUI gui;
 	PreferencesManager pMan;
@@ -38,18 +36,21 @@ public class CustomColorChooser extends JDialog {
     	pMan = p;
     	
     }
+    private void init(){
+    	colorChooser = new JColorChooser();
+        backgroundButton = new JButton("Background Color");       
+        foregroundButton = new JButton("Foreground Color");
+        okButton = new JButton("OK");
+    	backgroundButton.addActionListener((e)->pMan.setBg(colorChooser.getColor()));
+    	 foregroundButton.addActionListener((e)->pMan.setFg(colorChooser.getColor()));
+    	 okButton.addActionListener((e)->{
+    		 dispose();
+    		 pMan.updatePreview();
+    	 });
+    }
     public CustomColorChooser(JComponent targetComponent) {
         this.targetComponent = targetComponent;
-        colorChooser = new JColorChooser();
-        backgroundButton = new JButton("Background Color");
-        backgroundButton.addActionListener((e)->bgColor = colorChooser.getColor());
-        foregroundButton = new JButton("Foreground Color");
-        foregroundButton.addActionListener((e)->fgColor = colorChooser.getColor());
-        okButton = new JButton("OK");
-        okButton.addActionListener((e)->{
-        	dispose();
-        	pMan.updatePreview();
-        });
+        init();
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(backgroundButton);
         buttonPanel.add(foregroundButton);

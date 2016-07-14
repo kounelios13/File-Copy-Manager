@@ -289,9 +289,7 @@ public class GUI extends JFrame {
 		super(name == null ? "Copy Files" : name);
 		init();
 		this.setJMenuBar(menuBar);
-		panel.setLayout(new MigLayout("",
-				"[113px][28px,grow][117px,grow][][][]",
-				"[23px][][][][][][grow][][][grow]"));
+		panel.setLayout(new MigLayout("","[113px][28px,grow][117px,grow][][][]","[23px][][][][][][grow][][][grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");

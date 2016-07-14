@@ -199,12 +199,18 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		Font lFont = settings.getLabelFont();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
-		settings.setBgColor(colorChooser.getBgColor());
-		settings.setFgColor(colorChooser.getFgColor());
+		/*settings.setBgColor(colorChooser.getBgColor());
+		settings.setFgColor(colorChooser.getFgColor());*/
 		btnSample.setBackground(colorChooser.getBgColor());
 		btnSample.setForeground(colorChooser.getFgColor());
 		lblSample.setForeground(colorChooser.getFgColor());
 		this.pack();
+	}
+	public void setBg(Color c){
+		settings.setBgColor(c);
+	}
+	public void setFg(Color c){
+		settings.setFgColor(c);
 	}
 }
 @SuppressWarnings({"serial"})
