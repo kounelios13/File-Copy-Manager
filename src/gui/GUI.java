@@ -1,4 +1,5 @@
 package gui;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,7 +73,6 @@ public class GUI extends JFrame {
 		selectDestination = new JButton("Select Destination Folder");
 		openDestinationFolder = new JButton("Open Destination Folder");
 		deleteAll = new JButton("Delete all files from list");
-		dragLabel = new JLabel("Drag files  here");
 		model = new DefaultComboBoxModel<String>();
 		JFrame curFrame = this;
 		fileNames = new JComboBox<String>(model);
@@ -211,16 +211,9 @@ public class GUI extends JFrame {
 			public void filesDropped(File[] draggedFiles) {
 				try {
 					for (File f : draggedFiles) {
-						// Check if any file dropped here is a directory to get
-						// its inner files
-						/* handler.customSearch(f,files,model); */
 						files.add(f);
 						String name = f.isDirectory() ? " (Folder)" : "";
-						model.addElement(f.getName() + name);
-						/*
-						 * deepSearch may cause nullpointerexception if too many
-						 * files are passed
-						 */
+						model.addElement(f.getName() + name);						
 					}
 				} catch (NullPointerException n) {
 					System.out.println("Hit an end.");
@@ -289,7 +282,8 @@ public class GUI extends JFrame {
 		super(name == null ? "Copy Files" : name);
 		init();
 		this.setJMenuBar(menuBar);
-		panel.setLayout(new MigLayout("","[113px][28px,grow][117px,grow][][][]","[23px][][][][][][grow][][][grow]"));
+		panel.setBackground(Color.white);
+		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][]", "[23px][][][][][][grow][][][][grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");
@@ -298,14 +292,14 @@ public class GUI extends JFrame {
 		panel.add(selectDestination, "cell 0 5");
 		panel.add(deleteAll, "cell 3 5");
 		panel.add(deleteFile, "cell 3 2");
-		panel.add(dragLabel, "cell 3 8");
-		panel.add(dragPanel, "flowx,cell 3 9");
+		dragLabel = new JLabel("Drag files  here");
+		panel.add(dragLabel, "flowy,cell 3 6");
 		preload().setVisible(true);
 		this.setSize(535, 391);
 		this.setContentPane(panel);
+		panel.add(dragPanel, "cell 3 7");
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		// new DragFrame(this,files,model);
 	}
 	public GUI preload() {
 		if(pManager.settingsFile.exists()){
@@ -325,7 +319,5 @@ public class GUI extends JFrame {
 			e.printStackTrace();
 		}
 		new GUI();
-
 	}
-
 }

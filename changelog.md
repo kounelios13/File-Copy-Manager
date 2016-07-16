@@ -1,6 +1,9 @@
 # changelog
 # todo
 * rework preferences manager to remove duplicates and unused code
+* set size of main screen from preferences
+## v1.6.0.6
+	* Added 'Exit' option to File menu
 ## v1.6.0.5
 	* Now you can set colors for the buttons and labels available in the main GUI.
 	* These colors will be saved and be available next time you open the program. 
@@ -15,7 +18,6 @@
 	* Setting bgcolor and fgColor partially working
 ## v1.5.0.7
 	*Changed Look and Feel class to Nimbus
-
 ## v1.5.0.6
 	* Copy multiple directories and files
 	* When you press "Add files to copy" you can select directories and files
@@ -28,9 +30,4 @@
 	*fixed bug that caused IOException to the preferences file
 	*Editing preferences is still in beta
 
-main method of GUI class consists of 3 states:
-
-	1. Create the UI (GUI gui = new GUI();)
-	2. Preload(Check if the user has saved any preferences) (gui.preload())
-	2. Make the UI visible	(gui.setVisible(true);)
 
