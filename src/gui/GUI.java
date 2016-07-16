@@ -38,6 +38,7 @@ public class GUI extends JFrame {
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu fileMenu = new JMenu("File"), editMenu = new JMenu("Edit");
 	private JMenuItem saveList = new JMenuItem("Save queue"),
+			exit = new JMenuItem("Exit"),
 			loadList = new JMenuItem("Load queue"),
 			showSettings = new JMenuItem("Preferences");
 	private File selectedFile = null;
@@ -61,6 +62,7 @@ public class GUI extends JFrame {
 	private void init() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
+		fileMenu.add(exit);
 		editMenu.add(showSettings);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
@@ -99,11 +101,8 @@ public class GUI extends JFrame {
 				selectedFile = files.get(0);
 			else {
 				selectedFileIndex = fileNames.getSelectedIndex();
-				selectedFile = selectedFileIndex != -1 ? files
-						.get(selectedFileIndex) : null;
+				selectedFile = selectedFileIndex != -1 ? files.get(selectedFileIndex) : null;
 			}
-			// System.out.println(selectedFile !=
-			// null?selectedFile.getName():"No name");
 			});
 		copyFile = new JButton("Copy selected file");
 		copyFile.addActionListener((e) -> {
@@ -206,6 +205,7 @@ public class GUI extends JFrame {
 		showSettings.addActionListener((e) -> {
 			pManager.editPreferences();
 		});
+		exit.addActionListener((e)->System.exit(0));
 		new FileDrop(dragPanel, new FileDrop.Listener() {
 			@Override
 			public void filesDropped(File[] draggedFiles) {
