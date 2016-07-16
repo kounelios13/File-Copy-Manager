@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,7 +21,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utilities.Controller;
@@ -137,14 +135,12 @@ public class GUI extends JFrame {
 			if (selectedFile == null) {
 				msg.error(null, "No file is selected", "Error");
 				return;
-			}
-			boolean go = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete the selected item from the list?") == JOptionPane.OK_OPTION;
-			if (go) {
-				int index = fileNames.getSelectedIndex();
-				model.removeElementAt(index);
-				files.remove(index);
-			}
-
+			}		
+			int index = fileNames.getSelectedIndex();
+			if(index == -1)
+				return;
+			model.removeElementAt(index);
+			files.remove(index);		
 			fileNames.setVisible(files.size() > 0);
 		});
 		saveList.addActionListener((e) -> {
@@ -241,7 +237,7 @@ public class GUI extends JFrame {
 				selectedFile = null;
 				selectedFileIndex = -1;
 			} else
-				msg.info(null, "Operation cancelled by user", "Status");
+				msg.error(null, "Operation cancelled by user", "Status");
 
 		});
 		selectDestination.addActionListener((e) -> {
