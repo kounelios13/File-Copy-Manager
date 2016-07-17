@@ -125,8 +125,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			settings = (Settings) in.readObject();
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
-			System.out.println(bgColor);
-			System.out.println(fgColor);
 			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
@@ -149,8 +147,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			dir.mkdirs();
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(settingsFile));
-/*			settings.setBgColor(colorChooser.getBgColor());
-			settings.setFgColor(colorChooser.getFgColor());*/
 			out.writeObject(settings);
 			out.close();
 		} catch (FileNotFoundException e) {

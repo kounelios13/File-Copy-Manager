@@ -2,6 +2,8 @@
 # todo
 * rework preferences manager to remove duplicates and unused code
 * set size of main screen from preferences
+## v1.6.0.7
+	* Fixed Array Index Out Of Bounds exception when after every file is deleted you press delete selected file
 ## v1.6.0.6
 	* Added 'Exit' option to File menu
 ## v1.6.0.5
