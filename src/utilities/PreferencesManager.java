@@ -29,6 +29,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
@@ -169,16 +170,14 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			}
 		} catch (IOException io) {
 			msg.error(null, "IOException occured", "IO");
-			// io.printStackTrace();
 		}
 		this.setVisible(false);
 	}
 	public void editPreferences() {
-		// TODO Auto-generated method stub
 		this.setVisible(true);
 	}
 	public void applySettings() {
-		for (JButton b : f.getButtons()) {
+		for(JButton b : f.getButtons()) {
 			b.setFont(settings.getButtonFont());
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
@@ -251,6 +250,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		}
 	}
 	public void deleteAppSettings(){
+		boolean delete=JOptionPane.showConfirmDialog(null, "Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
+		if(!delete){
+			msg.error(prefPanel, "Operation cancelled", "Error");
+			return;
+		}
 		for(File f:new File("app").listFiles())
 			f.delete();
 		if(new File("app").listFiles().length == 0)
