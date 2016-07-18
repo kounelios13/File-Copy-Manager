@@ -41,7 +41,8 @@ public class GUI extends JFrame {
 			loadList = new JMenuItem("Load queue"),
 			showPreferences = new JMenuItem("Preferences"),
 			exportPreferences = new JMenuItem("Export Preferences"),
-			deleteApp=new JMenuItem("Delete app settings");
+			deleteApp=new JMenuItem("Delete app settings"),
+			restartApp=new JMenuItem("Restart Application");
 	private File selectedFile = null;
 	private String destinationPath;
 	private ArrayList<File> files = new ArrayList<>();
@@ -66,6 +67,7 @@ public class GUI extends JFrame {
 		fileMenu.add(exit);
 		editMenu.add(showPreferences);
 		editMenu.add(exportPreferences);
+		editMenu.add(restartApp);
 		editMenu.add(deleteApp);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
@@ -208,6 +210,12 @@ public class GUI extends JFrame {
 		exit.addActionListener((e)->System.exit(0));
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
+		restartApp.addActionListener((e)->{
+			//First close the current instance of the program
+			this.dispose();
+			//and create a new instance
+			new GUI();
+		});
 		new FileDrop(dragPanel, new FileDrop.Listener() {
 			@Override
 			public void filesDropped(File[] draggedFiles) {
