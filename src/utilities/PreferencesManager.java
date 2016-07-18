@@ -255,12 +255,21 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "Operation cancelled", "Error");
 			return;
 		}
-		for(File f:new File("app").listFiles())
+		File dir = new File("app");
+		if(!dir.exists())
+			return;
+		//TODO
+		//instead of just return if dir does not exist display inform the user that there are no app related files available to delete
+		for(File f:dir.listFiles())
 			f.delete();
-		if(new File("app").listFiles().length == 0)
+		if(dir.listFiles().length == 0)
 			msg.info(prefPanel, "All app related files have been deleted", "Success");
 		else
 			msg.error(prefPanel, "Could not delete all files", "Failure");
+		if(dir.delete())
+			msg.info(prefPanel, "App folder deleted", "Success");
+		else
+			msg.error(prefPanel, "Could not delete app directory", "Failed!!!");
 	}
 }
 @SuppressWarnings({"serial"})
