@@ -11,10 +11,12 @@ import gui.GUI;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
@@ -24,6 +26,7 @@ import java.io.Serializable;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -88,6 +91,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			updatePreview();
 			this.pack();
 		});
+		btnSample.addActionListener((e)->msg.info(prefPanel, "Stop pressing me. \n I won't do anything", "Idiot alert"));
 	}
 	/**
 	 * @wbp.parser.constructor
@@ -205,6 +209,54 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	public void setFg(Color c){
 		settings.setFgColor(c);
+	}
+	public String toCol(Color c){
+		return "rgb("+c.getRed()+","+c.getBlue()+","+c.getBlue()+")";
+	}
+	public void exportSettings(){
+		StringBuilder str = null;
+		JFileChooser ch = new JFileChooser();
+		ch.setDialogTitle("Choose wher to export file");
+		ch.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		ch.setApproveButtonText("Select");
+		int n=ch.showOpenDialog(null);
+		if(n != JFileChooser.APPROVE_OPTION){
+			System.out.println("exited");
+			return;
+		}
+		File f = new File(ch.getSelectedFile()+File.separator+File.separator+"export.txt");
+		if(!f.exists())
+			try{
+				f.createNewFile();
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				return;
+			}
+		try {
+			BufferedWriter writer= new BufferedWriter(new FileWriter(f));
+			writer.write("------File Copy Manager Preferences------\n\n\n\n");
+			str = new StringBuilder();
+			str.append("Font name:\n"+settings.getFontName()+"\n\nButton Font Size:\n"+settings.getBtnSize()+"\n\n");
+			str.append("Label Font Size:\n"+settings.getLblSize()+"\n\n");
+			if(bgColor != null)
+				str.append("Background color:\n"+toCol(bgColor)+"\n\n");
+			if(fgColor != null)
+				str.append("Foreground color:\n"+toCol(fgColor)+"\n\n");
+			writer.write(str.toString());
+			writer.close();
+		} catch (IOException exc) {
+			// TODO Auto-generated catch block
+			exc.printStackTrace();
+		}
+	}
+	public void deleteAppSettings(){
+		for(File f:new File("app").listFiles())
+			f.delete();
+		if(new File("app").listFiles().length == 0)
+			msg.info(prefPanel, "All app related files have been deleted", "Success");
+		else
+			msg.error(prefPanel, "Could not delete all files", "Failure");
 	}
 }
 @SuppressWarnings({"serial"})

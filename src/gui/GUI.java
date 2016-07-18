@@ -39,7 +39,9 @@ public class GUI extends JFrame {
 	private JMenuItem saveList = new JMenuItem("Save queue"),
 			exit = new JMenuItem("Exit"),
 			loadList = new JMenuItem("Load queue"),
-			showSettings = new JMenuItem("Preferences");
+			showPreferences = new JMenuItem("Preferences"),
+			exportPreferences = new JMenuItem("Export Preferences"),
+			deleteApp=new JMenuItem("Delete app settings");
 	private File selectedFile = null;
 	private String destinationPath;
 	private ArrayList<File> files = new ArrayList<>();
@@ -62,7 +64,9 @@ public class GUI extends JFrame {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
 		fileMenu.add(exit);
-		editMenu.add(showSettings);
+		editMenu.add(showPreferences);
+		editMenu.add(exportPreferences);
+		editMenu.add(deleteApp);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		addFiles = new JButton("Add files to copy");
@@ -198,10 +202,12 @@ public class GUI extends JFrame {
 				fileNames.setVisible(files.size() > 0);
 			}
 		});
-		showSettings.addActionListener((e) -> {
+		showPreferences.addActionListener((e) -> {
 			pManager.editPreferences();
 		});
 		exit.addActionListener((e)->System.exit(0));
+		exportPreferences.addActionListener((e)->pManager.exportSettings());
+		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		new FileDrop(dragPanel, new FileDrop.Listener() {
 			@Override
 			public void filesDropped(File[] draggedFiles) {
