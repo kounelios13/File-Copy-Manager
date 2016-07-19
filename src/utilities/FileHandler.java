@@ -13,30 +13,20 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Date;
-
-//import java.util.stream.*;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-
 import messages.Message;
-
 import org.apache.commons.io.FileUtils;
-@SuppressWarnings({"unused","static-access"})
+@SuppressWarnings({"static-access"})
 public class FileHandler extends Thread{
-
-	private File selectedFile = null;
 	private ArrayList<File> filesToCopy=null;
 	private String dest=null;
-	private int  copied = 0;
-	private Date date = new Date();
 	private Message msg = new Message();
 	private DefaultComboBoxModel<String> model=new DefaultComboBoxModel<>();
 	private JComboBox<String> comboBox = new JComboBox<>(model);
 	public FileHandler(){
 		
 	}
-
 	public FileHandler(ArrayList<File> fs,JComboBox<String> combo,DefaultComboBoxModel<String>model){
 		filesToCopy = fs;
 		comboBox = combo;
@@ -72,9 +62,6 @@ public class FileHandler extends Thread{
 
 
 	public void saveList(ProgramState ps,File destFile){
-	
-		System.out.println(destFile.getAbsolutePath());
-	
 		File f =destFile;
 		if(destFile == null){
 			msg.error(null, "Destination folder has not been selected", "Destination Empty");

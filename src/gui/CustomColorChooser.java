@@ -16,7 +16,7 @@ public class CustomColorChooser extends JDialog {
 	 */
 	private static final long serialVersionUID = -7374804525631377356L;
 	GUI gui;
-	PreferencesManager pMan;
+	private PreferencesManager pMan;
 	JComponent targetComponent;
     JColorChooser colorChooser;
     JButton backgroundButton;

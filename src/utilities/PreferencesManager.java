@@ -213,6 +213,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		return "rgb("+c.getRed()+","+c.getBlue()+","+c.getBlue()+")";
 	}
 	public void exportSettings(){
+		File dir = new File("app");
+		if(!dir.exists()){
+			msg.error(prefPanel, "There are no setiings saved by user", "Error");
+			return;
+		}
 		StringBuilder str = null;
 		JFileChooser ch = new JFileChooser();
 		ch.setDialogTitle("Choose wher to export file");
@@ -250,12 +255,18 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		}
 	}
 	public void deleteAppSettings(){
+		File dir = new File("app");
+		if(!dir.exists() || dir.listFiles().length < 1)
+		{
+			msg.error(prefPanel, "No files to delete", "Error");
+			return;
+		}
 		boolean delete=JOptionPane.showConfirmDialog(null, "Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
 		if(!delete){
 			msg.error(prefPanel, "Operation cancelled", "Error");
 			return;
 		}
-		File dir = new File("app");
+		
 		if(!dir.exists())
 			return;
 		//TODO
