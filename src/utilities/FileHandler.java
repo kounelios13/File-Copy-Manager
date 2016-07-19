@@ -95,7 +95,6 @@ public class FileHandler extends Thread{
 			    }; 
 		try{
 			Files.copy(from, to, options);
-			//JOptionPane.showMessageDialog(null, "");
 		}
 		catch(IOException io){
 			System.out.println("File "+f.getName()+" could not be copied to "+to);
@@ -118,6 +117,7 @@ public class FileHandler extends Thread{
 		catch (IOException e) {
 			// TODO Auto-generated catch block
 			log(e.getMessage());
+			msg.error(null,"Exception during copying directory","Error");
 		}
 		System.out.println("Output dir will be:"+destFolder);
 		return true;
@@ -128,26 +128,6 @@ public class FileHandler extends Thread{
 			copySingleFile(f,dest);				
 		}
 		
-	}
-	private void checkNull(ArrayList<File> st){
-		if(st==null)
-			st = new ArrayList<File>();
-	}
-	public void deepSearch(File fileToLook,ArrayList<File> fileStorage,DefaultComboBoxModel<String> mod) throws NullPointerException{
-		checkNull(fileStorage);
-		if(fileToLook !=null)
-			if(fileToLook.isDirectory())
-			{
-				//mod.addElement(fileToLook.getName()+"(Folder)");
-				for(File f:fileToLook.listFiles())
-					deepSearch(f,fileStorage,mod);
-			}
-			else if(fileToLook.isFile()){
-				fileStorage.add(fileToLook);
-				mod.addElement(fileToLook.getName());
-			}
-		else
-			System.out.println("Reached an end.");
 	}
 	public boolean copy(File f,String dest){
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest);
