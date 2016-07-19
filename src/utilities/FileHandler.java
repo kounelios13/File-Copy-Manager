@@ -132,23 +132,7 @@ public class FileHandler extends Thread{
 	public boolean copy(File f,String dest){
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest);
 	}
-	public void customSearch(File f,ArrayList<File> storage,DefaultComboBoxModel<String> mod)
-	throws NullPointerException
-	{
-		String fold=" (Folder)";
-		if(f != null){
-			storage.add(f);
-			if(f.isDirectory()){
-				mod.addElement(f.getName()+fold);
-				for(File e:f.listFiles())
-					customSearch(e,storage,mod);
-			}
-			else{
-				mod.addElement(f.getName());
-			}
-		}
-		
-	}
+
 	public void loadList() {
 		// TODO Auto-generated method stub
 		
