@@ -158,7 +158,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				msg.error(null, "Can't save preferences", "Error");
 			} finally {
 				if (settingsFile.exists()) {
@@ -256,8 +255,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	public void deleteAppSettings(){
 		File dir = new File("app");
-		if(!dir.exists() || dir.listFiles().length < 1)
-		{
+		if(!dir.exists() || dir.listFiles().length < 1){
 			msg.error(prefPanel, "No files to delete", "Error");
 			return;
 		}
@@ -267,9 +265,10 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			return;
 		}
 		
-		if(!dir.exists())
+		if(!dir.exists()){
+			msg.error(prefPanel, "No app settings found", "Error");
 			return;
-		//TODO
+		}
 		//instead of just return if dir does not exist display inform the user that there are no app related files available to delete
 		for(File f:dir.listFiles())
 			f.delete();

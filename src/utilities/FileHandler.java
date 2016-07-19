@@ -39,7 +39,6 @@ public class FileHandler extends Thread{
 			try {
 				logFile.createNewFile();
 			} catch (IOException exc) {
-				// TODO Auto-generated catch block
 				msg.error(null, "IOException :"+exc, "Error");	
 				return;
 			}
@@ -51,7 +50,6 @@ public class FileHandler extends Thread{
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
-				// TODO Auto-generated catch block
 				msg.error(null, "IOException :"+exc, "Error");
 			}
 
@@ -77,10 +75,9 @@ public class FileHandler extends Thread{
 			out.writeObject(ps);
 			out.close();
 		} catch (FileNotFoundException exc) {
-			// TODO Auto-generated catch block
+			log(exc.getMessage());
 			exc.printStackTrace();
 		} catch (IOException exc) {
-			// TODO Auto-generated catch block
 			msg.error(null, "IOException:"+exc, "Error");
 			log(exc.getMessage());
 		}
@@ -107,7 +104,6 @@ public class FileHandler extends Thread{
 		return copySingleFile(f,dest);
 	}
 	public boolean copyDir(File dir,String dest){
-		//TODO
 		File destFolder = new File(dest+"\\"+dir.getName());
 		if(!destFolder.exists())
 			destFolder.mkdirs();
@@ -115,7 +111,6 @@ public class FileHandler extends Thread{
 			FileUtils.copyDirectory(dir,destFolder);
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			log(e.getMessage());
 			msg.error(null,"Exception during copying directory","Error");
 		}
@@ -123,7 +118,6 @@ public class FileHandler extends Thread{
 		return true;
 	}
 	public void run() {
-		// TODO Auto-generated method stub	
 		for(File f:filesToCopy){
 			copySingleFile(f,dest);				
 		}
@@ -134,7 +128,6 @@ public class FileHandler extends Thread{
 	}
 
 	public void loadList() {
-		// TODO Auto-generated method stub
 		
 	}
 
