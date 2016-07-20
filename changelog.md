@@ -6,6 +6,7 @@
 	* Fixed Array Index Out Of Bounds exception when after every file is deleted you press delete selected file
 	* Added option to export app preferences to a 'txt' file
 	* Added option to delete app related files on user's demand
+	* When user settings are loaded the saved font name will be sellected on the coresponding combo box
 ## v1.6.0.6
 	* Added 'Exit' option to File menu
 ## v1.6.0.5
