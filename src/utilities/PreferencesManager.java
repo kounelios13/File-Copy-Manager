@@ -38,6 +38,7 @@ import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private GUI f;
+	private FileHandler fh = new FileHandler();
 	public  static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
@@ -133,6 +134,13 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
+			int i = 0;
+			for(Font f:GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts())
+				if(f.getFontName().equals(settings.getFontName()))
+					break;
+				else
+					i++;
+			fontCombo.setSelectedIndex(i);
 			updatePreview();
 			applySettings();
 		}
@@ -141,9 +149,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'", "Unsupported settings");
 			if(d)
 				msg.info(prefPanel, "Old file deleted", "Success");
+			fh.log(e.getMessage());
 		}
 		catch (IOException  e) {
 			msg.error(prefPanel, "Can't load preferences", "Error");
+			fh.log(e.getMessage());
 		}
 	}
 	@Override
@@ -155,10 +165,12 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			out.writeObject(settings);
 			out.close();
 		} catch (FileNotFoundException e) {
+			fh.log(e.getMessage());
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e1) {
 				msg.error(null, "Can't save preferences", "Error");
+				fh.log(e1.getMessage());
 			} finally {
 				if (settingsFile.exists()) {
 					msg.info(null, "Created preferences file", "Status");
@@ -169,6 +181,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			}
 		} catch (IOException io) {
 			msg.error(null, "IOException occured", "IO");
+			fh.log(io.getMessage());
 		}
 		this.setVisible(false);
 	}
@@ -233,7 +246,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 				f.createNewFile();
 			}
 			catch(Exception e){
-				e.printStackTrace();
+				fh.log(e.getMessage());
 				return;
 			}
 		try {
@@ -249,8 +262,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			writer.write(str.toString());
 			writer.close();
 		} catch (IOException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+			fh.log(exc.getMessage());
 		}
 	}
 	public void deleteAppSettings(){
