@@ -37,7 +37,7 @@ import messages.Message;
 import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
-	private GUI f;
+	private GUI appFrame;
 	private FileHandler fh = new FileHandler();
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
@@ -45,7 +45,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JPanel prefPanel = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
-	private CustomColorChooser colorChooser = new CustomColorChooser(f, this);
+	private CustomColorChooser colorChooser = new CustomColorChooser(appFrame,
+			this);
 	public static File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
 	private Settings settings = new Settings();
@@ -59,6 +60,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblLabelFontSize = new JLabel("Label font size");
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
+	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 	private void updateSliders() {
 		int bv = buttonSlider.getValue();
 		int lv = labelSlider.getValue();
@@ -66,9 +68,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		settings.setLblSize(lv);
 	}
 	private void init() {
-		GraphicsEnvironment ee = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
-		Font[] fonts = ee.getAllFonts();// get all system fonts
 		for (Font f : fonts)
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e) -> savePreferences());
@@ -101,7 +100,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	 */
 	public PreferencesManager(GUI frame, File sFile) {
 		super("Preferences");
-		f = frame;
+		appFrame = frame;
 		init();
 		if (sFile != null && sFile.isFile() && sFile.canWrite()
 				&& sFile.canRead())
@@ -139,8 +138,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
 			int i = 0;
-			for (Font f : GraphicsEnvironment.getLocalGraphicsEnvironment()
-					.getAllFonts())
+			for (Font f : fonts)
 				if (f.getFontName().equals(settings.getFontName()))
 					break;
 				else
@@ -197,7 +195,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		this.setVisible(true);
 	}
 	public void applySettings() {
-		for (JButton b : f.getButtons()) {
+		for (JButton b : appFrame.getButtons()) {
 			b.setFont(settings.getButtonFont());
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
@@ -206,12 +204,12 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			if (fgColor != null)
 				b.setForeground(fgColor);
 		}
-		for (JLabel lbl : f.getLabels()) {
+		for (JLabel lbl : appFrame.getLabels()) {
 			lbl.setFont(settings.getLabelFont());
 			if (fgColor != null)
 				lbl.setForeground(settings.getFgColor());
 		}
-		f.pack();
+		appFrame.pack();
 	}
 	public void updatePreview() {
 		Font bFont = settings.getButtonFont();
