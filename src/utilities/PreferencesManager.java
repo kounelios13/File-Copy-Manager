@@ -39,14 +39,14 @@ import net.miginfocom.swing.MigLayout;
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private GUI f;
 	private FileHandler fh = new FileHandler();
-	public  static String sep = File.separator + File.separator;
+	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
 	private JPanel prefPanel = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
-	private CustomColorChooser colorChooser = new CustomColorChooser(f,this);
-	public  static File settingsFile = new File("app" + sep + "settings.dat"),
+	private CustomColorChooser colorChooser = new CustomColorChooser(f, this);
+	public static File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
 	private Settings settings = new Settings();
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
@@ -59,7 +59,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblLabelFontSize = new JLabel("Label font size");
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
-	private void updateSliders(){
+	private void updateSliders() {
 		int bv = buttonSlider.getValue();
 		int lv = labelSlider.getValue();
 		settings.setBtnSize(bv);
@@ -88,12 +88,13 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			updatePreview();
 			this.pack();
 		});
-		labelSlider.addChangeListener((e) -> {			
+		labelSlider.addChangeListener((e) -> {
 			updateSliders();
 			updatePreview();
 			this.pack();
 		});
-		btnSample.addActionListener((e)->msg.info(prefPanel, "Stop pressing me. \n I won't do anything", "Idiot alert"));
+		btnSample.addActionListener((e) -> msg.info(prefPanel,
+				"Stop pressing me. \n I won't do anything", "Idiot alert"));
 	}
 	/**
 	 * @wbp.parser.constructor
@@ -102,11 +103,14 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		super("Preferences");
 		f = frame;
 		init();
-		if (sFile != null && sFile.isFile() && sFile.canWrite()&& sFile.canRead())
+		if (sFile != null && sFile.isFile() && sFile.canWrite()
+				&& sFile.canRead())
 			settingsFile = sFile;
-		prefPanel.setLayout(new MigLayout("", "[97px][97px]","[][][][][][23px][][]"));
+		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
+				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
-		prefPanel.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
+		prefPanel
+				.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
 		prefPanel.add(buttonSlider, "cell 0 2,growx");
 		prefPanel.add(btnSample, "cell 1 2");
 		prefPanel.add(lblLabelFontSize, "cell 0 3,alignx center,aligny center");
@@ -135,23 +139,25 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
 			int i = 0;
-			for(Font f:GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts())
-				if(f.getFontName().equals(settings.getFontName()))
+			for (Font f : GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getAllFonts())
+				if (f.getFontName().equals(settings.getFontName()))
 					break;
 				else
 					i++;
 			fontCombo.setSelectedIndex(i);
 			updatePreview();
 			applySettings();
-		}
-		catch(InvalidClassException | ClassNotFoundException e){
-			boolean d=settingsFile.delete();
-			msg.error(prefPanel, "Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'", "Unsupported settings");
-			if(d)
+		} catch (InvalidClassException | ClassNotFoundException e) {
+			boolean d = settingsFile.delete();
+			msg.error(
+					prefPanel,
+					"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
+					"Unsupported settings");
+			if (d)
 				msg.info(prefPanel, "Old file deleted", "Success");
 			fh.log(e.getMessage());
-		}
-		catch (IOException  e) {
+		} catch (IOException e) {
 			msg.error(prefPanel, "Can't load preferences", "Error");
 			fh.log(e.getMessage());
 		}
@@ -161,7 +167,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		if (!dir.exists())
 			dir.mkdirs();
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(settingsFile));
+			ObjectOutputStream out = new ObjectOutputStream(
+					new FileOutputStream(settingsFile));
 			out.writeObject(settings);
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -186,16 +193,17 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		this.setVisible(false);
 	}
 	public void editPreferences() {
+		loadPreferences();
 		this.setVisible(true);
 	}
 	public void applySettings() {
-		for(JButton b : f.getButtons()) {
+		for (JButton b : f.getButtons()) {
 			b.setFont(settings.getButtonFont());
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
-			if(bgColor != null)
+			if (bgColor != null)
 				b.setBackground(bgColor);
-			if(fgColor != null)
+			if (fgColor != null)
 				b.setForeground(fgColor);
 		}
 		for (JLabel lbl : f.getLabels()) {
@@ -215,18 +223,19 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		lblSample.setForeground(settings.getFgColor());
 		this.pack();
 	}
-	public void setBg(Color c){
+	public void setBg(Color c) {
 		settings.setBgColor(c);
 	}
-	public void setFg(Color c){
+	public void setFg(Color c) {
 		settings.setFgColor(c);
 	}
-	public String toCol(Color c){
-		return "rgb("+c.getRed()+","+c.getBlue()+","+c.getBlue()+")";
+	public String toCol(Color c) {
+		return "rgb(" + c.getRed() + "," + c.getBlue() + "," + c.getBlue()
+				+ ")";
 	}
-	public void exportSettings(){
+	public void exportSettings() {
 		File dir = new File("app");
-		if(!dir.exists()){
+		if (!dir.exists()) {
 			msg.error(prefPanel, "There are no setiings saved by user", "Error");
 			return;
 		}
@@ -235,60 +244,66 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		ch.setDialogTitle("Choose wher to export file");
 		ch.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		ch.setApproveButtonText("Select");
-		int n=ch.showOpenDialog(null);
-		if(n != JFileChooser.APPROVE_OPTION){
+		int n = ch.showOpenDialog(null);
+		if (n != JFileChooser.APPROVE_OPTION) {
 			System.out.println("exited");
 			return;
 		}
-		File f = new File(ch.getSelectedFile()+File.separator+File.separator+"export.txt");
-		if(!f.exists())
-			try{
+		File f = new File(ch.getSelectedFile() + File.separator
+				+ File.separator + "export.txt");
+		if (!f.exists())
+			try {
 				f.createNewFile();
-			}
-			catch(Exception e){
+			} catch (Exception e) {
 				fh.log(e.getMessage());
 				return;
 			}
 		try {
-			BufferedWriter writer= new BufferedWriter(new FileWriter(f));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 			writer.write("------File Copy Manager Preferences------\n\n\n\n");
 			str = new StringBuilder();
-			str.append("Font name:\n"+settings.getFontName()+"\n\nButton Font Size:\n"+settings.getBtnSize()+"\n\n");
-			str.append("Label Font Size:\n"+settings.getLblSize()+"\n\n");
-			if(bgColor != null)
-				str.append("Background color:\n"+toCol(bgColor)+"\n\n");
-			if(fgColor != null)
-				str.append("Foreground color:\n"+toCol(fgColor)+"\n\n");
+			str.append("Font name:\n" + settings.getFontName()
+					+ "\n\nButton Font Size:\n" + settings.getBtnSize()
+					+ "\n\n");
+			str.append("Label Font Size:\n" + settings.getLblSize() + "\n\n");
+			if (bgColor != null)
+				str.append("Background color:\n" + toCol(bgColor) + "\n\n");
+			if (fgColor != null)
+				str.append("Foreground color:\n" + toCol(fgColor) + "\n\n");
 			writer.write(str.toString());
 			writer.close();
 		} catch (IOException exc) {
 			fh.log(exc.getMessage());
 		}
 	}
-	public void deleteAppSettings(){
+	public void deleteAppSettings() {
 		File dir = new File("app");
-		if(!dir.exists() || dir.listFiles().length < 1){
+		if (!dir.exists() || dir.listFiles().length < 1) {
 			msg.error(prefPanel, "No files to delete", "Error");
 			return;
 		}
-		boolean delete=JOptionPane.showConfirmDialog(null, "Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
-		if(!delete){
+		boolean delete = JOptionPane
+				.showConfirmDialog(null,
+						"Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
+		if (!delete) {
 			msg.error(prefPanel, "Operation cancelled", "Error");
 			return;
 		}
-		
-		if(!dir.exists()){
+
+		if (!dir.exists()) {
 			msg.error(prefPanel, "No app settings found", "Error");
 			return;
 		}
-		//instead of just return if dir does not exist display inform the user that there are no app related files available to delete
-		for(File f:dir.listFiles())
+		// instead of just return if dir does not exist display inform the user
+		// that there are no app related files available to delete
+		for (File f : dir.listFiles())
 			f.delete();
-		if(dir.listFiles().length == 0)
-			msg.info(prefPanel, "All app related files have been deleted", "Success");
+		if (dir.listFiles().length == 0)
+			msg.info(prefPanel, "All app related files have been deleted",
+					"Success");
 		else
 			msg.error(prefPanel, "Could not delete all files", "Failure");
-		if(dir.delete())
+		if (dir.delete())
 			msg.info(prefPanel, "App folder deleted", "Success");
 		else
 			msg.error(prefPanel, "Could not delete app directory", "Failed!!!");
@@ -298,17 +313,17 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;
-	private int lblSize=12,btnSize=18;
-	public void setBgColor(Color e){
+	private int lblSize = 12, btnSize = 18;
+	public void setBgColor(Color e) {
 		bg = e;
 	}
-	public void setFgColor(Color e){
+	public void setFgColor(Color e) {
 		fg = e;
 	}
-	public Color getBgColor(){
+	public Color getBgColor() {
 		return bg;
 	}
-	public Color getFgColor(){
+	public Color getFgColor() {
 		return fg;
 	}
 	public int getLblSize() {
@@ -329,11 +344,10 @@ class Settings implements Serializable {
 	public void setFontName(String fontName) {
 		this.fontName = fontName;
 	}
-	public Font getButtonFont(){
-		return new Font(fontName,Font.PLAIN,btnSize);
+	public Font getButtonFont() {
+		return new Font(fontName, Font.PLAIN, btnSize);
 	}
-	public Font getLabelFont(){
-		return new Font(fontName,Font.PLAIN,lblSize);
+	public Font getLabelFont() {
+		return new Font(fontName, Font.PLAIN, lblSize);
 	}
 }
-
