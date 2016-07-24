@@ -1,7 +1,6 @@
 package gui;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -368,16 +367,13 @@ public class GUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-	
-		 EventQueue.invokeLater(new Runnable() {
-			 public void run(){
-					try {
-						UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-						 new GUI();
-					} catch (Throwable e) {
-						System.out.println(e.getMessage());
-					}
-			 }
-	      });
+		SwingUtilities.invokeLater(()->{
+			 try {
+					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+					 new GUI();
+				} catch (Throwable e) {
+					System.out.println(e.getMessage());
+				}
+		 });
 	}
 }
