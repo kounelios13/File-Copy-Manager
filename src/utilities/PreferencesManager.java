@@ -62,10 +62,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblSample = new JLabel("Label Sample");
 	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 	private void updateSliders() {
-		int bv = buttonSlider.getValue();
-		int lv = labelSlider.getValue();
-		settings.setBtnSize(bv);
-		settings.setLblSize(lv);
+		settings.setBtnSize(buttonSlider.getValue());
+		settings.setLblSize(labelSlider.getValue());
 	}
 	private void init() {
 		for (Font f : fonts)
@@ -92,8 +90,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			updatePreview();
 			this.pack();
 		});
-		btnSample.addActionListener((e) -> msg.info(prefPanel,
-				"Stop pressing me. \n I won't do anything", "Idiot alert"));
+		btnSample.addActionListener((e) -> msg.info(prefPanel,"Stop pressing me. \n I won't do anything", "Idiot alert"));
 	}
 	/**
 	 * @wbp.parser.constructor

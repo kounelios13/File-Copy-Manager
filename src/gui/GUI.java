@@ -1,6 +1,7 @@
 package gui;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,7 +22,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utilities.Controller;
@@ -31,6 +35,7 @@ import utilities.ProgramState;
 @SuppressWarnings({"serial", "static-access"})
 public class GUI extends JFrame {
 	Controller controller = new Controller();
+	StatusFrame status = new StatusFrame();
 	private FileHandler fHandler = new FileHandler();
 	private PreferencesManager pManager = new PreferencesManager(this, null);
 	private Message msg = new Message();
@@ -127,14 +132,21 @@ public class GUI extends JFrame {
 			if(destinationPath == null)
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
-				for(File f:files)
-					fHandler.copy(f,destinationPath);
+				for(File f:files){
+					SwingUtilities.invokeLater(()->{
+						status.text(f.getName()).showStatus();
+						fHandler.copy(f,destinationPath);
+					});	
+				}
+				
 			}
 			catch(Exception ee){
 				msg.error(panel, "Error occured.Se log file for more", "Error");
 				fHandler.log(ee.getMessage());
 			}
-			
+			finally{
+				status.dispose();
+			}
 		});
 
 		deleteFile.addActionListener((e) -> {
@@ -173,13 +185,15 @@ public class GUI extends JFrame {
 			if (loaded)
 				return;
 			loaded = true;
+			boolean clearList = true;
+			ProgramState state = null;
 			// Hack ends here
 			try {
-				model.removeAllElements();
+				
 				ObjectInputStream in = new ObjectInputStream(
 						new FileInputStream(listFile));
-				ProgramState state = (ProgramState) in.readObject();
-				files = state.getFiles();
+				state = (ProgramState) in.readObject();
+				/*files = state.getFiles();
 				selectedFile = state.getSelectedFile();
 				for (File f : files) {
 					String name = f.getName()+ (f.isDirectory() ? " (Folder)" : "");
@@ -187,20 +201,45 @@ public class GUI extends JFrame {
 				}
 				selectedFileIndex = state.getSindex();
 				destinationPath = state.getPath();
-				fileNames.setSelectedIndex(selectedFileIndex);
+				fileNames.setSelectedIndex(selectedFileIndex);*/
 				in.close();
-				this.pack();
+				
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
+				clearList = false;
 				msg.error(panel, "File not found", "Error");
 				fHandler.log(e1.getMessage());
 			} catch (ClassNotFoundException cn) {
+				clearList = false;
 				msg.error(panel, "Corrupted file found", "Error");
 				fHandler.log(cn.getMessage());
 			} catch (IOException io) {
+				clearList = false;
 				msg.error(panel, "IO exception occured", "Error");
 				fHandler.log(io.getMessage());
 			} finally {
+				if(clearList){
+					//TODO
+					if(files.size() > 0){
+						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){
+							for(File f:state.getFiles()){
+								files.add(f);
+								model.addElement(f.getName()+(f.isDirectory()?" (Folder)":" "));
+							}
+						}
+						else{
+							model.removeAllElements();
+							files = state.getFiles();
+							for(File f:files)
+								model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
+						}
+					}//files.size() > 0
+					selectedFileIndex = state.getSindex();
+					selectedFile = state.getSelectedFile();
+					destinationPath = state.getPath();
+					fileNames.setSelectedIndex(selectedFileIndex);
+					this.pack();
+				}//clearList
 				fileNames.setVisible(files.size() > 0);
 			}
 		});
@@ -310,6 +349,7 @@ public class GUI extends JFrame {
 		panel.add(dragPanel, "cell 3 7");
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
 	}
 	public GUI preload() {
 		if(pManager.settingsFile.exists()){
@@ -323,11 +363,16 @@ public class GUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		new GUI();
+	
+		 EventQueue.invokeLater(new Runnable() {
+			 public void run(){
+					try {
+						UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+						 new GUI();
+					} catch (Throwable e) {
+						System.out.println(e.getMessage());
+					}
+			 }
+	      });
 	}
 }
