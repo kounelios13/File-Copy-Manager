@@ -1,2 +1,4 @@
 app;;settings.dat
 *;;*.*
+app
+app/*.*
