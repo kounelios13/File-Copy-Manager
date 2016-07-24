@@ -234,8 +234,13 @@ public class GUI extends JFrame {
 								model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
 						}
 					}//files.size() > 0
-					selectedFileIndex = state.getSindex();
+					else{
+						files=state.getFiles();
+						for(File f:files)
+							model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
+					}
 					selectedFile = state.getSelectedFile();
+					selectedFileIndex = state.getSindex();
 					destinationPath = state.getPath();
 					fileNames.setSelectedIndex(selectedFileIndex);
 					this.pack();

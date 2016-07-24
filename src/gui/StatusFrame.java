@@ -28,7 +28,7 @@ public class StatusFrame extends JFrame{
 		 EventQueue.invokeLater(new Runnable() {
 			 public void run(){
 					try {
-						 new StatusFrame().text(" my balls").setVisible(true);
+						 //new StatusFrame().text(" my balls").setVisible(true);
 					} catch (Throwable e) {
 						System.out.println(e.getMessage());
 					}
