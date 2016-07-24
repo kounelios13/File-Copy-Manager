@@ -69,12 +69,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		for (Font f : fonts)
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e) -> savePreferences());
-		loadSettings.addActionListener((e) -> {
-			loadPreferences();
-		});
-		applySettings.addActionListener((e) -> {
-			applySettings();
-		});
+		loadSettings.addActionListener((e) -> loadPreferences());
+		applySettings.addActionListener((e) ->	applySettings());
 		fontCombo.addActionListener((e) -> {
 			settings.setFontName((String) fontCombo.getSelectedItem());
 			updatePreview();

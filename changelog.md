@@ -2,6 +2,8 @@
 # todo
 * rework preferences manager to remove duplicates and unused code
 * set size of main screen from preferences
+## v1.6.1.0
+	* Changed behaviour of program when trying to load a user saved list.
 ## v1.6.0.8
 	* When opening Preferences each slider will have its corresponding value(from last saved preferences file)
 ## v1.6.0.7

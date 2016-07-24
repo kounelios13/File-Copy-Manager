@@ -25,14 +25,6 @@ public class StatusFrame extends JFrame{
 		return this;
 	}
 	public static void main(String[] args) {
-		 EventQueue.invokeLater(new Runnable() {
-			 public void run(){
-					try {
-						 //new StatusFrame().text(" my balls").setVisible(true);
-					} catch (Throwable e) {
-						System.out.println(e.getMessage());
-					}
-			 }
-	      });
+		 EventQueue.invokeLater(()->System.out.println("No worries"));
 	}
 }
