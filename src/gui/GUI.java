@@ -120,7 +120,6 @@ public class GUI extends JFrame {
 		});
 
 		copyFiles.addActionListener((e) -> {
-			
 			if(destinationPath == null)
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
@@ -201,6 +200,7 @@ public class GUI extends JFrame {
 			} finally {
 				if(clearList){
 					//TODO
+					//Rewrite the following if-else
 					if(files.size() > 0){
 						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){
 							for(File f:state.getFiles()){

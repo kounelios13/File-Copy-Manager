@@ -232,6 +232,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		}
 		StringBuilder str = null;
 		JFileChooser ch = new JFileChooser();
+		ch.setCurrentDirectory(new File("app"));
 		ch.setDialogTitle("Choose wher to export file");
 		ch.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		ch.setApproveButtonText("Select");
@@ -250,17 +251,17 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 				return;
 			}
 		try {
+			String ls =System.lineSeparator();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 			writer.write("------File Copy Manager Preferences------\n\n\n\n");
+			writer.write(ls);
 			str = new StringBuilder();
-			str.append("Font name:\n" + settings.getFontName()
-					+ "\n\nButton Font Size:\n" + settings.getBtnSize()
-					+ "\n\n");
-			str.append("Label Font Size:\n" + settings.getLblSize() + "\n\n");
+			str.append("Font name:" + settings.getFontName()+ls+ "Button Font Size:"+ls+ settings.getBtnSize()+ls);
+			str.append("Label Font Size:"+ls+ settings.getLblSize() +ls+ls);
 			if (bgColor != null)
-				str.append("Background color:\n" + toCol(bgColor) + "\n\n");
+				str.append("Background color:" +ls+ toCol(bgColor)+ls);
 			if (fgColor != null)
-				str.append("Foreground color:\n" + toCol(fgColor) + "\n\n");
+				str.append("Foreground color:" +ls+ toCol(fgColor) +ls);
 			writer.write(str.toString());
 			writer.close();
 		} catch (IOException exc) {
