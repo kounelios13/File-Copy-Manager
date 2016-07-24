@@ -105,22 +105,15 @@ public class GUI extends JFrame {
 			this.pack();
 		});
 		fileNames.addActionListener((e) -> {
-			if (files.size() == 1)
-				selectedFile = files.get(0);
-			else {
-				selectedFileIndex = fileNames.getSelectedIndex();
-				selectedFile = selectedFileIndex != -1 ? files.get(selectedFileIndex) : null;
-			}
-			});
+			selectedFileIndex = files.size()==1?0:fileNames.getSelectedIndex();
+			selectedFile = selectedFileIndex == -1 ?null:files.get(selectedFileIndex);
+		});
 		copyFile = new JButton("Copy selected file");
 		copyFile.addActionListener((e) -> {
+			String message = destinationPath== null && selectedFile == null?"Selecte at least a file and a destination folder "
+					:selectedFile == null?" Select at least one file to copy":"Select a directory to copy selected file(s) in";
 			if (destinationPath == null || selectedFile == null) {
-				if (selectedFile == null)
-					msg.error(null, "Please select a file first.",
-							"No file selected");
-				else
-					msg.error(null, "Please select a directory",
-							"No directory selected");
+				msg.error(panel, message);
 				return;
 			}
 			fHandler.copy(selectedFile, destinationPath);
@@ -173,8 +166,7 @@ public class GUI extends JFrame {
 					fHandler.log(e1.getMessage());
 				}
 			}
-			ProgramState ps = new ProgramState(files, selectedFileIndex,
-					destinationPath);
+			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath);
 			controller.saveList(ps, listFile);
 		});
 		loadList.addActionListener((e) -> {
@@ -187,20 +179,10 @@ public class GUI extends JFrame {
 			boolean clearList = true;
 			ProgramState state = null;
 			// Hack ends here
-			try {
-				
+			try {	
 				ObjectInputStream in = new ObjectInputStream(
 						new FileInputStream(listFile));
 				state = (ProgramState) in.readObject();
-				/*files = state.getFiles();
-				selectedFile = state.getSelectedFile();
-				for (File f : files) {
-					String name = f.getName()+ (f.isDirectory() ? " (Folder)" : "");
-					model.addElement(name);
-				}
-				selectedFileIndex = state.getSindex();
-				destinationPath = state.getPath();
-				fileNames.setSelectedIndex(selectedFileIndex);*/
 				in.close();
 				
 			} catch (FileNotFoundException e1) {
@@ -315,7 +297,6 @@ public class GUI extends JFrame {
 			try {
 				Desktop.getDesktop().open(new File(destinationPath));
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				msg.error(panel, "Could not open destination file", "Error");
 			}
 		});
