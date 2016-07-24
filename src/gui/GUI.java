@@ -308,7 +308,7 @@ public class GUI extends JFrame {
 			}
 		});
 		openDestinationFolder.addActionListener((e) -> {
-			if (selectedFile == null) {
+			if (destinationPath == null) {
 				msg.error(panel, "No folder selected","Missing destination folder");
 				return;
 			}
