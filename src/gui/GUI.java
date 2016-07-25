@@ -241,25 +241,21 @@ public class GUI extends JFrame {
 			//and create a new instance
 			new GUI();
 		});
-		new FileDrop(dragPanel, new FileDrop.Listener() {
-			@Override
-			public void filesDropped(File[] draggedFiles) {
-				try {
-					for (File f : draggedFiles) {
-						files.add(f);
-						String name = f.isDirectory() ? " (Folder)" : "";
-						model.addElement(f.getName() + name);						
-					}
-				} catch (NullPointerException n) {
-					System.out.println("Hit an end.");
-				} finally {
-					fileNames.setVisible(files.size() > 0);
-					curFrame.pack();
-					System.out.println("Total files:" + files.size());
-				}
-				// Can't use this.pack()
-				// cause 'this' refers to FileDrop class
+		new FileDrop(dragPanel,(e)->{
+			for(File f:e){
+				files.add(f);
+				model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 			}
+			curFrame.pack();
+			showFiles();
+		});	
+		new FileDrop(this,(e)->{
+			for(File f:e){
+				files.add(f);
+				model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+			}
+			curFrame.pack();
+			showFiles();
 		});
 
 		deleteAll.addActionListener((e) -> {
