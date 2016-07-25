@@ -167,7 +167,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e1) {
-				msg.error(null, "Can't save preferences", "Error");
+				msg.error(null, "Can't save preferences");
 				fh.log(e1.getMessage());
 			} finally {
 				if (settingsFile.exists()) {
@@ -221,13 +221,12 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		settings.setFgColor(c);
 	}
 	public String toCol(Color c) {
-		return "rgb(" + c.getRed() + "," + c.getBlue() + "," + c.getBlue()
-				+ ")";
+		return "rgb(" + c.getRed() + "," + c.getBlue() + "," + c.getBlue()+ ")";
 	}
 	public void exportSettings() {
 		File dir = new File("app");
 		if (!dir.exists()) {
-			msg.error(prefPanel, "There are no setiings saved by user", "Error");
+			msg.error(prefPanel, "There are no setiings saved by user");
 			return;
 		}
 		StringBuilder str = null;
@@ -271,14 +270,14 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public void deleteAppSettings() {
 		File dir = new File("app");
 		if (!dir.exists() || dir.listFiles().length < 1) {
-			msg.error(prefPanel, "No files to delete", "Error");
+			msg.error(prefPanel, "No files to delete");
 			return;
 		}
 		boolean delete = JOptionPane
 				.showConfirmDialog(null,
 						"Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
 		if (!delete) {
-			msg.error(prefPanel, "Operation cancelled", "Error");
+			msg.error(prefPanel, "Operation cancelled");
 			return;
 		}
 

@@ -346,11 +346,15 @@ public class GUI extends JFrame {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
 			 try {
-					UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-					 new GUI();
-				} catch (Throwable e) {
-					System.out.println(e.getMessage());
-				}
+				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+				
+			}
+			catch (Throwable e) {
+				System.out.println(e.getMessage());
+			}
+			finally{
+				new GUI();
+			}
 		 });
 	}
 }
