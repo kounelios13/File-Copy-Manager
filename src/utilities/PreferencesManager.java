@@ -130,13 +130,14 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
-			int i = 0;
+			int i = -1;
 			for (Font f : fonts)
 				if (f.getFontName().equals(settings.getFontName()))
 					break;
 				else
 					i++;
-			fontCombo.setSelectedIndex(i);
+			if(i != -1)	
+				fontCombo.setSelectedIndex(i);
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {

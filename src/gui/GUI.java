@@ -100,7 +100,8 @@ public class GUI extends JFrame {
 			}
 			selectedFile = files.get(0);
 			selectedFileIndex = 0;
-			fileNames.setSelectedIndex(0);
+			if(files.size()>0)
+				fileNames.setSelectedIndex(0);
 			fileNames.setVisible(files.size() > 0);
 			this.pack();
 		});
