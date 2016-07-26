@@ -132,6 +132,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 					break;
 				else
 					i++;
+			/*
+			*Some times when autoselecting last available font
+			*You might end up with a font that is crazy
+			*So in this case select a normal font "Arial"
+			*/	
 			fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
 			updatePreview();
 			applySettings();
