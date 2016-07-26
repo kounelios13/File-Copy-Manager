@@ -64,6 +64,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
+		updatePreview();
+		this.pack();
 	}
 	private void init() {
 		for (Font f : fonts)
@@ -76,16 +78,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			updatePreview();
 		});
 		chooseColors.addActionListener((e) -> colorChooser.setVisible(true));
-		buttonSlider.addChangeListener((e) -> {
-			updateSliders();
-			updatePreview();
-			this.pack();
-		});
-		labelSlider.addChangeListener((e) -> {
-			updateSliders();
-			updatePreview();
-			this.pack();
-		});
+		buttonSlider.addChangeListener((e) -> updateSliders());
+		labelSlider.addChangeListener((e) -> updateSliders());
 		btnSample.addActionListener((e) -> msg.info(prefPanel,"Stop pressing me. \n I won't do anything", "Idiot alert"));
 	}
 	/**
@@ -130,13 +124,18 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
-			int i = 0;
+			/*
+			 * Set to -1 to avoid Index Out Of Bounds Exception
+			 * when a user presses saves without first selecting
+			 * a font name 
+			 * */
+			int i = -1;
 			for (Font f : fonts)
 				if (f.getFontName().equals(settings.getFontName()))
 					break;
 				else
 					i++;
-			fontCombo.setSelectedIndex(i>=fonts.length?0:i);
+			fontCombo.setSelectedIndex(i);
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {
@@ -286,8 +285,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "No app settings found", "Error");
 			return;
 		}
-		// instead of just return if dir does not exist display inform the user
-		// that there are no app related files available to delete
 		for (File f : dir.listFiles())
 			f.delete();
 		if (dir.listFiles().length == 0)

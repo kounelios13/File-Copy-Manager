@@ -11,12 +11,11 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import utilities.PreferencesManager;
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 public class CustomColorChooser extends JDialog {
 	private static final long serialVersionUID = -7374804525631377356L;
 	private GUI gui;
 	private PreferencesManager pMan;
-	private JComponent targetComponent;
     private JColorChooser colorChooser;
     private JButton backgroundButton,
     		foregroundButton,
@@ -48,7 +47,6 @@ public class CustomColorChooser extends JDialog {
     	 });
     }
     public CustomColorChooser(JComponent targetComponent) {
-        this.targetComponent = targetComponent;
         init();
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(backgroundButton);
