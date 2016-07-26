@@ -118,6 +118,9 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		try {
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
 			settings = (Settings) in.readObject();
+			String fname = settings.getFontName();
+			if(settings.isFontAvailable() && fname != null)
+				msg.error(null,fname+" font is not available in this system");
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
 			in.close();
@@ -129,8 +132,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 					break;
 				else
 					i++;
-			if(i != -1)	
-				fontCombo.setSelectedIndex(i);
+			fontCombo.setSelectedIndex(i);
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {
@@ -300,8 +302,6 @@ class Settings implements Serializable {
 	private String fontName;
 	private int lblSize = 12, btnSize = 18;
 	public boolean isFontAvailable(){
-		if(fontName == null)
-			throw new IllegalArgumentException("Font name has not been set");
 		for(Font e:GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts())
 			if(e.getFontName().equals(fontName))
 				return true;
