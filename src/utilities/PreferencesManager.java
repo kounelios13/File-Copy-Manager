@@ -136,7 +136,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 					break;
 				else
 					i++;
-			fontCombo.setSelectedIndex(i);
+			fontCombo.setSelectedIndex(i>=fonts.length?0:i);
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {
@@ -182,6 +182,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			fh.log(io.getMessage());
 		}
 		this.setVisible(false);
+		System.out.println(settings.getFontName()!= null);
 	}
 	public void editPreferences() {
 		loadPreferences();
