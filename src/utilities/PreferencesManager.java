@@ -126,13 +126,13 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
-			int i = -1;
+			int i = 0;
 			for (Font f : fonts)
 				if (f.getFontName().equals(settings.getFontName()))
 					break;
 				else
 					i++;
-			fontCombo.setSelectedIndex(i);
+			fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {
@@ -301,11 +301,18 @@ class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;
 	private int lblSize = 12, btnSize = 18;
+	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 	public boolean isFontAvailable(){
-		for(Font e:GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts())
+		for(Font e:fonts)
 			if(e.getFontName().equals(fontName))
 				return true;
-		return false	
+		return false;	
+	}
+	public int getFontIndex(String name){
+		for(int i = 0;i<fonts.length;i++)
+			if(fonts[i].getFontName().equals(name))
+				return i;
+		return -1;
 	}
 	public void setBgColor(Color e) {
 		bg = e;
