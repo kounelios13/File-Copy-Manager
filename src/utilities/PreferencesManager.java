@@ -119,7 +119,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
 			settings = (Settings) in.readObject();
 			String fname = settings.getFontName();
-			if(settings.isFontAvailable() && fname != null)
+			if(!settings.isFontAvailable() && fname != null)
 				msg.error(null,fname+" font is not available in this system");
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
