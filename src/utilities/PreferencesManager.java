@@ -64,6 +64,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
+		updatePreview();
 	}
 	private void init() {
 		for (Font f : fonts)
@@ -76,16 +77,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			updatePreview();
 		});
 		chooseColors.addActionListener((e) -> colorChooser.setVisible(true));
-		buttonSlider.addChangeListener((e) -> {
-			updateSliders();
-			updatePreview();
-			this.pack();
-		});
-		labelSlider.addChangeListener((e) -> {
-			updateSliders();
-			updatePreview();
-			this.pack();
-		});
+		buttonSlider.addChangeListener((e) ->updateSliders());
+		labelSlider.addChangeListener((e) -> updateSliders());
 		btnSample.addActionListener((e) -> msg.info(prefPanel,"Stop pressing me. \n I won't do anything", "Idiot alert"));
 	}
 	/**
@@ -306,6 +299,14 @@ class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;
 	private int lblSize = 12, btnSize = 18;
+	public boolean isFontAvailable(){
+		if(fontName == null)
+			throw new IllegalArgumentException("Font name has not been set");
+		for(Font e:GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts())
+			if(e.getFontName().equals(fontName))
+				return true;
+		return false	
+	}
 	public void setBgColor(Color e) {
 		bg = e;
 	}
