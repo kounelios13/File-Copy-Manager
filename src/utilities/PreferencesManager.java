@@ -137,7 +137,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			*You might end up with a font that is crazy
 			*So in this case select a normal font "Arial"
 			*/				
-			fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex():i);
+			fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {
@@ -234,7 +234,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		JFileChooser ch = new JFileChooser();
 		ch.setCurrentDirectory(new File("app"));
 		ch.setDialogTitle("Choose wher to export file");
-		ch.setsFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		ch.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		ch.setApproveButtonText("Select");
 		int n = ch.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION) {
