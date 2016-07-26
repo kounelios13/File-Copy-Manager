@@ -119,22 +119,26 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		try {
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
 			settings = (Settings) in.readObject();
+			if(!settings.isFontAvailable() && settings.getFontName() != null)
+				msg.error(null,settings.getFontName()+" font is not available on this system.");
 			bgColor = settings.getBgColor();
 			fgColor = settings.getFgColor();
 			in.close();
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
-			/*
-			 * Set to -1 to avoid Index Out Of Bounds Exception
-			 * when a user presses saves without first selecting
-			 * a font name 
-			 * */
-			int i = -1;
+			int i = 0;
 			for (Font f : fonts)
 				if (f.getFontName().equals(settings.getFontName()))
 					break;
 				else
 					i++;
+			/*
+			*Some times when autoselecting last available font
+			*You might end up with a font that is crazy
+			*So in this case select a normal font "Arial"
+			*/	
+			if(i>=fonts.length)
+				i = settings.getFontIndex("Arial");					
 			fontCombo.setSelectedIndex(i);
 			updatePreview();
 			applySettings();
@@ -181,7 +185,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			fh.log(io.getMessage());
 		}
 		this.setVisible(false);
-		System.out.println(settings.getFontName()!= null);
 	}
 	public void editPreferences() {
 		loadPreferences();
@@ -303,6 +306,19 @@ class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;
 	private int lblSize = 12, btnSize = 18;
+	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+	public boolean isFontAvailable(){
+		for(Font f:fonts)
+			if(f.getFontName().equals(fontName))
+				return true;
+		return false;	
+	}
+	public int getFontIndex(String name){
+		for(int i=0;i<fonts.length;i++)
+			if(fonts[i].getFontName().equals(name))
+				return i;
+		return -1;	
+	}
 	public void setBgColor(Color e) {
 		bg = e;
 	}
