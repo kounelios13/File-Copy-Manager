@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -295,17 +293,16 @@ public class GUI extends JFrame {
 			}
 		});
 	}
-	public ArrayList<JLabel> getLabels() {
+	public JLabel[] getLabels() {
 		// TODO Auto-generated method stub
 		JLabel[] labels = {dragLabel};
-		return new ArrayList<JLabel>(Arrays.asList(labels));
+		return labels;
 	}
-	public ArrayList<JButton> getButtons() {
+	public JButton[] getButtons() {
 		JButton[] array = {addFiles, selectDestination, copyFile, copyFiles,
 				deleteFile, deleteAll, openDestinationFolder};
-		ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
-		btns.trimToSize();
-		return btns;
+		//ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
+		return array;
 	}
 	public GUI(String name) {
 		super(name == null ? "Copy Files" : name);
