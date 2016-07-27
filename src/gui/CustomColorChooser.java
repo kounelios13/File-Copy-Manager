@@ -14,7 +14,7 @@ import utilities.PreferencesManager;
 @SuppressWarnings("unused")
 public class CustomColorChooser extends JDialog {
 	private static final long serialVersionUID = -7374804525631377356L;
-	private GUI gui;
+	private FileCopyManager gui;
 	private PreferencesManager pMan;
     private JColorChooser colorChooser;
     private JButton backgroundButton,
@@ -28,7 +28,7 @@ public class CustomColorChooser extends JDialog {
     public Color getFgColor(){
     	return fgColor; 
     }
-    public CustomColorChooser(GUI g,PreferencesManager p){
+    public CustomColorChooser(FileCopyManager g,PreferencesManager p){
     	this((JComponent)null);
     	gui = g;
     	pMan = p;

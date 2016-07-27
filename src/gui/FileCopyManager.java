@@ -30,7 +30,7 @@ import utilities.FileHandler;
 import utilities.PreferencesManager;
 import utilities.ProgramState;
 @SuppressWarnings({"serial", "static-access"})
-public class GUI extends JFrame {
+public class FileCopyManager extends JFrame {
 	Controller controller = new Controller();
 	StatusFrame status = new StatusFrame();
 	private FileHandler fHandler = new FileHandler();
@@ -235,7 +235,7 @@ public class GUI extends JFrame {
 			//First close the current instance of the program
 			this.dispose();
 			//and create a new instance
-			new GUI();
+			new FileCopyManager();
 		});
 		new FileDrop(dragPanel,(e)->{
 			for(File f:e){
@@ -304,7 +304,7 @@ public class GUI extends JFrame {
 		//ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
 		return array;
 	}
-	public GUI(String name) {
+	public FileCopyManager(String name) {
 		super(name == null ? "Copy Files" : name);
 		init();
 		this.setJMenuBar(menuBar);
@@ -328,14 +328,14 @@ public class GUI extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 	}
-	public GUI preload() {
+	public FileCopyManager preload() {
 		if(pManager.settingsFile.exists()){
 			pManager.loadPreferences();
 			pManager.applySettings();
 		}
 		return this;
 	}
-	public GUI() {
+	public FileCopyManager() {
 		this(null);
 	}
 
@@ -349,7 +349,7 @@ public class GUI extends JFrame {
 				System.out.println(e.getMessage());
 			}
 			finally{
-				new GUI();
+				new FileCopyManager();
 			}
 		 });
 	}

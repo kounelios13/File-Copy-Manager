@@ -6,7 +6,7 @@
 package utilities;
 
 import gui.CustomColorChooser;
-import gui.GUI;
+import gui.FileCopyManager;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -37,7 +37,7 @@ import messages.Message;
 import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
-	private GUI appFrame;
+	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
@@ -84,7 +84,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreferencesManager(GUI frame, File sFile) {
+	public PreferencesManager(FileCopyManager frame, File sFile) {
 		super("Preferences");
 		appFrame = frame;
 		init();
