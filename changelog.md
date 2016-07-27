@@ -6,6 +6,7 @@
 	* Fixed messages displayed during errors
 	* Changed method signature of getLabels() and getButtons() from ArrayList to simple array
 	* If you save preferences for first time without selecting a desired font "Arial" font will be selected as default
+	* renamed main class to FileCopyManager
 ## v1.6.1.0
 	* Changed behaviour of program when trying to load a user saved list.
 ## v1.6.0.8
