@@ -229,9 +229,7 @@ public class GUI extends JFrame {
 				fileNames.setVisible(files.size() > 0);
 			}
 		});
-		showPreferences.addActionListener((e) -> {
-			pManager.editPreferences();
-		});
+		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
