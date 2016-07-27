@@ -304,6 +304,7 @@ public class GUI extends JFrame {
 		JButton[] array = {addFiles, selectDestination, copyFile, copyFiles,
 				deleteFile, deleteAll, openDestinationFolder};
 		ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
+		btns.trimToSize();
 		return btns;
 	}
 	public GUI(String name) {
