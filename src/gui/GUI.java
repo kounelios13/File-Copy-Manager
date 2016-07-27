@@ -187,7 +187,7 @@ public class GUI extends JFrame {
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				clearList = false;
-				msg.error(panel, "File not found", "Error");
+				msg.error(panel, "You haven't saved any list.", "Error");
 				fHandler.log(e1.getMessage());
 			} catch (ClassNotFoundException cn) {
 				clearList = false;
