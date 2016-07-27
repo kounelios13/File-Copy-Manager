@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import utilities.PreferencesManager;
-//@SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class CustomColorChooser extends JDialog {
 	private static final long serialVersionUID = -7374804525631377356L;
 	private GUI gui;

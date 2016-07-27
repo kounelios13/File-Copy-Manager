@@ -65,7 +65,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
 		updatePreview();
-		this.pack();
 	}
 	private void init() {
 		for (Font f : fonts)
