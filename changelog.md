@@ -1,7 +1,8 @@
 # changelog
-# todo
-* rework preferences manager to remove duplicates and unused code
-* set size of main screen from preferences
+## v1.6.1.2
+	* Renamed folder "ex_jars" to "libs"
+	* Now when you delete app settings the app will restart
+	* Refactored code
 ## v1.6.1.1
 	* Fixed messages displayed during errors
 	* Changed method signature of getLabels() and getButtons() from ArrayList to simple array

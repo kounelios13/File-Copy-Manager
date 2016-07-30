@@ -111,9 +111,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	@Override
 	public void loadPreferences() {
-		if (!settingsFile.exists()) {
+		if (!settingsFile.exists())
 			return;
-		}
 		ObjectInputStream in;
 		try {
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
@@ -126,11 +125,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			labelSlider.setValue(settings.getLblSize());
 			buttonSlider.setValue(settings.getBtnSize());
 			int i = 0;
-			for (Font f : fonts)
+			for (Font f : fonts){
 				if (f.getFontName().equals(settings.getFontName()))
 					break;
-				else
-					i++;
+				i++;
+			}		
 			/*
 			*Some times when autoselecting last available font
 			*You might end up with a font that is crazy
@@ -140,12 +139,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			updatePreview();
 			applySettings();
 		} catch (InvalidClassException | ClassNotFoundException e) {
-			boolean d = settingsFile.delete();
 			msg.error(
 					prefPanel,
 					"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
 					"Unsupported settings");
-			if (d)
+			if (settingsFile.delete())
 				msg.info(prefPanel, "Old file deleted", "Success");
 			fh.log(e.getMessage());
 		} catch (IOException e) {
