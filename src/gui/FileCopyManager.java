@@ -279,6 +279,7 @@ public class FileCopyManager extends JFrame {
 				Desktop.getDesktop().open(new File(destinationPath));
 			} catch (Exception e1) {
 				msg.error(panel, "Could not open destination file", "Error");
+				fHandler.log(e1.getMessage());
 			}
 		});
 	}
@@ -332,10 +333,9 @@ public class FileCopyManager extends JFrame {
 		SwingUtilities.invokeLater(()->{
 			 try {
 				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-				
 			}
 			catch (Throwable e) {
-				System.out.println(e.getMessage());
+				new FileHandler().log(e.getMessage());
 			}
 			finally{
 				new FileCopyManager();
