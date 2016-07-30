@@ -175,7 +175,6 @@ public class FileCopyManager extends JFrame {
 				in.close();
 				
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				clearList = false;
 				msg.error(panel, "You haven't saved any list.", "Error");
 				fHandler.log(e1.getMessage());
@@ -189,8 +188,6 @@ public class FileCopyManager extends JFrame {
 				fHandler.log(io.getMessage());
 			} finally {
 				if(clearList){
-					//TODO
-					//Rewrite the following if-else
 					if(files.size() > 0){
 						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){
 							for(File f:state.getFiles()){
@@ -245,7 +242,6 @@ public class FileCopyManager extends JFrame {
 			curFrame.pack();
 			showFiles();
 		});
-
 		deleteAll.addActionListener((e) -> {
 			if (files.size() < 1) {
 				msg.info(panel,"There are no files to remove from list","Warning");
@@ -269,9 +265,10 @@ public class FileCopyManager extends JFrame {
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			chooser.showOpenDialog(panel);
 			File selected = chooser.getSelectedFile();
-			if (selected != null) {
+			if (selected != null)
 				destinationPath = selected.getAbsolutePath();
-			}
+			else
+				msg.error(panel,"Invalid destination");
 		});
 		openDestinationFolder.addActionListener((e) -> {
 			if (destinationPath == null) {
