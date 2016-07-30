@@ -284,14 +284,12 @@ public class FileCopyManager extends JFrame {
 		});
 	}
 	public JLabel[] getLabels() {
-		// TODO Auto-generated method stub
 		JLabel[] labels = {dragLabel};
 		return labels;
 	}
 	public JButton[] getButtons() {
 		JButton[] array = {addFiles, selectDestination, copyFile, copyFiles,
 				deleteFile, deleteAll, openDestinationFolder};
-		//ArrayList<JButton> btns = new ArrayList<JButton>(Arrays.asList(array));
 		return array;
 	}
 	public FileCopyManager(String name) {
@@ -319,10 +317,12 @@ public class FileCopyManager extends JFrame {
 		this.setLocationRelativeTo(null);
 	}
 	public FileCopyManager preload() {
-		if(pManager.settingsFile.exists()){
+		/*
+		* See if we need to change the main UI(change colors or font size)
+		*and if we need do it first and then show the app
+		*/
+		if(pManager.settingsFile.exists())
 			pManager.loadPreferences();
-			pManager.applySettings();
-		}
 		return this;
 	}
 	public FileCopyManager() {
