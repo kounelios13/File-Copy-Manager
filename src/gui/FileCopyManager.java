@@ -62,6 +62,12 @@ public class FileCopyManager extends JFrame {
 	public void showFiles() {
 		fileNames.setVisible(files.size() > 0);
 	}
+	public void restart(){
+		//First close the current instance of the program
+		this.dispose();
+		//and create a new instance
+		new FileCopyManager();
+	}
 	private void init() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -220,12 +226,7 @@ public class FileCopyManager extends JFrame {
 		exit.addActionListener((e)->System.exit(0));
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
-		restartApp.addActionListener((e)->{
-			//First close the current instance of the program
-			this.dispose();
-			//and create a new instance
-			new FileCopyManager();
-		});
+		restartApp.addActionListener((e)->restart());
 		new FileDrop(dragPanel,(e)->{
 			for(File f:e){
 				files.add(f);

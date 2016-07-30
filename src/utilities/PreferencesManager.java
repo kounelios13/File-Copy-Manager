@@ -280,7 +280,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "Operation cancelled");
 			return;
 		}
-
 		if (!dir.exists()) {
 			msg.error(prefPanel, "No app settings found", "Error");
 			return;
@@ -296,6 +295,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.info(prefPanel, "App folder deleted", "Success");
 		else
 			msg.error(prefPanel, "Could not delete app directory", "Failed!!!");
+		loadPreferences();
+		appFrame.restart();
 	}
 }
 @SuppressWarnings({"serial"})
