@@ -54,7 +54,6 @@ public class FileCopyManager extends JFrame {
 			deleteFile, deleteAll, openDestinationFolder;
 	private JComboBox<String> fileNames;
 	private DefaultComboBoxModel<String> model;
-	private boolean loaded = false;
 	private int selectedFileIndex;
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
@@ -126,8 +125,7 @@ public class FileCopyManager extends JFrame {
 						status.text(f.getName()).showStatus();
 						fHandler.copy(f,destinationPath);
 					});	
-				}
-				
+				}	
 			}
 			catch(Exception ee){
 				msg.error(panel, "Error occured.Se log file for more", "Error");
@@ -167,12 +165,6 @@ public class FileCopyManager extends JFrame {
 			controller.saveList(ps, listFile);
 		});
 		loadList.addActionListener((e) -> {
-			// Hack to avoid ArrayOutOfBoundsException
-			// When you start the program and press load once then press save
-			// and again load an exception is being thrown
-			if (loaded)
-				return;
-			loaded = true;
 			boolean clearList = true;
 			ProgramState state = null;
 			// Hack ends here
