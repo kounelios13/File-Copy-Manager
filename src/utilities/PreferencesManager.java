@@ -37,6 +37,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
+	private GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
@@ -58,7 +59,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblLabelFontSize = new JLabel("Label font size");
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
-	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+	private Font[] fonts =env.getAllFonts();
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
@@ -82,13 +83,10 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreferencesManager(FileCopyManager frame, File sFile) {
+	public PreferencesManager(FileCopyManager frame) {
 		super("Preferences");
 		appFrame = frame;
 		init();
-		if (sFile != null && sFile.isFile() && sFile.canWrite()
-				&& sFile.canRead())
-			settingsFile = sFile;
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
 				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");

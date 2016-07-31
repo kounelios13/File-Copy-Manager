@@ -2,10 +2,6 @@ package gui;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -37,7 +33,7 @@ public class FileCopyManager extends JFrame {
 	StatusFrame status = new StatusFrame();
 	private FileHandler fHandler = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fHandler);
-	private PreferencesManager pManager = new PreferencesManager(this, null);
+	private PreferencesManager pManager = new PreferencesManager(this);
 	private Message msg = new Message();
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu fileMenu = new JMenu("File"), editMenu = new JMenu("Edit");
