@@ -169,39 +169,37 @@ public class FileCopyManager extends JFrame {
 			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath);
 			controller.saveList(ps, listFile);
 		});
-		loadList.addActionListener((e) -> {
+		loadList.addActionListener((e)->{
 			ProgramState state = rc.getAppState();
-			boolean clearList = state !=  null;
-			
-			// Hack ends here
+			boolean clearList = state != null;
 			if(clearList){
-					if(files.size() > 0){
-						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){
-							for(File f:state.getFiles()){
-								files.add(f);
-								model.addElement(f.getName()+(f.isDirectory()?" (Folder)":" "));
-							}
-						}
-						else{
-							model.removeAllElements();
-							files = state.getFiles();
-							for(File f:files)
-								model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
-						}
-					}//files.size() > 0
+				if(files.size()> 0){
+					if(JOptionPane.showConfirmDialog(null,
+						"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
+						for(File f:state.getFiles()){
+							files.add(f);
+							model.addElement(f.getName()+(f.isDirectory(" (Folder)":"")));
+						}//for
+					}//if JOptionPane.showConfirmDialog()
 					else{
-						files=state.getFiles();
+						model.removeAllElements();
+						files = state.getFiles();
 						for(File f:files)
-							model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
+							model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":""));
 					}
-					selectedFile = state.getSelectedFile();
-					selectedFileIndex = state.getSindex();
-					destinationPath = state.getPath();
-					fileNames.setSelectedIndex(selectedFileIndex);
-					this.pack();
-				}//clearList
-				fileNames.setVisible(files.size() > 0);
-			
+				}//files.size()>0
+				else{
+					files = state.getFiles();
+					for(File f:files)
+						model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":""));
+				}
+				selectedFile = state.getSelectedFile();
+				selectedFileIndex = state.getSindex();
+				destinationPath = state.getPath();
+				fileNames.setSelectedIndex(selectedFileIndex);
+				this.pack();
+			}//if clearList
+			fileNames.setVisible(files.size() > 0);
 		});
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
