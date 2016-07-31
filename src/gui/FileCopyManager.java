@@ -30,13 +30,13 @@ import utilities.FileDrop;
 import utilities.FileHandler;
 import utilities.PreferencesManager;
 import utilities.ProgramState;
-import utilities.ResourcesLoader;
+import utilities.ResourceLoader;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	Controller controller = new Controller();
 	StatusFrame status = new StatusFrame();
-	private ResourcesLoader rc = new ResourcesLoader();
 	private FileHandler fHandler = new FileHandler();
+	private ResourceLoader rc = new ResourceLoader(fHandler);
 	private PreferencesManager pManager = new PreferencesManager(this, null);
 	private Message msg = new Message();
 	private JMenuBar menuBar = new JMenuBar();

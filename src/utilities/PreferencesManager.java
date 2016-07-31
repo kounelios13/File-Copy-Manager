@@ -39,6 +39,7 @@ import net.miginfocom.swing.MigLayout;
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
+	private ResourceLoader rc = new ResourceLoader(fh);
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
@@ -113,10 +114,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public void loadPreferences() {
 		if (!settingsFile.exists())
 			return;
+		//Settings s = rc.getPreferences();
 		ObjectInputStream in;
 		try {
 			in = new ObjectInputStream(new FileInputStream(settingsFile));
-			settings = (Settings) in.readObject();
+			settings = rc.getPreferences();
 			if(!settings.isFontAvailable() && settings.getFontName() != null)
 				msg.error(null,settings.getFontName()+" font is not available on this system.");
 			bgColor = settings.getBgColor();
@@ -138,7 +140,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
 			updatePreview();
 			applySettings();
-		} catch (InvalidClassException | ClassNotFoundException e) {
+		} catch (InvalidClassException  /*ClassNotFoundException*/ e) {
 			msg.error(
 					prefPanel,
 					"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
