@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,10 +30,12 @@ import utilities.FileDrop;
 import utilities.FileHandler;
 import utilities.PreferencesManager;
 import utilities.ProgramState;
+import utilities.ResourcesLoader;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	Controller controller = new Controller();
 	StatusFrame status = new StatusFrame();
+	private ResourcesLoader rc = new ResourcesLoader();
 	private FileHandler fHandler = new FileHandler();
 	private PreferencesManager pManager = new PreferencesManager(this, null);
 	private Message msg = new Message();
@@ -171,29 +174,11 @@ public class FileCopyManager extends JFrame {
 			controller.saveList(ps, listFile);
 		});
 		loadList.addActionListener((e) -> {
-			boolean clearList = true;
-			ProgramState state = null;
+			ProgramState state = rc.getAppState();
+			boolean clearList = state !=  null;
+			
 			// Hack ends here
-			try {	
-				ObjectInputStream in = new ObjectInputStream(
-						new FileInputStream(listFile));
-				state = (ProgramState) in.readObject();
-				in.close();
-				
-			} catch (FileNotFoundException e1) {
-				clearList = false;
-				msg.error(panel, "You haven't saved any list.", "Error");
-				fHandler.log(e1.getMessage());
-			} catch (ClassNotFoundException cn) {
-				clearList = false;
-				msg.error(panel, "Corrupted file found", "Error");
-				fHandler.log(cn.getMessage());
-			} catch (IOException io) {
-				clearList = false;
-				msg.error(panel, "IO exception occured", "Error");
-				fHandler.log(io.getMessage());
-			} finally {
-				if(clearList){
+			if(clearList){
 					if(files.size() > 0){
 						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){
 							for(File f:state.getFiles()){
@@ -220,7 +205,7 @@ public class FileCopyManager extends JFrame {
 					this.pack();
 				}//clearList
 				fileNames.setVisible(files.size() > 0);
-			}
+			
 		});
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));

@@ -1,9 +1,8 @@
 package utilities;
 import java.io.*;
 import java.util.*;
-import messages.*;
-@SuppressWarnings({"unused","static-access"})
-public class ResourceLoader {
+
+public class ResourcesLoader {
 
 	/***
 	 * Handle loading of app related files
@@ -12,7 +11,7 @@ public class ResourceLoader {
 	 * */
 	private ObjectInputStream inputStream;
 	private FileInputStream fileStream;
-	private Message msg = new Message();
+
 	private String seperator = File.separator+File.separator;
 	private File uiTheme=PreferencesManager.settingsFile,
 		listFile = new File("app"+seperator+"userlist.dat");
@@ -30,6 +29,7 @@ public class ResourceLoader {
 			fileStream = new FileInputStream(listFile);
 			inputStream = new ObjectInputStream(fileStream);
 			p = (ProgramState)inputStream.readObject();
+			inputStream.close();
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
 			exc.printStackTrace();
