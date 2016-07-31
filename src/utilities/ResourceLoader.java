@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 
 import messages.Message;
@@ -34,13 +35,16 @@ public class ResourceLoader {
 			inputStream = new ObjectInputStream(fileStream);
 			s=(Settings)inputStream.readObject();
 		} catch (FileNotFoundException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+			msg.error(null,"Cant find preferences file");
+			handler.log(exc.getMessage());
 		} catch (IOException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
-		} catch (ClassNotFoundException cnf){
-			
+			msg.error(null, "Can't load preferences");
+			handler.log(exc.getMessage());
+		} catch (ClassNotFoundException ci){
+			msg.error(null,
+				"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
+				"Invalid settings");
+			handler.log(ci.getMessage());
 		}
 		return s;
 		
