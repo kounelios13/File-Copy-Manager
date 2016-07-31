@@ -13,13 +13,10 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
@@ -39,6 +36,8 @@ import net.miginfocom.swing.MigLayout;
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
+	private ResourceLoader rc = new ResourceLoader(fh);
+	private GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
@@ -60,7 +59,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblLabelFontSize = new JLabel("Label font size");
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
-	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+	private Font[] fonts =env.getAllFonts();
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
@@ -84,13 +83,10 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreferencesManager(FileCopyManager frame, File sFile) {
+	public PreferencesManager(FileCopyManager frame) {
 		super("Preferences");
 		appFrame = frame;
 		init();
-		if (sFile != null && sFile.isFile() && sFile.canWrite()
-				&& sFile.canRead())
-			settingsFile = sFile;
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
 				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
@@ -110,46 +106,25 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		this.pack();
 	}
 	@Override
-	public void loadPreferences() {
-		if (!settingsFile.exists())
+	public void loadPreferences(){
+		if(!settingsFile.exists())
 			return;
-		ObjectInputStream in;
-		try {
-			in = new ObjectInputStream(new FileInputStream(settingsFile));
-			settings = (Settings) in.readObject();
-			if(!settings.isFontAvailable() && settings.getFontName() != null)
-				msg.error(null,settings.getFontName()+" font is not available on this system.");
-			bgColor = settings.getBgColor();
-			fgColor = settings.getFgColor();
-			in.close();
-			labelSlider.setValue(settings.getLblSize());
-			buttonSlider.setValue(settings.getBtnSize());
-			int i = 0;
-			for (Font f : fonts){
-				if (f.getFontName().equals(settings.getFontName()))
-					break;
+		Settings settings = rc.getPreferences();
+		if(!settings.isFontAvailable() && settings.getFontName() != null)
+			msg.error(null,settings.getFontName()+" font is not available on this system.");
+		bgColor = settings.getBgColor();
+		fgColor = settings.getFgColor();
+		labelSlider.setValue(settings.getLblSize());
+		buttonSlider.setValue(settings.getBtnSize());
+		int i = 0;
+		for (Font f : fonts)
+			if (f.getFontName().equals(settings.getFontName()))
+				break;
+			else
 				i++;
-			}		
-			/*
-			*Some times when autoselecting last available font
-			*You might end up with a font that is crazy
-			*So in this case select a normal font "Arial"
-			*/				
-			fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
-			updatePreview();
-			applySettings();
-		} catch (InvalidClassException | ClassNotFoundException e) {
-			msg.error(
-					prefPanel,
-					"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
-					"Unsupported settings");
-			if (settingsFile.delete())
-				msg.info(prefPanel, "Old file deleted", "Success");
-			fh.log(e.getMessage());
-		} catch (IOException e) {
-			msg.error(prefPanel, "Can't load preferences", "Error");
-			fh.log(e.getMessage());
-		}
+		fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
+		updatePreview();
+		applySettings();	
 	}
 	@Override
 	public void savePreferences() {
@@ -235,7 +210,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		ch.setApproveButtonText("Select");
 		int n = ch.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION) {
-			System.out.println("exited");
+		 	msg.info(null,"Operation aborted");
 			return;
 		}
 		File f = new File(ch.getSelectedFile() + File.separator
