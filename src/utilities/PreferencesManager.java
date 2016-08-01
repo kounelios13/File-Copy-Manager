@@ -1,3 +1,4 @@
+
 //TODO
 /*fIX THIS HELL For God's shake
  rewrite everything
@@ -109,7 +110,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public void loadPreferences(){
 		if(!settingsFile.exists())
 			return;
-		Settings settings = rc.getPreferences();
+		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && settings.getFontName() != null)
 			msg.error(null,settings.getFontName()+" font is not available on this system.");
 		bgColor = settings.getBgColor();
@@ -182,9 +183,9 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		Font lFont = settings.getLabelFont();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
-		btnSample.setBackground(settings.getBgColor());
-		btnSample.setForeground(settings.getFgColor());
-		lblSample.setForeground(settings.getFgColor());
+		btnSample.setBackground(bgColor);
+		btnSample.setForeground(fgColor);
+		lblSample.setForeground(fgColor);
 		this.pack();
 	}
 	public void setBg(Color c) {
