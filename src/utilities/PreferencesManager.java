@@ -162,25 +162,24 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		this.setVisible(true);
 	}
 	public void applySettings() {
+		bgColor = settings.getBgColor();
+		fgColor = settings.getFgColor();
+		Font btn = settings.getButtonFont(),
+			 lbl = settings.getLabelFont();
 		for (JButton b : appFrame.getButtons()) {
-			b.setFont(settings.getButtonFont());
-			bgColor = settings.getBgColor();
-			fgColor = settings.getFgColor();
-			if (bgColor != null)
-				b.setBackground(bgColor);
-			if (fgColor != null)
-				b.setForeground(fgColor);
+			b.setFont(btn);	
+			b.setBackground(bgColor);
+			b.setForeground(fgColor);
 		}
-		for (JLabel lbl : appFrame.getLabels()) {
-			lbl.setFont(settings.getLabelFont());
-			if (fgColor != null)
-				lbl.setForeground(settings.getFgColor());
+		for (JLabel label : appFrame.getLabels()) {
+			label.setFont(lbl);
+			label.setForeground(fgColor);
 		}
 		appFrame.pack();
 	}
 	public void updatePreview() {
-		Font bFont = settings.getButtonFont();
-		Font lFont = settings.getLabelFont();
+		Font bFont = settings.getButtonFont(),
+			 lFont = settings.getLabelFont();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
 		btnSample.setBackground(bgColor);
@@ -228,13 +227,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 			writer.write("------File Copy Manager Preferences------\n\n\n\n");
 			writer.write(ls);
-			str = new StringBuilder();
+			str = new StringBuilder(); 
 			str.append("Font name:" + settings.getFontName()+ls+ "Button Font Size:"+ls+ settings.getBtnSize()+ls);
 			str.append("Label Font Size:"+ls+ settings.getLblSize() +ls+ls);
-			if (bgColor != null)
-				str.append("Background color:" +ls+ toCol(bgColor)+ls);
-			if (fgColor != null)
-				str.append("Foreground color:" +ls+ toCol(fgColor) +ls);
+			str.append("Background color:" +ls+ toCol(bgColor)+ls);
+			str.append("Foreground color:" +ls+ toCol(fgColor) +ls);
 			writer.write(str.toString());
 			writer.close();
 		} catch (IOException exc) {
@@ -298,10 +295,10 @@ class Settings implements Serializable {
 		fg = e;
 	}
 	public Color getBgColor() {
-		return bg;
+		return bg != null ? bg:new Color(238,238,238);
 	}
 	public Color getFgColor() {
-		return fg;
+		return fg != null ? fg:new Color(51,51,51);
 	}
 	public int getLblSize() {
 		return lblSize;
