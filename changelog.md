@@ -1,4 +1,7 @@
 # changelog
+## v1.6.3.0
+	* Each time you copy one or multiple files a new Thread is used to to prevent UI from freezing when you copy large files
+	* If you save preferences without choosing bg anf fg colors a default color for each  will be saved.
 ## v1.6.1.2
 	* Renamed folder "ex_jars" to "libs"
 	* Now when you delete app settings the app will restart
