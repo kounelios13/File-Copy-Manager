@@ -194,7 +194,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		settings.setFgColor(c);
 	}
 	public String toCol(Color c) {
-		return "rgb(" + c.getRed() + "," + c.getBlue() + "," + c.getBlue()+ ")";
+		return "rgb(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue()+ ")";
 	}
 	public void exportSettings() {
 		File dir = new File("app");
