@@ -240,6 +240,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	public void deleteAppSettings() {
 		File dir = new File("app");
+		File[] contents = dir.listFiles();
 		if (!dir.exists() || dir.listFiles().length < 1) {
 			msg.error(prefPanel, "No files to delete");
 			return;
@@ -255,7 +256,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "No app settings found", "Error");
 			return;
 		}
-		for (File f : dir.listFiles())
+		for (File f :contents)
 			f.delete();
 		if (dir.listFiles().length == 0)
 			msg.info(prefPanel, "All app related files have been deleted",
