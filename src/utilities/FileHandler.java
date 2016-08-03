@@ -84,8 +84,9 @@ public class FileHandler extends Thread{
 		msg.info(null, "List has been saved", "Status");
 	}
 	private boolean copySingleFile(File f,String dest){
+		String fileName = f.getName();
 		Path from = Paths.get(f.getAbsolutePath());
-		Path to = Paths.get(dest+"\\"+f.getName());
+		Path to = Paths.get(dest+"\\"+fileName);
 		CopyOption[] options = new CopyOption[]{
 			      StandardCopyOption.REPLACE_EXISTING,
 			      StandardCopyOption.COPY_ATTRIBUTES
@@ -94,10 +95,14 @@ public class FileHandler extends Thread{
 			Files.copy(from, to, options);
 		}
 		catch(IOException io){
-			System.out.println("File "+f.getName()+" could not be copied to "+to);
+			msg.error(null,"File "+fileName+" could not be copied to "+to);
 			log(io.getMessage());
 			return false;
 		}
+		if(new File(dest+"\\"+fileName).exists())
+			msg.info(null,fileName+" copied successfully");
+		else
+			msg.error(null,fileName+" could not be copied");
 		return true;
 	}
 	public boolean copyFile(File f,String dest){
