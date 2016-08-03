@@ -18,9 +18,7 @@ import javax.swing.JComboBox;
 import messages.Message;
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access"})
-public class FileHandler extends Thread{
-	private ArrayList<File> filesToCopy=null;
-	private String dest=null;
+public class FileHandler{
 	private Message msg = new Message();
 	private DefaultComboBoxModel<String> model=new DefaultComboBoxModel<>();
 	private JComboBox<String> comboBox = new JComboBox<>(model);
@@ -28,7 +26,6 @@ public class FileHandler extends Thread{
 		
 	}
 	public FileHandler(ArrayList<File> fs,JComboBox<String> combo,DefaultComboBoxModel<String>model){
-		filesToCopy = fs;
 		comboBox = combo;
 		this.model=model;
 		comboBox.setModel(model);
@@ -55,7 +52,6 @@ public class FileHandler extends Thread{
 
 	}
 	public void setDestination(String des){
-		dest = des;
 	}
 
 
@@ -83,7 +79,7 @@ public class FileHandler extends Thread{
 		}
 		msg.info(null, "List has been saved", "Status");
 	}
-	private boolean copySingleFile(File f,String dest){
+	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
 		Path from = Paths.get(f.getAbsolutePath());
 		Path to = Paths.get(dest+"\\"+fileName);
@@ -99,14 +95,15 @@ public class FileHandler extends Thread{
 			log(io.getMessage());
 			return false;
 		}
-		if(new File(dest+"\\"+fileName).exists())
-			msg.info(null,fileName+" copied successfully");
-		else
-			msg.error(null,fileName+" could not be copied");
+		if(log)
+			if(new File(dest+"\\"+fileName).exists())
+				msg.info(null,fileName+" copied successfully");
+			else
+				msg.error(null,fileName+" could not be copied");
 		return true;
 	}
-	public boolean copyFile(File f,String dest){
-		return copySingleFile(f,dest);
+	public boolean copyFile(File f,String dest,boolean log){
+		return copySingleFile(f,dest,log);
 	}
 	public boolean copyDir(File dir,String dest){
 		File destFolder = new File(dest+"\\"+dir.getName());
@@ -122,14 +119,9 @@ public class FileHandler extends Thread{
 		System.out.println("Output dir will be:"+destFolder);
 		return true;
 	}
-	public void run() {
-		for(File f:filesToCopy){
-			copySingleFile(f,dest);				
-		}
-		
-	}
-	public boolean copy(File f,String dest){
-		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest);
+
+	public boolean copy(File f,String dest,boolean log){
+		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
 
 	public void loadList() {

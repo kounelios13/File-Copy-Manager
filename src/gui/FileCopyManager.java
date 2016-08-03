@@ -119,7 +119,7 @@ public class FileCopyManager extends JFrame {
 				return;
 			}
 			new Thread(()->{
-				fHandler.copy(selectedFile, destinationPath);
+				fHandler.copy(selectedFile, destinationPath,true);
 			}).start();
 		});
 
@@ -129,8 +129,10 @@ public class FileCopyManager extends JFrame {
 			try{
 				new Thread(()->{
 					for(File f:files){
+						int curIndex = files.indexOf(f);
+						fileNames.setSelectedIndex(curIndex);
 						status.text(f.getName()).showStatus();
-						fHandler.copy(f,destinationPath);		
+						fHandler.copy(f,destinationPath,false);		
 					}
 				}).start();
 			}
@@ -173,8 +175,7 @@ public class FileCopyManager extends JFrame {
 		});
 		loadList.addActionListener((e) -> {
 			ProgramState state = rc.getAppState();
-			boolean clearList = state !=  null;
-			
+			boolean clearList = state !=  null;		
 			// Hack ends here
 			if(clearList){
 					if(files.size() > 0){
@@ -211,20 +212,28 @@ public class FileCopyManager extends JFrame {
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
 		new FileDrop(dragPanel,(e)->{
-			for(File f:e){
-				files.add(f);
-				model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-			}
-			curFrame.pack();
-			showFiles();
+			//Prevent application from freezing
+			//When dragging many files
+			new Thread(()->{
+				for(File f:e){
+					files.add(f);
+					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+				}
+				curFrame.pack();
+				showFiles();
+			}).start();
 		});	
 		new FileDrop(this,(e)->{
-			for(File f:e){
-				files.add(f);
-				model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-			}
-			curFrame.pack();
-			showFiles();
+			//Prevent application from freezing
+			//When dragging many files
+			new Thread(()->{
+				for(File f:e){
+					files.add(f);
+					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+				}
+				curFrame.pack();
+				showFiles();
+			}).start();
 		});
 		deleteAll.addActionListener((e) -> {
 			if (files.size() < 1) {
