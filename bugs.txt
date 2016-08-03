@@ -1,7 +1,8 @@
 When loading saved queue if the user has added files to copy and an error occurs the list will be cleared
-COnsider what will happen when a user presses "Load queue" and has added some files to copy.Should these files be removed or give the user the choise of keeping them along with the loaded files?
+Consider what will happen when a user presses "Load queue" and has added some files to copy.Should these files be removed or give the user the choise of keeping them along with the loaded files?
 Bugs
 * Index out of bounds when loading list-->fixed
 
 Todo
-Improve error messages
+Improve error messages-->done
+After copying file check if it sopied in the ouput directory

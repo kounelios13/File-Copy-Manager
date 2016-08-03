@@ -4,14 +4,12 @@ import java.awt.EventQueue;
 import javax.swing.*;
 @SuppressWarnings({"serial"})
 public class StatusFrame extends JFrame{
-
-	//public String fName;
 	private JPanel panel = new JPanel();
 	private JLabel currentFileLabel = new JLabel("Current File");
 	public StatusFrame(){
 		
 		panel.add(currentFileLabel);
-		this.setSize(400,400);
+		this.setSize(400,100);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(panel);
 

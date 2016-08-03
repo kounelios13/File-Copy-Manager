@@ -118,19 +118,23 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel, message);
 				return;
 			}
-			fHandler.copy(selectedFile, destinationPath);
+			new Thread(()->{
+				fHandler.copy(selectedFile, destinationPath,true);
+			}).start();
 		});
 
 		copyFiles.addActionListener((e) -> {
 			if(destinationPath == null)
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
-				for(File f:files){
-					SwingUtilities.invokeLater(()->{
+				new Thread(()->{
+					for(File f:files){
+						int curIndex = files.indexOf(f);
+						fileNames.setSelectedIndex(curIndex);
 						status.text(f.getName()).showStatus();
-						fHandler.copy(f,destinationPath);
-					});	
-				}	
+						fHandler.copy(f,destinationPath,false);		
+					}
+				}).start();
 			}
 			catch(Exception ee){
 				msg.error(panel, "Error occured.Se log file for more", "Error");
@@ -178,7 +182,7 @@ public class FileCopyManager extends JFrame {
 						"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
 						for(File f:state.getFiles()){
 							files.add(f);
-							model.addElement(f.getName()+(f.isDirectory(" (Folder)":"")));
+							model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 						}//for
 					}//if JOptionPane.showConfirmDialog()
 					else{
@@ -207,20 +211,28 @@ public class FileCopyManager extends JFrame {
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
 		new FileDrop(dragPanel,(e)->{
-			for(File f:e){
-				files.add(f);
-				model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-			}
-			curFrame.pack();
-			showFiles();
+			//Prevent application from freezing
+			//When dragging many files
+			new Thread(()->{
+				for(File f:e){
+					files.add(f);
+					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+				}
+				curFrame.pack();
+				showFiles();
+			}).start();
 		});	
 		new FileDrop(this,(e)->{
-			for(File f:e){
-				files.add(f);
-				model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-			}
-			curFrame.pack();
-			showFiles();
+			//Prevent application from freezing
+			//When dragging many files
+			new Thread(()->{
+				for(File f:e){
+					files.add(f);
+					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+				}
+				curFrame.pack();
+				showFiles();
+			}).start();
 		});
 		deleteAll.addActionListener((e) -> {
 			if (files.size() < 1) {
