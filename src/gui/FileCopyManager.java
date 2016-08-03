@@ -134,6 +134,7 @@ public class FileCopyManager extends JFrame {
 						status.text(f.getName()).showStatus();
 						fHandler.copy(f,destinationPath,false);		
 					}
+					status.dispose();
 				}).start();
 			}
 			catch(Exception ee){
