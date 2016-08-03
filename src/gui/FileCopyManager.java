@@ -118,19 +118,21 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel, message);
 				return;
 			}
-			fHandler.copy(selectedFile, destinationPath);
+			new Thread(()->{
+				fHandler.copy(selectedFile, destinationPath);
+			}).start();
 		});
 
 		copyFiles.addActionListener((e) -> {
 			if(destinationPath == null)
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
-				for(File f:files){
-					SwingUtilities.invokeLater(()->{
+				new Thread(()->{
+					for(File f:files){
 						status.text(f.getName()).showStatus();
-						fHandler.copy(f,destinationPath);
-					});	
-				}	
+						fHandler.copy(f,destinationPath);		
+					}
+				}).start();
 			}
 			catch(Exception ee){
 				msg.error(panel, "Error occured.Se log file for more", "Error");
