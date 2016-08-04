@@ -67,7 +67,7 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager();
 	}
-	private void init() {
+	private void initUIElements() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
 		fileMenu.add(exit);
@@ -288,7 +288,7 @@ public class FileCopyManager extends JFrame {
 	}
 	public FileCopyManager(String name) {
 		super(name == null ? "Copy Files" : name);
-		init();
+		initUIElements();
 		this.setJMenuBar(menuBar);
 		panel.setBackground(Color.white);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][]", "[23px][][][][][][grow][][][][grow]"));
