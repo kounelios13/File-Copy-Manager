@@ -26,9 +26,11 @@ public class ResourceLoader {
 		this.handler=handler;
 	}	
 	public Settings getPreferences(){
-		//Settings class of preferences Manager
-		//may be invisible but Settings class of java.util is not.
-		//That's how you fool the compiler :)
+		/** 
+		*	Settings class of preferences Manager
+		*	may be invisible but Settings class of java.util is not.
+		*	That's how you fool the compiler :)
+		*/
 		Settings s=null;
 		try {
 			fileStream = new FileInputStream(uiTheme);

@@ -1,9 +1,8 @@
-
-//TODO
-/*fIX THIS HELL For God's shake
- rewrite everything
- *
- */
+/**
+* <h1>PreferencesManager
+* <p>allow the user to edit font,font size ,background and foreground color of UI elements
+* @ author kounelios13	
+*/
 package utilities;
 
 import gui.CustomColorChooser;
