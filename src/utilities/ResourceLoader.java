@@ -5,11 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
-
 import messages.Message;
 @SuppressWarnings({"unused","static-access"})
 public class ResourceLoader {
-
 	/***
 	 * Handle loading of app related files
 	 * 

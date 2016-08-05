@@ -22,8 +22,7 @@ public class FileHandler{
 	private Message msg = new Message();
 	private DefaultComboBoxModel<String> model=new DefaultComboBoxModel<>();
 	private JComboBox<String> comboBox = new JComboBox<>(model);
-	public FileHandler(){
-		
+	public FileHandler(){	
 	}
 	public FileHandler(ArrayList<File> fs,JComboBox<String> combo,DefaultComboBoxModel<String>model){
 		comboBox = combo;
@@ -39,22 +38,18 @@ public class FileHandler{
 				msg.error(null, "IOException :"+exc, "Error");	
 				return;
 			}
-	
-			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
-				StringBuilder str = new StringBuilder();
-				str.append("New log:::"+System.lineSeparator()+message);
-				writer.write(str.toString());
-				writer.close();
-			} catch (IOException exc) {
-				msg.error(null, "IOException :"+exc, "Error");
-			}
-
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
+			StringBuilder str = new StringBuilder();
+			str.append("New log:::"+System.lineSeparator()+message);
+			writer.write(str.toString());
+			writer.close();
+		} catch (IOException exc) {
+			msg.error(null, "IOException :"+exc, "Error");
+		}
 	}
 	public void setDestination(String des){
 	}
-
-
 	public void saveList(ProgramState ps,File destFile){
 		File f =destFile;
 		if(destFile == null){
@@ -119,13 +114,9 @@ public class FileHandler{
 		System.out.println("Output dir will be:"+destFolder);
 		return true;
 	}
-
 	public boolean copy(File f,String dest,boolean log){
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
-
-	public void loadList() {
-		
+	public void loadList() {		
 	}
-
 }
