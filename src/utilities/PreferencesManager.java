@@ -10,7 +10,6 @@ import gui.FileCopyManager;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +36,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
-	private GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	//private GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
@@ -59,7 +58,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JLabel lblLabelFontSize = new JLabel("Label font size");
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
-	private Font[] fonts =env.getAllFonts();
+	private Font[] fonts =UIPreferences.fonts;
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
@@ -275,7 +274,7 @@ class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;
 	private int lblSize = 12, btnSize = 18;
-	private Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+	private Font[] fonts = UIPreferences.fonts;
 	public boolean isFontAvailable(){
 		for(Font f:fonts)
 			if(f.getFontName().equals(fontName))

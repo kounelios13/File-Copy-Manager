@@ -176,18 +176,20 @@ public class FileCopyManager extends JFrame {
 				try {
 					listFile.createNewFile();
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					msg.error(panel, "Cannot save list.", "Error");
 					fHandler.log(e1.getMessage());
 				}
 			}
-			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath);
+			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
 			controller.saveList(ps, listFile);
 		});
 		loadList.addActionListener((e) -> {
 			ProgramState state = rc.getAppState();
-			boolean clearList = state !=  null;		
-			// Hack ends here
+			boolean clearList = state !=  null;
+			if(state != null){
+				allowDuplicates = state.allowDuplicates();
+				allowDuplicatesOption.setSelected(allowDuplicates);
+			}
 			if(clearList){
 					if(files.size() > 0){
 						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){

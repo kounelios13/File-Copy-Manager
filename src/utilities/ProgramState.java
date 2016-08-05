@@ -8,6 +8,7 @@ public class ProgramState implements Serializable{
 	private ArrayList<File> files;
 	private int index;
 	private String path;
+	private boolean duplicates = false;
 	public String getPath(){
 		return path;
 	}
@@ -19,10 +20,14 @@ public class ProgramState implements Serializable{
 	}
 	public int getSindex(){
 		return index;
-	}	
-	public ProgramState(ArrayList<File> ar,int selectedIndex,String p){
+	}
+	public boolean allowDuplicates(){
+		return duplicates;
+	}
+	public ProgramState(ArrayList<File> ar,int selectedIndex,String p,boolean dups){
 		files = ar;
 		path = p;
 		index =selectedIndex;
+		duplicates = dups;
 	}
 }
