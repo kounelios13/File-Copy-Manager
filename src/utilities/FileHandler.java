@@ -13,9 +13,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+
 import messages.Message;
+
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access"})
 public class FileHandler{
@@ -124,8 +128,21 @@ public class FileHandler{
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
 
-	public void loadList() {
-		
+	public boolean loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {
+		ProgramState temp= new ResourceLoader(this).getAppState();
+		//See if we have succeed in loading everything we need so we can proccess the combobox
+		boolean clearList = temp != null;
+		if(clearList){
+			if(!storage.isEmpty()){
+				if(JOptionPane.showConfirmDialog(null,
+						"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
+					for(File f:temp.getFiles()){
+						
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 }
