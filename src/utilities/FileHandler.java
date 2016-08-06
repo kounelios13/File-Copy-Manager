@@ -127,19 +127,18 @@ public class FileHandler{
 	public boolean copy(File f,String dest,boolean log){
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
-
+	public String fileName(File f){
+		return f.getName()+(f.isDirectory()?" (Folder)":"");
+	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {
 		ProgramState temp= new ResourceLoader(this).getAppState();
 		//See if we have succeed in loading everything we need so we can proccess the combobox
 		boolean clearList = temp != null;
-		if(storage.isEmpty())
-			return temp;
 		if(clearList){
 			if(!storage.isEmpty()){
-				if(JOptionPane.showConfirmDialog(null,
-						"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
+				if(JOptionPane.showConfirmDialog(null,"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
 					for(File f:temp.getFiles()){
-						mod.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+						mod.addElement(fileName(f));
 						storage.add(f);
 					}
 				}//do not remove existing files
@@ -147,13 +146,13 @@ public class FileHandler{
 					mod.removeAllElements();
 					storage=temp.getFiles();
 					for(File f:storage)
-						mod.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));						
+						mod.addElement(fileName(f));						
 				}//remove existing files
 			}
 			else{
 				storage=temp.getFiles();
 				for(File f:storage)
-					mod.addElement(f.getName()+ (f.isDirectory()?" (Folder)":""));
+					mod.addElement(fileName(f));
 			}
 		}
 		return temp;
