@@ -132,6 +132,8 @@ public class FileHandler{
 		ProgramState temp= new ResourceLoader(this).getAppState();
 		//See if we have succeed in loading everything we need so we can proccess the combobox
 		boolean clearList = temp != null;
+		if(storage.isEmpty())
+			return temp;
 		if(clearList){
 			if(!storage.isEmpty()){
 				if(JOptionPane.showConfirmDialog(null,
