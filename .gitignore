@@ -2,3 +2,4 @@ app;;settings.dat
 *;;*.*
 app
 app/*.*
+/bin/
