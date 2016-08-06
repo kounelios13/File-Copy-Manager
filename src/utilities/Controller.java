@@ -9,7 +9,7 @@ public class Controller {
 	public void saveList(ProgramState ps,File d){
 		handler.saveList(ps,d);
 	}
-	public void loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage,boolean dups){
-		handler.loadList(mod,storage,dups);
+	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
+		return handler.loadList(mod,storage);
 	}
 }

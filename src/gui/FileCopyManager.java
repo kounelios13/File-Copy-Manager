@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -26,13 +27,11 @@ import utilities.FileDrop;
 import utilities.FileHandler;
 import utilities.PreferencesManager;
 import utilities.ProgramState;
-import utilities.ResourceLoader;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	Controller controller = new Controller();
 	StatusFrame status = new StatusFrame();
 	private FileHandler fHandler = new FileHandler();
-	private ResourceLoader rc = new ResourceLoader(fHandler);
 	private PreferencesManager pManager = new PreferencesManager(this);
 	private Message msg = new Message();
 	private JMenuBar menuBar = new JMenuBar();
@@ -44,6 +43,7 @@ public class FileCopyManager extends JFrame {
 			exportPreferences = new JMenuItem("Export Preferences"),
 			deleteApp=new JMenuItem("Delete app settings"),
 			restartApp=new JMenuItem("Restart Application");
+	private JCheckBoxMenuItem allowDuplicatesOption=new JCheckBoxMenuItem("Allow dupliactes in list");
 	private File selectedFile = null;
 	private String destinationPath;
 	private ArrayList<File> files = new ArrayList<>();
@@ -58,6 +58,7 @@ public class FileCopyManager extends JFrame {
 	private JLabel dragLabel;
 	String sep = File.separator;
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
+	private boolean allowDuplicates = false;
 	public void showFiles() {
 		fileNames.setVisible(files.size() > 0);
 	}
@@ -67,14 +68,18 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager();
 	}
-	private void init() {
+	private void initUIElements() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
 		fileMenu.add(exit);
 		editMenu.add(showPreferences);
 		editMenu.add(exportPreferences);
 		editMenu.add(restartApp);
+		editMenu.addSeparator();
 		editMenu.add(deleteApp);
+		editMenu.addSeparator();
+		allowDuplicatesOption.addActionListener((e)->allowDuplicates = allowDuplicatesOption.isSelected());
+		editMenu.add(allowDuplicatesOption);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
 		addFiles = new JButton("Add files to copy");
@@ -95,6 +100,9 @@ public class FileCopyManager extends JFrame {
 			if (r != JFileChooser.APPROVE_OPTION)
 				return;
 			for (File f : chooser.getSelectedFiles()) {
+				if(!allowDuplicates)
+					if(files.indexOf(f) != -1)
+						continue;
 				files.add(f);
 				String name = f.getName()
 						+ (f.isDirectory() ? " (Folder)" : "");
@@ -134,6 +142,7 @@ public class FileCopyManager extends JFrame {
 						status.text(f.getName()).showStatus();
 						fHandler.copy(f,destinationPath,false);		
 					}
+					status.dispose();
 				}).start();
 			}
 			catch(Exception ee){
@@ -165,44 +174,26 @@ public class FileCopyManager extends JFrame {
 				try {
 					listFile.createNewFile();
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					msg.error(panel, "Cannot save list.", "Error");
 					fHandler.log(e1.getMessage());
 				}
 			}
-			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath);
+			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
 			controller.saveList(ps, listFile);
 		});
-		loadList.addActionListener((e)->{
-			ProgramState state = rc.getAppState();
-			boolean clearList = state != null;
-			if(clearList){
-				if(files.size()> 0){
-					if(JOptionPane.showConfirmDialog(null,
-						"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
-						for(File f:state.getFiles()){
-							files.add(f);
-							model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-						}//for
-					}//if JOptionPane.showConfirmDialog()
-					else{
-						model.removeAllElements();
-						files = state.getFiles();
-						for(File f:files)
-							model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":""));
-					}
-				}//files.size()>0
-				else{
-					files = state.getFiles();
-					for(File f:files)
-						model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":""));
-				}
-				selectedFile = state.getSelectedFile();
-				selectedFileIndex = state.getSindex();
-				destinationPath = state.getPath();
-				fileNames.setSelectedIndex(selectedFileIndex);
-				this.pack();
-			}//if clearList
+		loadList.addActionListener((e) -> {
+			ProgramState state = controller.loadList(model, files);
+			if(state != null){
+				allowDuplicates = state.allowDuplicates();
+				allowDuplicatesOption.setSelected(allowDuplicates);
+			}
+			else
+				return;
+			selectedFile = state.getSelectedFile();
+			selectedFileIndex = state.getSindex();
+			destinationPath = state.getPath();
+			fileNames.setSelectedIndex(selectedFileIndex);
+			this.pack();			
 			fileNames.setVisible(files.size() > 0);
 		});
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
@@ -215,6 +206,9 @@ public class FileCopyManager extends JFrame {
 			//When dragging many files
 			new Thread(()->{
 				for(File f:e){
+					if(!allowDuplicates)
+						if(files.indexOf(f)!= -1)
+							continue;
 					files.add(f);
 					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 				}
@@ -227,6 +221,9 @@ public class FileCopyManager extends JFrame {
 			//When dragging many files
 			new Thread(()->{
 				for(File f:e){
+					if(!allowDuplicates)
+						if(files.indexOf(f)!= -1)
+							continue;
 					files.add(f);
 					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 				}
@@ -286,7 +283,7 @@ public class FileCopyManager extends JFrame {
 	}
 	public FileCopyManager(String name) {
 		super(name == null ? "Copy Files" : name);
-		init();
+		initUIElements();
 		this.setJMenuBar(menuBar);
 		panel.setBackground(Color.white);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][]", "[23px][][][][][][grow][][][][grow]"));
