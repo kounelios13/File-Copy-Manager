@@ -326,7 +326,7 @@ public class FileCopyManager extends JFrame {
 				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
 			catch (Throwable e) {
-				new FileHandler().log(e.getMessage());
+				FileHandler.log(e.getMessage());
 			}
 			finally{
 				new FileCopyManager();
