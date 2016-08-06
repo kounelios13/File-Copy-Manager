@@ -21,9 +21,7 @@ import javax.swing.JOptionPane;
 import messages.Message;
 
 import org.apache.commons.io.FileUtils;
-@SuppressWarnings({"static-access"})
 public class FileHandler{
-	private Message msg = new Message();
 	private DefaultComboBoxModel<String> model=new DefaultComboBoxModel<>();
 	private JComboBox<String> comboBox = new JComboBox<>(model);
 	public FileHandler(){
@@ -34,13 +32,13 @@ public class FileHandler{
 		this.model=model;
 		comboBox.setModel(model);
 	}
-	public void log(String message){
+	public static void log(String message){
 		File logFile = new File("app\\log.txt");
 		if(!logFile.exists())
 			try {
 				logFile.createNewFile();
 			} catch (IOException exc) {
-				msg.error(null, "IOException :"+exc, "Error");	
+				Message.error(null, "IOException :"+exc, "Error");	
 				return;
 			}
 	
@@ -51,7 +49,7 @@ public class FileHandler{
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
-				msg.error(null, "IOException :"+exc, "Error");
+				Message.error(null, "IOException :"+exc, "Error");
 			}
 
 	}
@@ -62,12 +60,12 @@ public class FileHandler{
 	public void saveList(ProgramState ps,File destFile){
 		File f =destFile;
 		if(destFile == null){
-			msg.error(null, "Destination folder has not been selected", "Destination Empty");
+			Message.error(null, "Destination folder has not been selected", "Destination Empty");
 			return;
 		}
 		if(ps.getFiles()==null || ps.getFiles().size() < 1)
 		{
-			msg.error(null,"No files have been selected","Empty list");
+			Message.error(null,"No files have been selected","Empty list");
 			return;
 		}
 		try {
@@ -78,10 +76,10 @@ public class FileHandler{
 			log(exc.getMessage());
 			exc.printStackTrace();
 		} catch (IOException exc) {
-			msg.error(null, "IOException:"+exc, "Error");
+			Message.error(null, "IOException:"+exc, "Error");
 			log(exc.getMessage());
 		}
-		msg.info(null, "List has been saved", "Status");
+		Message.info(null, "List has been saved", "Status");
 	}
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
@@ -95,15 +93,15 @@ public class FileHandler{
 			Files.copy(from, to, options);
 		}
 		catch(IOException io){
-			msg.error(null,"File "+fileName+" could not be copied to "+to);
+			Message.error(null,"File "+fileName+" could not be copied to "+to);
 			log(io.getMessage());
 			return false;
 		}
 		if(log)
 			if(new File(dest+"\\"+fileName).exists())
-				msg.info(null,fileName+" copied successfully");
+				Message.info(null,fileName+" copied successfully");
 			else
-				msg.error(null,fileName+" could not be copied");
+				Message.error(null,fileName+" could not be copied");
 		return true;
 	}
 	public boolean copyFile(File f,String dest,boolean log){
@@ -118,7 +116,7 @@ public class FileHandler{
 		}
 		catch (IOException e) {
 			log(e.getMessage());
-			msg.error(null,"Exception during copying directory","Error");
+			Message.error(null,"Exception during copying directory","Error");
 		}
 		System.out.println("Output dir will be:"+destFolder);
 		return true;
@@ -132,28 +130,31 @@ public class FileHandler{
 	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {
 		ProgramState temp= new ResourceLoader(this).getAppState();
-		//See if we have succeed in loading everything we need so we can proccess the combobox
-		boolean clearList = temp != null;
-		if(clearList){
-			if(!storage.isEmpty()){
-				if(JOptionPane.showConfirmDialog(null,"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
-					for(File f:temp.getFiles()){
-						mod.addElement(fileName(f));
-						storage.add(f);
-					}
-				}//do not remove existing files
-				else{
-					mod.removeAllElements();
-					storage=temp.getFiles();
-					for(File f:storage)
-						mod.addElement(fileName(f));						
-				}//remove existing files
-			}
+			//See if we have succeed in loading everything we need so we can proccess the combobox
+		if(temp == null)
+			return null;
+
+		if(!storage.isEmpty()){
+			if(JOptionPane.showConfirmDialog(null,"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
+				for(File f:temp.getFiles()){
+					mod.addElement(fileName(f));
+					storage.add(f);
+				}
+			}//do not remove existing files
 			else{
+				mod.removeAllElements();
 				storage=temp.getFiles();
 				for(File f:storage)
-					mod.addElement(fileName(f));
-			}
+					mod.addElement(fileName(f));						
+			}//remove existing files
+		}// !storage.isEmpty()
+		/*
+		User has not added any files before loading saved list
+		*/
+		else{
+			storage=temp.getFiles();
+			for(File f:storage)
+				mod.addElement(fileName(f));
 		}
 		return temp;
 	}
