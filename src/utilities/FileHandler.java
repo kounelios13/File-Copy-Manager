@@ -117,6 +117,7 @@ public class FileHandler{
 	public boolean copy(File f,String dest,boolean log){
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
-	public void loadList() {		
+	public void loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {	
+			
 	}
 }
