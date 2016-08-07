@@ -112,7 +112,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			return;
 		settings = rc.getPreferences();
 		/*
-		 * Since we use a proxy 
+		 * Since we use a proxy if an exception is thrown the program will not start
+		 * so by returning if something happens we can start our program normally
 		 */
 		if(settings ==null)
 			return;
