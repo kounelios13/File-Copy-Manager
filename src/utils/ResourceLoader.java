@@ -1,13 +1,12 @@
-package utilities;
+package utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 
 import messages.Message;
-@SuppressWarnings({"unused","static-access"})
+@SuppressWarnings({"static-access"})
 public class ResourceLoader {
 
 	/***

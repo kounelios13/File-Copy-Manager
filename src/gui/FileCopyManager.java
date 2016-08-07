@@ -22,11 +22,11 @@ import javax.swing.UIManager;
 
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-import utilities.Controller;
-import utilities.FileDrop;
-import utilities.FileHandler;
-import utilities.PreferencesManager;
-import utilities.ProgramState;
+import utils.Controller;
+import utils.FileDrop;
+import utils.FileHandler;
+import utils.PreferencesManager;
+import utils.ProgramState;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	Controller controller = new Controller();

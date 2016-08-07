@@ -4,7 +4,7 @@
  rewrite everything
  *
  */
-package utilities;
+package utils;
 
 import gui.CustomColorChooser;
 import gui.FileCopyManager;

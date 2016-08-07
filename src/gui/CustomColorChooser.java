@@ -1,6 +1,5 @@
 package gui;
 import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.FlowLayout;
 
@@ -10,7 +9,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import utilities.PreferencesManager;
+import utils.PreferencesManager;
 @SuppressWarnings("unused")
 public class CustomColorChooser extends JDialog {
 	private static final long serialVersionUID = -7374804525631377356L;
