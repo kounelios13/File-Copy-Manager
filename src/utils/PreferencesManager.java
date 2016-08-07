@@ -111,6 +111,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		if(!settingsFile.exists())
 			return;
 		settings = rc.getPreferences();
+		/*
+		 * Since we use a proxy 
+		 */
+		if(settings ==null)
+			return;
 		if(!settings.isFontAvailable() && settings.getFontName() != null)
 			msg.error(null,settings.getFontName()+" font is not available on this system.");
 		bgColor = settings.getBgColor();

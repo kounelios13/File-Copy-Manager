@@ -45,7 +45,8 @@ public class ResourceLoader {
 				"Invalid settings");
 			handler.log(ci.getMessage());
 		}
-		return s;
+		return s != null? s:null;
+		
 		
 	}
 	public ProgramState getAppState(){
