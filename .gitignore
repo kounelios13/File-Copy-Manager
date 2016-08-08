@@ -5,4 +5,3 @@ app/*.*
 /bin/
 bin/
 dummy/
-*.py

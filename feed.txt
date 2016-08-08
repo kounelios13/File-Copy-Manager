@@ -1,0 +1,8 @@
+src/gui/FileCopyManager.java
+src/gui/StatusFrame.java
+src/utils/Controller.java
+src/utils/PreferencesManager.java
+src/utils/ProgramState.java
+src/utils/UIPreferences.java
+src/utils/ResourceLoader.java
+src/utils/FileHandler.java
