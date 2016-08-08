@@ -108,14 +108,12 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	@Override
 	public void loadPreferences(){
-		if(!settingsFile.exists())
-			return;
 		settings = rc.getPreferences();
 		/*
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
-		if(settings ==null)
+		if(settings == null)
 			return;
 		if(!settings.isFontAvailable() && settings.getFontName() != null)
 			msg.error(null,settings.getFontName()+" font is not available on this system.");

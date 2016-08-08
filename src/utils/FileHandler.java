@@ -126,7 +126,7 @@ public class FileHandler{
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
 	public String fileName(File f){
-		return f.getName()+(f.isDirectory()?" (Folder)":"");
+		return f.isFile()?f.getName()+(f.isDirectory()?" (Folder)":""):"";
 	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {
 		ProgramState temp= new ResourceLoader(this).getAppState();
@@ -134,27 +134,29 @@ public class FileHandler{
 		if(temp == null)
 			return null;
 
-		if(!storage.isEmpty()){
-			if(JOptionPane.showConfirmDialog(null,"There are new files added to the list.Do you want to keep them?")==JOptionPane.OK_OPTION){
-				for(File f:temp.getFiles()){
-					mod.addElement(fileName(f));
-					storage.add(f);
-				}
-			}//do not remove existing files
-			else{
-				mod.removeAllElements();
-				storage=temp.getFiles();
-				for(File f:storage)
-					mod.addElement(fileName(f));						
-			}//remove existing files
-		}// !storage.isEmpty()
-		/*
-		User has not added any files before loading saved list
-		*/
-		else{
-			storage=temp.getFiles();
+		System.out.println("Size of importes files"+temp.getFiles().size());
+		if(storage.isEmpty()){
+			//Storage is empty no new files added by user
+			storage = temp.getFiles();
 			for(File f:storage)
 				mod.addElement(fileName(f));
+		}
+		else{
+			if(JOptionPane.showConfirmDialog(null, "Do you want to keep new files?")==JOptionPane.OK_OPTION){
+				/*
+				 * The user wants to keep new and old files 
+				 * */
+				for(File f:temp.getFiles()){
+					storage.add(f);
+					mod.addElement(fileName(f));
+				}
+			}
+			else{
+				storage = temp.getFiles();
+				mod.removeAllElements();
+				for(File f:storage)
+					mod.addElement(fileName(f));
+			}
 		}
 		return temp;
 	}

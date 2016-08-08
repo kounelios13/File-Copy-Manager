@@ -45,7 +45,7 @@ public class ResourceLoader {
 				"Invalid settings");
 			handler.log(ci.getMessage());
 		}
-		return s != null? s:null;
+		return s;
 		
 		
 	}

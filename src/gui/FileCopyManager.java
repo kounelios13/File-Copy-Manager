@@ -115,7 +115,7 @@ public class FileCopyManager extends JFrame {
 			this.pack();
 		});
 		fileNames.addActionListener((e) -> {
-			selectedFileIndex = files.size()==1?0:fileNames.getSelectedIndex();
+			selectedFileIndex = files.isEmpty()?-1:fileNames.getSelectedIndex();
 			selectedFile = selectedFileIndex == -1 ?null:files.get(selectedFileIndex);
 		});
 		copyFile = new JButton("Copy selected file");
@@ -196,7 +196,7 @@ public class FileCopyManager extends JFrame {
 			System.out.println("Size of files:"+files.size());
 			fileNames.setSelectedIndex(selectedFileIndex);
 			this.pack();			
-			fileNames.setVisible(files.size() > 0);
+			fileNames.setVisible(!files.isEmpty());
 		});
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
