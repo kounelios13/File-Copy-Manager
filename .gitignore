@@ -3,3 +3,6 @@ app;;settings.dat
 app
 app/*.*
 /bin/
+bin/
+dummy/
+*.py

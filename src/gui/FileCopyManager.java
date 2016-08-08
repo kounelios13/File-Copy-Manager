@@ -68,6 +68,7 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager();
 	}
+	@SuppressWarnings("deprecation")
 	private void initUIElements() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -268,9 +269,17 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel,"Invalid destination");
 		});
 		stopCopy.addActionListener((e)->{
-			copyThreads[0]=copyThreads[1]=null;
+			
+			try{
+				copyThreads[0].stop();
+				copyThreads[1].stop();
+			}
+			catch(Exception ee){
+				
+			}
 			status.dispose();
 		});
+		stopCopy.setVisible(false);
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel};
