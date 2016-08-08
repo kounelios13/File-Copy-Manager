@@ -1,6 +1,5 @@
 package gui;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -50,7 +49,7 @@ public class FileCopyManager extends JFrame {
 	private JPanel panel = new JPanel();
 	private JFileChooser chooser = new JFileChooser();
 	private JButton addFiles, selectDestination, copyFile, copyFiles,
-			deleteFile, deleteAll, openDestinationFolder;
+			deleteFile, deleteAll, openDestinationFolder,stopCopy;
 	private JComboBox<String> fileNames;
 	private DefaultComboBoxModel<String> model;
 	private int selectedFileIndex;
@@ -59,6 +58,7 @@ public class FileCopyManager extends JFrame {
 	String sep = File.separator;
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
+	private Thread[] copyThreads = new Thread[2];
 	public void showFiles() {
 		fileNames.setVisible(files.size() > 0);
 	}
@@ -86,8 +86,11 @@ public class FileCopyManager extends JFrame {
 		copyFiles = new JButton("Copy all files");
 		deleteFile = new JButton("Delete file from list");
 		selectDestination = new JButton("Select Destination Folder");
-		openDestinationFolder = new JButton("Open Destination Folder");
 		deleteAll = new JButton("Delete all files from list");
+		openDestinationFolder = new JButton("Open Destination Folder");
+		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
+		
+		stopCopy = new JButton("Stop copy operations");
 		model = new DefaultComboBoxModel<String>();
 		JFrame curFrame = this;
 		fileNames = new JComboBox<String>(model);
@@ -126,15 +129,17 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel, message);
 				return;
 			}
-			new Thread(()->{
+			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
-			}).start();
+			});
+			copyThreads[0].start();
 		});
 
 		copyFiles.addActionListener((e) -> {
 			if(destinationPath == null)
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
+				copyThreads[1]=
 				new Thread(()->{
 					for(File f:files){
 						int curIndex = files.indexOf(f);
@@ -143,7 +148,8 @@ public class FileCopyManager extends JFrame {
 						fHandler.copy(f,destinationPath,false);		
 					}
 					status.dispose();
-				}).start();
+				});
+				copyThreads[1].start();
 			}
 			catch(Exception ee){
 				msg.error(panel, "Error occured.Se log file for more", "Error");
@@ -261,17 +267,9 @@ public class FileCopyManager extends JFrame {
 			else
 				msg.error(panel,"Invalid destination");
 		});
-		openDestinationFolder.addActionListener((e) -> {
-			if (destinationPath == null) {
-				msg.error(panel, "No folder selected","Missing destination folder");
-				return;
-			}
-			try {
-				Desktop.getDesktop().open(new File(destinationPath));
-			} catch (Exception e1) {
-				msg.error(panel, "Could not open destination file", "Error");
-				fHandler.log(e1.getMessage());
-			}
+		stopCopy.addActionListener((e)->{
+			copyThreads[0]=copyThreads[1]=null;
+			status.dispose();
 		});
 	}
 	public JLabel[] getLabels() {
@@ -288,21 +286,22 @@ public class FileCopyManager extends JFrame {
 		initUIElements();
 		this.setJMenuBar(menuBar);
 		panel.setBackground(Color.white);
-		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][]", "[23px][][][][][][grow][][][][grow]"));
+		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");
 		panel.add(copyFile, "cell 0 2,alignx left,aligny top");
-		panel.add(openDestinationFolder, "cell 0 6");
 		panel.add(selectDestination, "cell 0 5");
 		panel.add(deleteAll, "cell 3 5");
 		panel.add(deleteFile, "cell 3 2");
+		panel.add(openDestinationFolder, "cell 0 6");
+		panel.add(stopCopy, "cell 3 6");
 		dragLabel = new JLabel("Drag files  here");
-		panel.add(dragLabel, "flowy,cell 3 6");
+		panel.add(dragLabel, "flowy,cell 3 7");
 		preload().setVisible(true);
 		this.setSize(535, 391);
 		this.setContentPane(panel);
-		panel.add(dragPanel, "cell 3 7");
+		panel.add(dragPanel, "cell 3 8");
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);

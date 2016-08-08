@@ -1,5 +1,6 @@
 package utils;
 
+import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -159,6 +160,19 @@ public class FileHandler{
 			}
 		}
 		return temp;
+	}
+	public void openDestination(String dPath) {
+		if (dPath == null) {
+			Message.error(null, "No folder selected","Missing destination folder");
+			return;
+		}
+		try {
+			Desktop.getDesktop().open(new File(dPath));
+		} catch (Exception e1) {
+			Message.error(null, "Could not open destination file", "Error");
+			log(e1.getMessage());
+		}
+		
 	}
 
 }
