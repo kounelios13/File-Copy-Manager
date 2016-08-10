@@ -153,7 +153,7 @@ public class FileCopyManager extends JFrame {
 				copyThreads[1].start();
 			}
 			catch(Exception ee){
-				msg.error(panel, "Error occured.Se log file for more", "Error");
+				msg.error(panel, "Error occured.See log file for more");
 				fHandler.log(ee.getMessage());
 			}
 			finally{

@@ -32,7 +32,6 @@ public class FileHandler{
 				Message.error(null, "IOException :"+exc);	
 				return;
 			}
-	
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
 				StringBuilder str = new StringBuilder();
@@ -46,18 +45,17 @@ public class FileHandler{
 	}
 
 	public void saveList(ProgramState ps,File destFile){
-		File f =destFile;
 		if(destFile == null){
 			Message.error(null, "Destination folder has not been selected", "Destination Empty");
 			return;
 		}
-		if(ps.getFiles()==null || ps.getFiles().size() < 1)
+		if(ps.getFiles()==null || ps.getFiles().isEmpty())
 		{
 			Message.error(null,"No files have been selected","Empty list");
 			return;
 		}
 		try {
-			ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(f));
+			ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream(destFile));
 			out.writeObject(ps);
 			out.close();
 		} catch (FileNotFoundException exc) {
