@@ -22,7 +22,7 @@ import messages.Message;
 
 import org.apache.commons.io.FileUtils;
 public class FileHandler{
-	
+	String sep = File.separator + File.separator;
 	public static void log(String message){
 		File logFile = new File("app"+File.separator+File.separator+"log.txt");
 		if(!logFile.exists())
@@ -72,7 +72,7 @@ public class FileHandler{
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
 		Path from = Paths.get(f.getAbsolutePath());
-		Path to = Paths.get(dest+"\\"+fileName);
+		Path to = Paths.get(dest+sep+fileName);
 		CopyOption[] options = new CopyOption[]{
 			      StandardCopyOption.REPLACE_EXISTING,
 			      StandardCopyOption.COPY_ATTRIBUTES
@@ -86,7 +86,7 @@ public class FileHandler{
 			return false;
 		}
 		if(log)
-			if(new File(dest+"\\"+fileName).exists())
+			if(new File(dest+sep+fileName).exists())
 				Message.info(null,fileName+" copied successfully");
 			else
 				Message.error(null,fileName+" could not be copied");
@@ -96,7 +96,7 @@ public class FileHandler{
 		return copySingleFile(f,dest,log);
 	}
 	public boolean copyDir(File dir,String dest){
-		File destFolder = new File(dest+"\\"+dir.getName());
+		File destFolder = new File(dest+sep+dir.getName());
 		if(!destFolder.exists())
 			destFolder.mkdirs();
 		try {
