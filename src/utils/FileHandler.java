@@ -16,25 +16,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import messages.Message;
 
 import org.apache.commons.io.FileUtils;
 public class FileHandler{
-	private DefaultComboBoxModel<String> model=new DefaultComboBoxModel<>();
-	private JComboBox<String> comboBox = new JComboBox<>(model);
-	public FileHandler(){
-		
-	}
-	public FileHandler(ArrayList<File> fs,JComboBox<String> combo,DefaultComboBoxModel<String>model){
-		comboBox = combo;
-		this.model=model;
-		comboBox.setModel(model);
-	}
+	
 	public static void log(String message){
-		File logFile = new File("app\\log.txt");
+		File logFile = new File("app"+File.seperator+File.seperator+"log.txt");
 		if(!logFile.exists())
 			try {
 				logFile.createNewFile();
@@ -135,7 +125,7 @@ public class FileHandler{
 		if(temp == null)
 			return null;
 
-		System.out.println("Size of importes files"+temp.getFiles().size());
+		System.out.println("Size of imported files:"+temp.getFiles().size());
 		if(storage.isEmpty()){
 			//Storage is empty no new files added by user
 			storage = temp.getFiles();
