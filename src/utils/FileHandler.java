@@ -24,7 +24,7 @@ import org.apache.commons.io.FileUtils;
 public class FileHandler{
 	
 	public static void log(String message){
-		File logFile = new File("app"+File.seperator+File.seperator+"log.txt");
+		File logFile = new File("app"+File.separator+File.separator+"log.txt");
 		if(!logFile.exists())
 			try {
 				logFile.createNewFile();
@@ -44,9 +44,6 @@ public class FileHandler{
 			}
 
 	}
-	public void setDestination(String des){
-	}
-
 
 	public void saveList(ProgramState ps,File destFile){
 		File f =destFile;
