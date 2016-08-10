@@ -39,7 +39,7 @@ public class FileHandler{
 			try {
 				logFile.createNewFile();
 			} catch (IOException exc) {
-				Message.error(null, "IOException :"+exc, "Error");	
+				Message.error(null, "IOException :"+exc);	
 				return;
 			}
 	
@@ -50,7 +50,7 @@ public class FileHandler{
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
-				Message.error(null, "IOException :"+exc, "Error");
+				Message.error(null, "IOException :"+exc);
 			}
 
 	}
@@ -77,7 +77,7 @@ public class FileHandler{
 			log(exc.getMessage());
 			exc.printStackTrace();
 		} catch (IOException exc) {
-			Message.error(null, "IOException:"+exc, "Error");
+			Message.error(null, "IOException:"+exc);
 			log(exc.getMessage());
 		}
 		Message.info(null, "List has been saved", "Status");
@@ -117,7 +117,7 @@ public class FileHandler{
 		}
 		catch (IOException e) {
 			log(e.getMessage());
-			Message.error(null,"Exception during copying directory","Error");
+			Message.error(null,"Exception during copying directory");
 		}
 		System.out.println("Output dir will be:"+destFolder);
 		return true;
@@ -169,7 +169,7 @@ public class FileHandler{
 		try {
 			Desktop.getDesktop().open(new File(dPath));
 		} catch (Exception e1) {
-			Message.error(null, "Could not open destination file", "Error");
+			Message.error(null, "Could not open destination file");
 			log(e1.getMessage());
 		}
 		
