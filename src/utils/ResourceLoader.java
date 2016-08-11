@@ -1,12 +1,11 @@
-package utilities;
+package utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import messages.Message;
-@SuppressWarnings({"unused","static-access"})
+@SuppressWarnings({"static-access"})
 public class ResourceLoader {
 	/***
 	 * Handle loading of app related files
@@ -47,6 +46,7 @@ public class ResourceLoader {
 			handler.log(ci.getMessage());
 		}
 		return s;
+		
 		
 	}
 	public ProgramState getAppState(){

@@ -1,0 +1,10 @@
+Lines
+PreferencesManager->326
+FileHandler->122
+ResourcesLoader->74-12=62
+ProgramState->33
+UIPreferences->8
+FileCopyManager->353
+Controller->12
+StatusFrame->34
+total->950 lines

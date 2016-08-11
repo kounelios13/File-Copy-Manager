@@ -1,4 +1,4 @@
-package utilities;
+package utils;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -9,7 +9,10 @@ public class Controller {
 	public void saveList(ProgramState ps,File d){
 		handler.saveList(ps,d);
 	}
-	public void loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
-		handler.loadList(mod,storage);
+	public void openDestination(String dPath){
+		handler.openDestination(dPath);
+	}
+	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
+		return handler.loadList(mod,storage);
 	}
 }

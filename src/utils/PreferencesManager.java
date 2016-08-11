@@ -3,7 +3,10 @@
 * <p>allow the user to edit font,font size ,background and foreground color of UI elements
 * @ author kounelios13	
 */
-package utilities;
+package utils;
+
+
+
 
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
@@ -106,7 +109,12 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	@Override
 	public void loadPreferences(){
-		if(!settingsFile.exists())
+		
+		/*
+		 * Since we use a proxy if an exception is thrown the program will not start
+		 * so by returning if something happens we can start our program normally
+		 */
+		if(rc.getPreferences() == null)
 			return;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && settings.getFontName() != null)

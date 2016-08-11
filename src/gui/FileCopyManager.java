@@ -1,6 +1,5 @@
 package gui;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -22,18 +21,16 @@ import javax.swing.UIManager;
 
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-import utilities.Controller;
-import utilities.FileDrop;
-import utilities.FileHandler;
-import utilities.PreferencesManager;
-import utilities.ProgramState;
-import utilities.ResourceLoader;
+import utils.Controller;
+import utils.FileDrop;
+import utils.FileHandler;
+import utils.PreferencesManager;
+import utils.ProgramState;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	Controller controller = new Controller();
 	StatusFrame status = new StatusFrame();
 	private FileHandler fHandler = new FileHandler();
-	private ResourceLoader rc = new ResourceLoader(fHandler);
 	private PreferencesManager pManager = new PreferencesManager(this);
 	private Message msg = new Message();
 	private JMenuBar menuBar = new JMenuBar();
@@ -52,7 +49,7 @@ public class FileCopyManager extends JFrame {
 	private JPanel panel = new JPanel();
 	private JFileChooser chooser = new JFileChooser();
 	private JButton addFiles, selectDestination, copyFile, copyFiles,
-			deleteFile, deleteAll, openDestinationFolder;
+			deleteFile, deleteAll, openDestinationFolder,stopCopy;
 	private JComboBox<String> fileNames;
 	private DefaultComboBoxModel<String> model;
 	private int selectedFileIndex;
@@ -61,8 +58,9 @@ public class FileCopyManager extends JFrame {
 	String sep = File.separator;
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
+	private Thread[] copyThreads = new Thread[2];
 	public void showFiles() {
-		fileNames.setVisible(files.size() > 0);
+		fileNames.setVisible(!files.isEmpty());
 	}
 	public void restart(){
 		//First close the current instance of the program
@@ -70,6 +68,7 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager();
 	}
+	@SuppressWarnings("deprecation")
 	private void initUIElements() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -88,8 +87,11 @@ public class FileCopyManager extends JFrame {
 		copyFiles = new JButton("Copy all files");
 		deleteFile = new JButton("Delete file from list");
 		selectDestination = new JButton("Select Destination Folder");
-		openDestinationFolder = new JButton("Open Destination Folder");
 		deleteAll = new JButton("Delete all files from list");
+		openDestinationFolder = new JButton("Open Destination Folder");
+		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
+		
+		stopCopy = new JButton("Stop copy operations");
 		model = new DefaultComboBoxModel<String>();
 		JFrame curFrame = this;
 		fileNames = new JComboBox<String>(model);
@@ -113,11 +115,11 @@ public class FileCopyManager extends JFrame {
 			selectedFile = files.get(0);
 			selectedFileIndex = 0;
 			fileNames.setSelectedIndex(0);
-			fileNames.setVisible(files.size() > 0);
+			showFiles();
 			this.pack();
 		});
 		fileNames.addActionListener((e) -> {
-			selectedFileIndex = files.size()==1?0:fileNames.getSelectedIndex();
+			selectedFileIndex = files.isEmpty()?-1:fileNames.getSelectedIndex();
 			selectedFile = selectedFileIndex == -1 ?null:files.get(selectedFileIndex);
 		});
 		copyFile = new JButton("Copy selected file");
@@ -128,15 +130,17 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel, message);
 				return;
 			}
-			new Thread(()->{
+			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
-			}).start();
+			});
+			copyThreads[0].start();
 		});
 
 		copyFiles.addActionListener((e) -> {
 			if(destinationPath == null)
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
+				copyThreads[1]=
 				new Thread(()->{
 					for(File f:files){
 						int curIndex = files.indexOf(f);
@@ -145,10 +149,11 @@ public class FileCopyManager extends JFrame {
 						fHandler.copy(f,destinationPath,false);		
 					}
 					status.dispose();
-				}).start();
+				});
+				copyThreads[1].start();
 			}
 			catch(Exception ee){
-				msg.error(panel, "Error occured.Se log file for more", "Error");
+				msg.error(panel, "Error occured.See log file for more");
 				fHandler.log(ee.getMessage());
 			}
 			finally{
@@ -184,40 +189,21 @@ public class FileCopyManager extends JFrame {
 			controller.saveList(ps, listFile);
 		});
 		loadList.addActionListener((e) -> {
-			ProgramState state = rc.getAppState();
-			boolean clearList = state !=  null;
+			ProgramState state = controller.loadList(model, files);
 			if(state != null){
 				allowDuplicates = state.allowDuplicates();
 				allowDuplicatesOption.setSelected(allowDuplicates);
 			}
-			if(clearList){
-					if(files.size() > 0){
-						if(JOptionPane.showConfirmDialog(null, "There are new files added to the list.Do you want to keep them?") == JOptionPane.OK_OPTION){
-							for(File f:state.getFiles()){
-								files.add(f);
-								model.addElement(f.getName()+(f.isDirectory()?" (Folder)":" "));
-							}
-						}
-						else{
-							model.removeAllElements();
-							files = state.getFiles();
-							for(File f:files)
-								model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
-						}
-					}//files.size() > 0
-					else{
-						files=state.getFiles();
-						for(File f:files)
-							model.addElement(f.getName()+ (f.isDirectory()?" (Folder)":" "));
-					}
-					selectedFile = state.getSelectedFile();
-					selectedFileIndex = state.getSindex();
-					destinationPath = state.getPath();
-					fileNames.setSelectedIndex(selectedFileIndex);
-					this.pack();
-				}//clearList
-				fileNames.setVisible(files.size() > 0);
+			else
+				return;
+			selectedFile = state.getSelectedFile();
+			selectedFileIndex = state.getSindex();
+			destinationPath = state.getPath();
 			
+			fileNames.setSelectedIndex(selectedFileIndex);
+						
+			showFiles();
+			this.pack();
 		});
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
@@ -282,18 +268,18 @@ public class FileCopyManager extends JFrame {
 			else
 				msg.error(panel,"Invalid destination");
 		});
-		openDestinationFolder.addActionListener((e) -> {
-			if (destinationPath == null) {
-				msg.error(panel, "No folder selected","Missing destination folder");
-				return;
+		stopCopy.addActionListener((e)->{
+			
+			try{
+				copyThreads[0].stop();
+				copyThreads[1].stop();
 			}
-			try {
-				Desktop.getDesktop().open(new File(destinationPath));
-			} catch (Exception e1) {
-				msg.error(panel, "Could not open destination file", "Error");
-				fHandler.log(e1.getMessage());
+			catch(Exception ee){
+				
 			}
+			status.dispose();
 		});
+		stopCopy.setVisible(false);
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel};
@@ -309,21 +295,22 @@ public class FileCopyManager extends JFrame {
 		initUIElements();
 		this.setJMenuBar(menuBar);
 		panel.setBackground(Color.white);
-		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][]", "[23px][][][][][][grow][][][][grow]"));
+		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");
 		panel.add(copyFile, "cell 0 2,alignx left,aligny top");
-		panel.add(openDestinationFolder, "cell 0 6");
 		panel.add(selectDestination, "cell 0 5");
 		panel.add(deleteAll, "cell 3 5");
 		panel.add(deleteFile, "cell 3 2");
+		panel.add(openDestinationFolder, "cell 0 6");
+		panel.add(stopCopy, "cell 3 6");
 		dragLabel = new JLabel("Drag files  here");
-		panel.add(dragLabel, "flowy,cell 3 6");
+		panel.add(dragLabel, "flowy,cell 3 7");
 		preload().setVisible(true);
 		this.setSize(535, 391);
 		this.setContentPane(panel);
-		panel.add(dragPanel, "cell 3 7");
+		panel.add(dragPanel, "cell 3 8");
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -347,7 +334,7 @@ public class FileCopyManager extends JFrame {
 				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
 			catch (Throwable e) {
-				new FileHandler().log(e.getMessage());
+				FileHandler.log(e.getMessage());
 			}
 			finally{
 				new FileCopyManager();
@@ -355,3 +342,4 @@ public class FileCopyManager extends JFrame {
 		 });
 	}
 }
+
