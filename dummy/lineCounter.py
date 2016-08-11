@@ -1,21 +1,18 @@
+import subprocess
 num_of_lines = 0
 # files = [g+"FileCopyManager.java",g+"StatusFrame.java",u+"Controller.java",u+"PreferencesManager.java",u+"ProgramState.java",u+"UIPreferences.java",u+"ResourceLoader.java",u+"FileHandler.java"]
 files=[file.rstrip() for file in open('feed.txt','r').readlines()]
+total_chars=0
 for e in files:
 	try:
 		file = open(e,'r')
-		num_of_lines+=len(file.readlines())
+		code_lines=[code.rstrip() for code in file.readlines()];
+		num_of_lines+=len(code_lines)
+		for line_of_code in code_lines:
+			total_chars+=len(line_of_code)
 	except FileNotFoundError:
 		print("File {} not found".format(e))
-
-print("{} lines of code found in {} files ".format(num_of_lines,len(files)))	
-total_chars=0
-for line in files:
-	#open each file
-	cur_file = open(line.rstrip(),'r').readlines()
-	for code in cur_file:
-		#for each line of code in each file count the total characters(not including new line character)
-		total_chars+=len(code.rstrip())
-	
+message = "{} lines of code found in {} files ".format(num_of_lines,len(files))
 if total_chars:
-	print("There are {} characters in these {} files".format(total_chars,len(files)))	
+	message += "and {} total characters".format(total_chars)
+print(message)
