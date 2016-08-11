@@ -60,7 +60,7 @@ public class FileCopyManager extends JFrame {
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
 	public void showFiles() {
-		fileNames.setVisible(files.size() > 0);
+		fileNames.setVisible(!files.isEmpty());
 	}
 	public void restart(){
 		//First close the current instance of the program
@@ -115,7 +115,7 @@ public class FileCopyManager extends JFrame {
 			selectedFile = files.get(0);
 			selectedFileIndex = 0;
 			fileNames.setSelectedIndex(0);
-			fileNames.setVisible(!files.isEmpty());
+			showFiles();
 			this.pack();
 		});
 		fileNames.addActionListener((e) -> {
@@ -199,11 +199,11 @@ public class FileCopyManager extends JFrame {
 			selectedFile = state.getSelectedFile();
 			selectedFileIndex = state.getSindex();
 			destinationPath = state.getPath();
-			System.out.println("Index to set:"+selectedFileIndex);
-			System.out.println("Size of files:"+files.size());
+			
 			fileNames.setSelectedIndex(selectedFileIndex);
-			this.pack();			
-			fileNames.setVisible(!files.isEmpty());
+						
+			showFiles();
+			this.pack();
 		});
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));

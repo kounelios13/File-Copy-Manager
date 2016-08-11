@@ -117,15 +117,16 @@ public class FileHandler{
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {
 		ProgramState temp= new ResourceLoader(this).getAppState();
 			//See if we have succeed in loading everything we need so we can proccess the combobox
-		if(temp == null)
+		if(temp == null || temp.getFiles()==null)
 			return null;
 
-		System.out.println("Size of imported files:"+temp.getFiles().size());
+		Message.info(null, "Total files to be imported:"+temp.getFiles().size());
 		if(storage.isEmpty()){
 			//Storage is empty no new files added by user
-			storage = temp.getFiles();
-			for(File f:storage)
+			for(File f:temp.getFiles()){
 				mod.addElement(fileName(f));
+				storage.add(f);
+			}
 		}
 		else{
 			if(JOptionPane.showConfirmDialog(null, "Do you want to keep new files?")==JOptionPane.OK_OPTION){
@@ -138,10 +139,15 @@ public class FileHandler{
 				}
 			}
 			else{
-				storage = temp.getFiles();
+				/*
+				* User wants to load only old files and get rid of any new files they added
+				*/
 				mod.removeAllElements();
-				for(File f:storage)
+				for(File f:temp.getFiles()){
+					storage.add(f);
 					mod.addElement(fileName(f));
+				}
+					
 			}
 		}
 		return temp;
