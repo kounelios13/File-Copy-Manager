@@ -1,4 +1,3 @@
-import subprocess
 num_of_lines = 0
 files=[file.rstrip() for file in open('feed.txt','r').readlines()]
 total_chars=0
@@ -16,3 +15,5 @@ if total_chars:
 	message += "and {} total characters".format(total_chars)
 print(message)
 print("Files read {}" .format(files))
+
+
