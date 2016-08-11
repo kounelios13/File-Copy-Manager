@@ -119,8 +119,6 @@ public class FileHandler{
 			//See if we have succeed in loading everything we need so we can proccess the combobox
 		if(temp == null || temp.getFiles()==null)
 			return null;
-
-		Message.info(null, "Total files to be imported:"+temp.getFiles().size());
 		if(storage.isEmpty()){
 			//Storage is empty no new files added by user
 			for(File f:temp.getFiles()){
@@ -143,6 +141,7 @@ public class FileHandler{
 				* User wants to load only old files and get rid of any new files they added
 				*/
 				mod.removeAllElements();
+				storage.clear();
 				for(File f:temp.getFiles()){
 					storage.add(f);
 					mod.addElement(fileName(f));
