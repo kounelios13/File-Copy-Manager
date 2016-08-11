@@ -114,40 +114,23 @@ public class FileHandler{
 	public String fileName(File f){
 		return f.isFile()?f.getName()+(f.isDirectory()?" (Folder)":""):"";
 	}
-	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage) {
-		ProgramState temp= new ResourceLoader(this).getAppState();
-			//See if we have succeed in loading everything we need so we can proccess the combobox
+	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
+		ProgramState temp = new ResourceLoader(this).getAppState();
 		if(temp == null || temp.getFiles()==null)
 			return null;
-		if(storage.isEmpty()){
-			//Storage is empty no new files added by user
-			for(File f:temp.getFiles()){
-				mod.addElement(fileName(f));
-				storage.add(f);
-			}
-		}
-		else{
-			if(JOptionPane.showConfirmDialog(null, "Do you want to keep new files?")==JOptionPane.OK_OPTION){
-				/*
-				 * The user wants to keep new and old files 
-				 * */
-				for(File f:temp.getFiles()){
-					storage.add(f);
-					mod.addElement(fileName(f));
-				}
-			}
-			else{
-				/*
-				* User wants to load only old files and get rid of any new files they added
-				*/
+		if(!storage.isEmpty()){
+			/*
+			* While loading old files we found out that there are new files
+			* so we ask the user if they want to keep them	 
+			*/
+			if(JOptionPane.showConfirmDialog(null,"Do you want to keep old files?")!=JOptionPane.OK_OPTION){
 				mod.removeAllElements();
 				storage.clear();
-				for(File f:temp.getFiles()){
-					storage.add(f);
-					mod.addElement(fileName(f));
-				}
-					
 			}
+		}
+		for(File f:temp.getFiles()){
+			storage.add(f);
+			mod.addElement(fileName(f));				
 		}
 		return temp;
 	}
