@@ -16,9 +16,9 @@ public class ResourceLoader {
 	private ObjectInputStream inputStream;
 	private FileInputStream fileStream;
 	private Message msg = new Message();
-	private String seperator = File.separator+File.separator;
-	private File uiTheme=PreferencesManager.settingsFile,
-		listFile = new File("app"+seperator+"userlist.dat");
+	private String separator = File.separator+File.separator;
+	private File uiTheme=new File("app"+separator+"settings.dat"),
+		listFile = new File("app"+separator+"userlist.dat");
 	public ResourceLoader(FileHandler handler){
 		this.handler=handler;
 	}	

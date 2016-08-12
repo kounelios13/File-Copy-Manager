@@ -39,7 +39,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
-	//private GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	private boolean settingsLoaded = false;
 	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
 	private Message msg = new Message();
@@ -48,7 +48,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
 	private CustomColorChooser colorChooser = new CustomColorChooser(appFrame,
 			this);
-	public static File settingsFile = new File("app" + sep + "settings.dat"),
+	private File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
 	private Settings settings = new Settings();
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
@@ -62,6 +62,9 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	private JButton btnSample = new JButton("Button Sample");
 	private JLabel lblSample = new JLabel("Label Sample");
 	private Font[] fonts =UIPreferences.fonts;
+	public boolean exists(){
+		return settingsFile.exists();
+	}
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
@@ -105,7 +108,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
 		prefPanel.add(applySettings, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		//this.setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		this.pack();
 	}
 	@Override
@@ -115,8 +118,9 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
-		if(rc.getPreferences() == null)
+		if(rc.getPreferences() == null || settingsLoaded)
 			return;
+		settingsLoaded = true;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && settings.getFontName() != null)
 			msg.error(null,settings.getFontName()+" font is not available on this system.");
@@ -204,7 +208,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public void setFg(Color c) {
 		settings.setFgColor(c);
 	}
-	public String toCol(Color c) {
+	private String toCol(Color c) {
 		return "rgb(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue()+ ")";
 	}
 	public void exportSettings() {
@@ -281,6 +285,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "Could not delete app directory", "Failed!!!");
 		loadPreferences();
 		appFrame.restart();
+	}
+	public void prepareUI(){
+		loadPreferences();
+		updatePreview();
+		applySettings();
 	}
 }
 @SuppressWarnings({"serial"})

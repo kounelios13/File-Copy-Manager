@@ -320,8 +320,8 @@ public class FileCopyManager extends JFrame {
 		* See if we need to change the main UI(change colors or font size)
 		*and if we need do it first and then show the app
 		*/
-		if(pManager.settingsFile.exists())
-			pManager.loadPreferences();
+		if(pManager.exists())
+			pManager.prepareUI();
 		return this;
 	}
 	public FileCopyManager() {
