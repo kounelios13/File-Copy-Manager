@@ -171,6 +171,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public void applySettings() {
 		bgColor = settings.getBgColor();
 		fgColor = settings.getFgColor();
+		/*int btnSize = settings.getBtnSize(),
+				lblSize = settings.getLblSize();*/
 		Font btn = settings.getButtonFont(),
 			 lbl = settings.getLabelFont();
 		for (JButton b : appFrame.getButtons()) {
@@ -187,6 +189,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public void updatePreview() {
 		Font bFont = settings.getButtonFont(),
 			 lFont = settings.getLabelFont();
+		bgColor = settings.getBgColor();
+		fgColor = settings.getFgColor();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
 		btnSample.setBackground(bgColor);
