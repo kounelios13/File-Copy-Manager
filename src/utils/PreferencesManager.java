@@ -105,6 +105,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
 		prefPanel.add(applySettings, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//this.setLocationRelativeTo(null);
 		this.pack();
 	}
 	@Override
@@ -264,6 +265,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		}
 		for (File f :contents)
 			f.delete();
+		
 		if (dir.listFiles().length == 0)
 			msg.info(prefPanel, "All app related files have been deleted",
 					"Success");

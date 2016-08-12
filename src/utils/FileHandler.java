@@ -40,6 +40,10 @@ public class FileHandler{
 				writer.close();
 			} catch (IOException exc) {
 				Message.error(null, "IOException :"+exc);
+				/**
+				* Here we can only output the error message 
+				* that prevent us from creating a '.log' file
+				*/
 			}
 
 	}
@@ -60,7 +64,6 @@ public class FileHandler{
 			out.close();
 		} catch (FileNotFoundException exc) {
 			log(exc.getMessage());
-			exc.printStackTrace();
 		} catch (IOException exc) {
 			Message.error(null, "IOException:"+exc);
 			log(exc.getMessage());
@@ -104,7 +107,6 @@ public class FileHandler{
 			log(e.getMessage());
 			Message.error(null,"Exception during copying directory");
 		}
-		System.out.println("Output dir will be:"+destFolder);
 		return true;
 	}
 

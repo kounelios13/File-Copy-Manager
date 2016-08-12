@@ -33,11 +33,7 @@ public class ResourceLoader {
 			fileStream = new FileInputStream(uiTheme);
 			inputStream = new ObjectInputStream(fileStream);
 			s=(Settings)inputStream.readObject();
-		} catch (FileNotFoundException exc) {
-			msg.error(null,"Cant find preferences file");
-			handler.log(exc.getMessage());
 		} catch (IOException exc) {
-			msg.error(null, "Can't load preferences");
 			handler.log(exc.getMessage());
 		} catch (ClassNotFoundException ci){
 			msg.error(null,
