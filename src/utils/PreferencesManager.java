@@ -135,8 +135,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			else
 				i++;
 		fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
-		updatePreview();
-		applySettings();	
 	}
 	@Override
 	public void savePreferences() {
@@ -169,14 +167,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		this.setVisible(false);
 	}
 	public void editPreferences() {
-		loadPreferences();
 		this.setVisible(true);
 	}
 	public void applySettings() {
 		bgColor = settings.getBgColor();
 		fgColor = settings.getFgColor();
-		/*int btnSize = settings.getBtnSize(),
-				lblSize = settings.getLblSize();*/
 		Font btn = settings.getButtonFont(),
 			 lbl = settings.getLabelFont();
 		for (JButton b : appFrame.getButtons()) {
@@ -288,8 +283,10 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	public void prepareUI(){
 		loadPreferences();
+		System.out.println("Btn size:"+settings.getBtnSize());
+		System.out.println("Lbl size:"+settings.getLblSize());
 		updatePreview();
-		applySettings();
+		applySettings();	
 	}
 }
 @SuppressWarnings({"serial"})
