@@ -1,5 +1,6 @@
 num_of_lines = 0
-files=[file.rstrip() for file in open('feed.txt','r').readlines()]
+from sys import argv
+files=[file.rstrip() for file in open('feed.txt' if len(argv) < 2 else argv[1],'r').readlines()]
 total_chars=0
 for e in files:
 	try:
@@ -15,5 +16,9 @@ if total_chars:
 	message += "and {} total characters".format(total_chars)
 print(message)
 print("Files read {}" .format(files))
+
+#if you want to supply an other file to load file names 
+# do it like this :
+#python lineCounter.py foofile.txt
 
 
