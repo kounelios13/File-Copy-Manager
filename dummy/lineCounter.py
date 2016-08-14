@@ -6,7 +6,7 @@ def isSourceCode(line):
 	def isComment(line):
 		def s(string,p):
 			return string.startswith(p)
-		return s(line,"//") or s(line,"/*") or s(line,"*") or s(line,"///") or line.endswith("*") or line.endswith(" */")
+		return s(line,'// ') or s(line,"//") or s(line,"/*") or s(line,"*")  or line.endswith("*") or line.endswith(" */")
 	return not isComment(line) and len(line) > 0
 files=[file.rstrip() for file in open('feed.txt' if len(argv) < 2 else argv[1],'r').readlines()]
 total_chars=0

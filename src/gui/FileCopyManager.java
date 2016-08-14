@@ -52,7 +52,7 @@ public class FileCopyManager extends JFrame {
 			deleteFile, deleteAll, openDestinationFolder,stopCopy;
 	private JComboBox<String> fileNames;
 	private DefaultComboBoxModel<String> model;
-	private int selectedFileIndex;
+	private int selectedFileIndex = -1;
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
 	String sep = File.separator;
@@ -65,7 +65,7 @@ public class FileCopyManager extends JFrame {
 	public void restart(){
 		//First close the current instance of the program
 		this.dispose();
-		//and create a new instance
+		// and create a new instance
 		new FileCopyManager();
 	}
 	@SuppressWarnings("deprecation")
@@ -171,7 +171,7 @@ public class FileCopyManager extends JFrame {
 				return;
 			model.removeElementAt(index);
 			files.remove(index);		
-			fileNames.setVisible(files.size() > 0);
+			fileNames.setVisible(!files.isEmpty());
 		});
 		saveList.addActionListener((e) -> {
 			File dir = listFile.getParentFile();
@@ -211,8 +211,8 @@ public class FileCopyManager extends JFrame {
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
 		new FileDrop(dragPanel,(e)->{
-			//Prevent application from freezing
-			//When dragging many files
+			/* Prevent application from freezing
+			* When dragging many files */
 			new Thread(()->{
 				for(File f:e){
 					if(!allowDuplicates)
@@ -226,8 +226,8 @@ public class FileCopyManager extends JFrame {
 			}).start();
 		});	
 		new FileDrop(this,(e)->{
-			//Prevent application from freezing
-			//When dragging many files
+			/* Prevent application from freezing
+			* When dragging many files */
 			new Thread(()->{
 				for(File f:e){
 					if(!allowDuplicates)
@@ -318,7 +318,7 @@ public class FileCopyManager extends JFrame {
 	public FileCopyManager preload() {
 		/*
 		* See if we need to change the main UI(change colors or font size)
-		*and if we need do it first and then show the app
+		* and if we need do it first and then show the app
 		*/
 		if(pManager.exists())
 			pManager.prepareUI();
