@@ -4,10 +4,6 @@
 * @ author kounelios13	
 */
 package utils;
-
-
-
-
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
 
@@ -36,32 +32,31 @@ import messages.Message;
 import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
+	public static String sep = File.separator + File.separator;
 	private FileCopyManager appFrame;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
 	private boolean settingsLoaded = false;
-	public static String sep = File.separator + File.separator;
 	private Color bgColor, fgColor;
-	private Message msg = new Message();
-	private JPanel prefPanel = new JPanel();
+	private Message msg 		 = new Message();
+	private JPanel prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
-			labelSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
-	private CustomColorChooser colorChooser = new CustomColorChooser(appFrame,
-			this);
+					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
+	private CustomColorChooser colorChooser = new CustomColorChooser(appFrame,this);
 	private File settingsFile = new File("app" + sep + "settings.dat"),
 			dir = new File("app");
 	private Settings settings = new Settings();
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
 	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
 	private JButton saveSettings = new JButton("Save settings"),
-			applySettings = new JButton("Apply Settings"),
-			loadSettings = new JButton("Load settings"),
-			chooseColors = new JButton("Choose colors");
-	private JLabel lblButtonFontSize = new JLabel("Button font size");
-	private JLabel lblLabelFontSize = new JLabel("Label font size");
-	private JButton btnSample = new JButton("Button Sample");
-	private JLabel lblSample = new JLabel("Label Sample");
-	private Font[] fonts =UIPreferences.fonts;
+			applySettings =  new JButton("Apply Settings"),
+			loadSettings  =  new JButton("Load settings"),
+			chooseColors  =  new JButton("Choose colors"),
+				btnSample =  new JButton("Button Sample");
+	private JLabel lblButtonFontSize = new JLabel("Button font size"),
+				   lblLabelFontSize  = new JLabel("Label font size"),
+				   lblSample		 = new JLabel("Label Sample");
+	private Font[] fonts = UIPreferences.fonts;
 	public boolean exists(){
 		return settingsFile.exists();
 	}
@@ -113,7 +108,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	@Override
 	public void loadPreferences(){
-		
 		/*
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
@@ -314,9 +308,15 @@ class Settings implements Serializable {
 		fg = e;
 	}
 	public Color getBgColor() {
+		/**
+		 * Default background color for most swing components
+		 * */
 		return bg != null ? bg:new Color(238,238,238);
 	}
 	public Color getFgColor() {
+		/**
+		 * Default foreground color for most swing components
+		 * */
 		return fg != null ? fg:new Color(51,51,51);
 	}
 	public int getLblSize() {

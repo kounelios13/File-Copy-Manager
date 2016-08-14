@@ -14,12 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-
 import messages.Message;
-
 import org.apache.commons.io.FileUtils;
 public class FileHandler{
 	String sep = File.separator + File.separator;
@@ -45,9 +42,7 @@ public class FileHandler{
 				* that prevent us from creating a '.log' file
 				*/
 			}
-
 	}
-
 	public void saveList(ProgramState ps,File destFile){
 		if(destFile == null){
 			Message.error(null, "Destination folder has not been selected", "Destination Empty");
@@ -146,8 +141,6 @@ public class FileHandler{
 		} catch (Exception e1) {
 			Message.error(null, "Could not open destination file");
 			log(e1.getMessage());
-		}
-		
+		}	
 	}
-
 }
