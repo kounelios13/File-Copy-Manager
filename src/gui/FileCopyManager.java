@@ -65,7 +65,7 @@ public class FileCopyManager extends JFrame {
 	public void restart(){
 		//First close the current instance of the program
 		this.dispose();
-		// and create a new instance
+		//and create a new instance
 		new FileCopyManager();
 	}
 	@SuppressWarnings("deprecation")
@@ -317,8 +317,8 @@ public class FileCopyManager extends JFrame {
 	}
 	public FileCopyManager preload() {
 		/*
-		* See if we need to change the main UI(change colors or font size)
-		* and if we need do it first and then show the app
+		*See if we need to change the main UI(change colors or font size)
+		*and if we need do it first and then show the app
 		*/
 		if(pManager.exists())
 			pManager.prepareUI();

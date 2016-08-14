@@ -11,7 +11,6 @@ public class StatusFrame extends JFrame{
 	private JPanel panel = new JPanel();
 	private JLabel currentFileLabel = new JLabel("Current File");
 	public StatusFrame(){
-		//currentFileLabel.setFont(getFont().deriveFont((float) 18.0));
 		panel.setBackground(new Color(18,193,17));
 		currentFileLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel.add(currentFileLabel);
