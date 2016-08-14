@@ -3,9 +3,13 @@ from sys import argv
 # check if a line ends with a comment terminating char
 def isComment(line):
 	comments=["*","//","// ","*/","* ","/*","/**"]
+	ending=[" */","*/","**/"]
 	for i in comments:
 		if line.startswith(i):
 			return True 
+	for i in ending:
+		if line.endswith(i):
+			return True 	
 	return False 		
 files=[file.rstrip() for file in open('feed.txt' if len(argv) < 2 else argv[1],'r').readlines()]
 lines = 0
