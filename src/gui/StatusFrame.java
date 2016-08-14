@@ -17,7 +17,6 @@ public class StatusFrame extends JFrame{
 		this.setSize(600,100);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(panel);
-
 	}
 	public void showStatus(){
 		this.setVisible(true);

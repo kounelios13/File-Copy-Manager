@@ -17,9 +17,8 @@ chars = 0
 for f in files:
 	temp_lines = open(f,'r').readlines()
 	for t_line in temp_lines:
-		if isComment(t_line.strip()):
-			print(t_line,end = "")
-		elif len(t_line) > 0:
+		t_line = t_line.strip()
+		if len(t_line) > 0 and not isComment(t_line):
 			lines+=1
 			chars+=len(t_line.strip())	
 print("Total source code lines {}. Number of source code chars {}".format(lines,chars))			
