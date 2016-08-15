@@ -2,8 +2,8 @@ from sys import argv
 # Improve comment check
 # check if a line ends with a comment terminating char
 def isComment(line):
-	comments=["*","//","// ","*/","* ","/*","/**"]
-	ending=[" */","*/","**/"]
+	comments=["*","//","// ","*/","* ","/*","/**","#"," #"]
+	ending=[" */","*/","**/","#"," #"]
 	for i in comments:
 		if line.startswith(i):
 			return True 

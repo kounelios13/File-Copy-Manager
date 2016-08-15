@@ -65,7 +65,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		settings.setLblSize(labelSlider.getValue());
 		updatePreview();
 	}
-	private void init() {
+	private void initUIElements() {
 		for (Font f : fonts)
 			fontModel.addElement(f.getFontName());
 		saveSettings.addActionListener((e) -> savePreferences());
@@ -86,7 +86,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public PreferencesManager(FileCopyManager frame) {
 		super("Preferences");
 		appFrame = frame;
-		init();
+		initUIElements();
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
 				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
