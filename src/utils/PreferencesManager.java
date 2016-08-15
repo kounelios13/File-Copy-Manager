@@ -243,6 +243,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		}
 	}
 	public void deleteAppSettings() {
+		// If we can't delete all files replace them with default files
 		File dir = new File("app");
 		File[] contents = dir.listFiles();
 		if (!dir.exists() || dir.listFiles().length < 1) {
@@ -260,8 +261,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "No app settings found", "Error");
 			return;
 		}
-		for (File f :contents)
+		for (File f :contents){
+			f.setWritable(true);
 			f.delete();
+		}
+			
 		
 		if (dir.listFiles().length == 0)
 			msg.info(prefPanel, "All app related files have been deleted",
@@ -276,6 +280,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		appFrame.restart();
 	}
 	public void prepareUI(){
+		if(!exists())
+			return;
 		loadPreferences();
 		System.out.println("Btn size:"+settings.getBtnSize());
 		System.out.println("Lbl size:"+settings.getLblSize());

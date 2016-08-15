@@ -44,7 +44,7 @@ public class FileCopyManager extends JFrame {
 			restartApp=new JMenuItem("Restart Application");
 	private JCheckBoxMenuItem allowDuplicatesOption=new JCheckBoxMenuItem("Allow dupliactes in list");
 	private File selectedFile = null;
-	private String destinationPath;
+	private String destinationPath = null;
 	private ArrayList<File> files = new ArrayList<>();
 	private JPanel panel = new JPanel();
 	private JFileChooser chooser = new JFileChooser();
@@ -320,14 +320,12 @@ public class FileCopyManager extends JFrame {
 		*See if we need to change the main UI(change colors or font size)
 		*and if we need do it first and then show the app
 		*/
-		if(pManager.exists())
-			pManager.prepareUI();
+		pManager.prepareUI();
 		return this;
 	}
 	public FileCopyManager() {
 		this(null);
 	}
-
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
 			 try {
