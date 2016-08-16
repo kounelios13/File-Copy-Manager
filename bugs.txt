@@ -3,7 +3,7 @@ Consider what will happen when a user presses "Load queue" and has added some fi
 Bugs
 * Index out of bounds when loading list-->fixed
 * When selecting colors the updatePreview() does not work-->fixed
-* Correct font size applied only after loadPreferences() is called 2nd time
+* Correct font size applied only after loadPreferences() is called 2nd time -->fixed
 Todo
 Improve error messages-->done
 After copying file check if it copied in the ouput directory-->done
