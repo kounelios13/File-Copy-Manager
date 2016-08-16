@@ -112,7 +112,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
-		if(rc.getPreferences() == null || settingsLoaded)
+		if(fh.isNull(rc.getPreferences()) || settingsLoaded)
 			return;
 		settingsLoaded = true;
 		settings = rc.getPreferences();
@@ -280,6 +280,10 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		appFrame.restart();
 	}
 	public void prepareUI(){
+		/**
+		 * If there is no file saved by PreferencesManager
+		 * abort any other operation
+		 * */
 		if(!exists())
 			return;
 		loadPreferences();

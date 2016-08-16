@@ -24,7 +24,7 @@ public class ResourceLoader {
 	}	
 	public Settings getPreferences(){
 		/** 
-		*	Settings class of preferences Manager
+		*	Settings class of Preferences Manager
 		*	may be invisible but Settings class of java.util is not.
 		*	That's how you fool the compiler :)
 		*/

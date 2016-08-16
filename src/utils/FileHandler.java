@@ -20,6 +20,12 @@ import messages.Message;
 import org.apache.commons.io.FileUtils;
 public class FileHandler{
 	String sep = File.separator + File.separator;
+	public static boolean isNull(Object... items){
+		for(Object o:items)
+			if(o==null)
+				return true;
+		return false;
+	}
 	public static void log(String message){
 		File logFile = new File("app"+File.separator+File.separator+"log.txt");
 		if(!logFile.exists())
@@ -44,11 +50,11 @@ public class FileHandler{
 			}
 	}
 	public void saveList(ProgramState ps,File destFile){
-		if(destFile == null){
+		if(isNull(destFile)){
 			Message.error(null, "Destination folder has not been selected", "Destination Empty");
 			return;
 		}
-		if(ps.getFiles()==null || ps.getFiles().isEmpty())
+		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
 			Message.error(null,"No files have been selected","Empty list");
 			return;
@@ -113,7 +119,7 @@ public class FileHandler{
 	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
 		ProgramState temp = new ResourceLoader(this).getAppState();
-		if(temp == null || temp.getFiles()==null)
+		if(isNull(temp,temp.getFiles()))
 			return null;
 		if(!storage.isEmpty()){
 			/*
@@ -132,7 +138,7 @@ public class FileHandler{
 		return temp;
 	}
 	public void openDestination(String dPath) {
-		if (dPath == null) {
+		if (isNull(dPath)) {
 			Message.error(null, "No folder selected","Missing destination folder");
 			return;
 		}

@@ -28,8 +28,8 @@ import utils.PreferencesManager;
 import utils.ProgramState;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
-	Controller controller = new Controller();
-	StatusFrame status = new StatusFrame();
+	private Controller controller = new Controller();
+	private StatusFrame status = new StatusFrame();
 	private FileHandler fHandler = new FileHandler();
 	private PreferencesManager pManager = new PreferencesManager(this);
 	private Message msg = new Message();
@@ -59,6 +59,9 @@ public class FileCopyManager extends JFrame {
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
+	private boolean isNull(Object...t){
+		return FileHandler.isNull(t);
+	}
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
 	}
@@ -68,6 +71,7 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager();
 	}
+
 	@SuppressWarnings("deprecation")
 	private void initUIElements() {
 		fileMenu.add(saveList);
@@ -126,7 +130,7 @@ public class FileCopyManager extends JFrame {
 		copyFile.addActionListener((e) -> {
 			String message = destinationPath== null && selectedFile == null?"Selecte at least a file and a destination folder "
 					:selectedFile == null?" Select at least one file to copy":"Select a directory to copy selected file(s) in";
-			if (destinationPath == null || selectedFile == null) {
+			if (isNull(destinationPath,selectedFile)) {
 				msg.error(panel, message);
 				return;
 			}
@@ -137,7 +141,7 @@ public class FileCopyManager extends JFrame {
 		});
 
 		copyFiles.addActionListener((e) -> {
-			if(destinationPath == null)
+			if(isNull(destinationPath))
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{
 				copyThreads[1]=
@@ -162,7 +166,7 @@ public class FileCopyManager extends JFrame {
 		});
 
 		deleteFile.addActionListener((e) -> {
-			if (selectedFile == null) {
+			if (isNull(selectedFile)) {
 				msg.error(null, "No file is selected", "Error");
 				return;
 			}		
