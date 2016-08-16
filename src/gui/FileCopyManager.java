@@ -94,7 +94,6 @@ public class FileCopyManager extends JFrame {
 		deleteAll = new JButton("Delete all files from list");
 		openDestinationFolder = new JButton("Open Destination Folder");
 		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
-		
 		stopCopy = new JButton("Stop copy operations");
 		model = new DefaultComboBoxModel<String>();
 		JFrame curFrame = this;
@@ -185,7 +184,7 @@ public class FileCopyManager extends JFrame {
 				try {
 					listFile.createNewFile();
 				} catch (Exception e1) {
-					msg.error(panel, "Cannot save list.", "Error");
+					msg.error(panel, "Cannot save list.");
 					fHandler.log(e1.getMessage());
 				}
 			}

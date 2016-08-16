@@ -61,6 +61,8 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		return settingsFile.exists();
 	}
 	private void updateSliders() {
+		System.out.println("Value for btnsize:"+buttonSlider.getValue());
+		System.out.println("Value for label size:"+labelSlider.getValue());
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
 		updatePreview();
@@ -120,8 +122,16 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(null,settings.getFontName()+" font is not available on this system.");
 		bgColor = settings.getBgColor();
 		fgColor = settings.getFgColor();
-		labelSlider.setValue(settings.getLblSize());
-		buttonSlider.setValue(settings.getBtnSize());
+		System.out.println("Loaded size btn:"+settings.getBtnSize());
+		/**
+		 * Important note:
+		 * Do not use buttonSlider.setValue(settings.getBtnSize())
+		 * First save the size in a variable and use the variable
+		 * */
+		int btnSize = settings.getBtnSize(),
+			labelSize = settings.getLblSize();
+		labelSlider.setValue(labelSize);
+		buttonSlider.setValue(btnSize);
 		int i = 0;
 		for (Font f : fonts)
 			if (f.getFontName().equals(settings.getFontName()))
@@ -131,7 +141,7 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
 	}
 	@Override
-	public void savePreferences() {
+	public void savePreferences(){
 		if (!dir.exists())
 			dir.mkdirs();
 		try {
@@ -287,8 +297,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		if(!exists())
 			return;
 		loadPreferences();
-		System.out.println("Btn size:"+settings.getBtnSize());
-		System.out.println("Lbl size:"+settings.getLblSize());
 		updatePreview();
 		applySettings();	
 	}
@@ -348,7 +356,7 @@ class Settings implements Serializable {
 		this.fontName = fontName;
 	}
 	public Font getButtonFont() {
-		return new Font(fontName, Font.PLAIN, btnSize);
+		return new Font(fontName, Font.PLAIN, this.btnSize);
 	}
 	public Font getLabelFont() {
 		return new Font(fontName, Font.PLAIN, lblSize);

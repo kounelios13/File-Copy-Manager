@@ -9,8 +9,6 @@ import messages.Message;
 public class ResourceLoader {
 	/***
 	 * Handle loading of app related files
-	 * 
-	 * 
 	 * */
 	private FileHandler handler = null;
 	private ObjectInputStream inputStream;
