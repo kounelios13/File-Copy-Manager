@@ -58,8 +58,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		return settingsFile.exists();
 	}
 	private void updateSliders() {
-		System.out.println("Value for btnsize:"+buttonSlider.getValue());
-		System.out.println("Value for label size:"+labelSlider.getValue());
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
 		updatePreview();
@@ -119,7 +117,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(null,settings.getFontName()+" font is not available on this system.");
 		bgColor = settings.getBgColor();
 		fgColor = settings.getFgColor();
-		System.out.println("Loaded size btn:"+settings.getBtnSize());
 		/**
 		 * Important note:
 		 * Do not use buttonSlider.setValue(settings.getBtnSize())
