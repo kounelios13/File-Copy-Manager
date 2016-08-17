@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -260,23 +261,11 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "Operation cancelled");
 			return;
 		}
-		if (!dir.exists()) {
-			msg.error(prefPanel, "No app settings found", "Error");
-			return;
-		}
-		for (File f :contents){
-			f.setWritable(true);
-			f.delete();
-		}
-		if (dir.listFiles().length == 0)
-			msg.info(prefPanel, "All app related files have been deleted",
-					"Success");
-		else
-			msg.error(prefPanel, "Could not delete all files", "Failure");
+		Stream.of(contents).forEach(File::delete);
 		if (dir.delete())
-			msg.info(prefPanel, "App folder deleted", "Success");
+			msg.info(prefPanel, "App settings deleted", "Success");
 		else
-			msg.error(prefPanel, "Could not delete app directory", "Failed!!!");
+			msg.error(prefPanel, "Could not delete app settings", "Failed!!!");
 		loadPreferences();
 		appFrame.restart();
 	}
