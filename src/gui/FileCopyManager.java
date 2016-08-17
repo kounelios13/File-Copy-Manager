@@ -36,6 +36,7 @@ public class FileCopyManager extends JFrame {
 	private JMenuItem saveList = new JMenuItem("Save queue"),
 			exit = new JMenuItem("Exit"),
 			loadList = new JMenuItem("Load queue"),
+			openAppDirectory = new JMenuItem("Open app folder"),
 			showPreferences = new JMenuItem("Preferences"),
 			exportPreferences = new JMenuItem("Export Preferences"),
 			deleteApp=new JMenuItem("Delete app settings"),
@@ -73,6 +74,9 @@ public class FileCopyManager extends JFrame {
 	private void initUIElements() {
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
+		fileMenu.addSeparator();
+		fileMenu.add(openAppDirectory);
+		fileMenu.addSeparator();
 		fileMenu.add(exit);
 		editMenu.add(showPreferences);
 		editMenu.add(exportPreferences);
@@ -91,6 +95,7 @@ public class FileCopyManager extends JFrame {
 		deleteAll = new JButton("Delete all files from list");
 		openDestinationFolder = new JButton("Open Destination Folder");
 		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
+		openAppDirectory.addActionListener((e)->controller.openAppDirectory());
 		stopCopy = new JButton("Stop copy operations");
 		model = new DefaultComboBoxModel<String>();
 		JFrame curFrame = this;

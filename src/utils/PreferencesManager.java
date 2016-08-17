@@ -247,7 +247,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		}
 	}
 	public void deleteAppSettings() {
-		// If we can't delete all files replace them with default files
 		File dir = new File("app");
 		File[] contents = dir.listFiles();
 		if (!dir.exists() || dir.listFiles().length < 1) {

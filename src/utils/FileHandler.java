@@ -154,4 +154,12 @@ public class FileHandler{
 			log(e1.getMessage());
 		}	
 	}
+	public void openAppDirectory() {
+		try {
+			Desktop.getDesktop().open(new File("app"));
+		} catch (Exception e1) {
+			Message.error(null, "Could not open app folder");
+			log(e1.getMessage());
+		}
+	}
 }

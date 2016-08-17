@@ -14,4 +14,7 @@ public class Controller {
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
 		return handler.loadList(mod,storage);
 	}
+	public void openAppDirectory() {
+		handler.openAppDirectory();
+	}
 }
