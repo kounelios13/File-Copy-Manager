@@ -29,6 +29,6 @@ def showStatus():
 			exportFile.write(row)
 		except Exception as e:
 			print("Exception found "+e)
-	exportFile.close()		
-	print("Total source code lines {}. Number of source code chars {}".format(lines,chars))				 		
+	exportFile.write("Total source code lines {}. Number of source code chars {}".format(lines,chars))				 		
 files=[file.rstrip() for file in open('feed.txt' if len(argv) < 2 else argv[1],'r').readlines()]
+showStatus()
