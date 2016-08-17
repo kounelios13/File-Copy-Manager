@@ -17,3 +17,4 @@ def shrinkFiles():
 
 
 shrinkFiles()
+showStatus()

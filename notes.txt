@@ -1,0 +1,8 @@
+../src/gui/FileCopyManager.java --> Total lines :335 
+../src/gui/StatusFrame.java --> Total lines :31 
+../src/utils/Controller.java --> Total lines :17 
+../src/utils/PreferencesManager.java --> Total lines :359 
+../src/utils/ProgramState.java --> Total lines :32 
+../src/utils/UIPreferences.java --> Total lines :12 
+../src/utils/ResourceLoader.java --> Total lines :66 
+../src/utils/FileHandler.java --> Total lines :150 
