@@ -2,13 +2,11 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-
 import utils.PreferencesManager;
 @SuppressWarnings("unused")
 public class CustomColorChooser extends JDialog {
@@ -31,7 +29,6 @@ public class CustomColorChooser extends JDialog {
     	this((JComponent)null);
     	gui = g;
     	pMan = p;
-    	
     }
     private void init(){
     	colorChooser = new JColorChooser();
@@ -39,11 +36,11 @@ public class CustomColorChooser extends JDialog {
         foregroundButton = new JButton("Foreground Color");
         okButton = new JButton("OK");
     	backgroundButton.addActionListener((e)->pMan.setBg(colorChooser.getColor()));
-    	 foregroundButton.addActionListener((e)->pMan.setFg(colorChooser.getColor()));
-    	 okButton.addActionListener((e)->{
-    		 dispose();
-    		 pMan.updatePreview();
-    	 });
+    	foregroundButton.addActionListener((e)->pMan.setFg(colorChooser.getColor()));
+    	okButton.addActionListener((e)->{
+    		dispose();
+    		pMan.updatePreview();
+    	});
     }
     public CustomColorChooser(JComponent targetComponent) {
         init();
@@ -57,5 +54,4 @@ public class CustomColorChooser extends JDialog {
         setModal(true);
         setLocationRelativeTo(targetComponent);
     }
-   
 }
