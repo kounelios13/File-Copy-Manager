@@ -28,6 +28,9 @@ public class FileHandler{
 	public static void log(String message){
 		File logFile = new File("app"+File.separator+File.separator+"log.txt"),
 				dir	 = new File("app");
+		/**
+		 * Make sure that 'app' directory exists 
+		 * before creating log file*/
 		if(!dir.exists())
 			dir.mkdirs();
 		if(!logFile.exists())
