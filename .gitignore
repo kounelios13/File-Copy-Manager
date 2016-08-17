@@ -2,6 +2,6 @@ app
 bin
 demos
 notes.txt
-
+*.class
 
 
