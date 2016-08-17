@@ -1,11 +1,12 @@
 from lineCounter import *
 def emptyLineRemove(fileName):
-	file  = open(fileName,'w')
+	file = open(fileName,'r')
 	lines = file.readlines()
-	for l in line:
-		l = l.strip()
-		if len(l)>0:
-			file.write(l+"\n")
+	file.close()
+	file = open(fileName,'w')
+	for l in lines:
+		if len(l.strip())>0:
+			file.write(l)
 	file.close()		
 def removeComments(fileName):
 	pass
@@ -21,5 +22,6 @@ def showMenu():
 		elif ans is 2:
 			removeComments(fileName)
 		go = input("Press Y to continue or N to exit")
-		if go is not Y:
+		if go is not "Y":
 			break 	
+showMenu()			
