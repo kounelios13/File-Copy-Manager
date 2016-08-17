@@ -2,7 +2,6 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -18,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -71,7 +69,6 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager();
 	}
-
 	@SuppressWarnings("deprecation")
 	private void initUIElements() {
 		fileMenu.add(saveList);
@@ -138,7 +135,6 @@ public class FileCopyManager extends JFrame {
 			});
 			copyThreads[0].start();
 		});
-
 		copyFiles.addActionListener((e) -> {
 			if(isNull(destinationPath))
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
@@ -163,7 +159,6 @@ public class FileCopyManager extends JFrame {
 				status.dispose();
 			}
 		});
-
 		deleteFile.addActionListener((e) -> {
 			if (isNull(selectedFile)) {
 				msg.error(null, "No file is selected", "Error");
@@ -202,9 +197,7 @@ public class FileCopyManager extends JFrame {
 			selectedFile = state.getSelectedFile();
 			selectedFileIndex = state.getSindex();
 			destinationPath = state.getPath();
-			
 			fileNames.setSelectedIndex(selectedFileIndex);
-						
 			showFiles();
 			this.pack();
 		});
@@ -258,7 +251,6 @@ public class FileCopyManager extends JFrame {
 				selectedFileIndex = -1;
 			} else
 				msg.error(null, "Operation cancelled by user", "Status");
-
 		});
 		selectDestination.addActionListener((e) -> {
 			chooser.setDialogTitle("Select destination folder");
@@ -272,13 +264,11 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel,"Invalid destination");
 		});
 		stopCopy.addActionListener((e)->{
-			
 			try{
 				copyThreads[0].stop();
 				copyThreads[1].stop();
 			}
 			catch(Exception ee){
-				
 			}
 			status.dispose();
 		});
@@ -343,4 +333,3 @@ public class FileCopyManager extends JFrame {
 		 });
 	}
 }
-

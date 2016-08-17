@@ -40,8 +40,6 @@ public class ResourceLoader {
 			handler.log(ci.getMessage());
 		}
 		return s;
-		
-		
 	}
 	public ProgramState getAppState(){
 		/**

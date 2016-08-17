@@ -6,7 +6,6 @@
 package utils;
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -17,7 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,7 +25,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
@@ -275,8 +272,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			f.setWritable(true);
 			f.delete();
 		}
-			
-		
 		if (dir.listFiles().length == 0)
 			msg.info(prefPanel, "All app related files have been deleted",
 					"Success");
