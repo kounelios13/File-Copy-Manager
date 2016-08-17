@@ -1,5 +1,6 @@
 import os
 def checkfeed():
+	#see if feed.txt is available
 	temp = [f+"\n" for f in os.listdir('.') if os.path.isfile(f)]
 	try:
 		temp.index("feed.txt\n")

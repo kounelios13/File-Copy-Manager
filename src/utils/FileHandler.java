@@ -26,7 +26,10 @@ public class FileHandler{
 		return false;
 	}
 	public static void log(String message){
-		File logFile = new File("app"+File.separator+File.separator+"log.txt");
+		File logFile = new File("app"+File.separator+File.separator+"log.txt"),
+				dir	 = new File("app");
+		if(!dir.exists())
+			dir.mkdirs();
 		if(!logFile.exists())
 			try {
 				logFile.createNewFile();
@@ -117,7 +120,8 @@ public class FileHandler{
 	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
 		ProgramState temp = new ResourceLoader(this).getAppState();
-		if(isNull(temp,temp.getFiles()))
+		//isNull causes NullPointerException
+		if(isNull(temp)||isNull(temp.getFiles()))
 			return null;
 		if(!storage.isEmpty()){
 			/*
