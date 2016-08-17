@@ -4,5 +4,5 @@
 ../src/utils/PreferencesManager.java --> Total lines :359 
 ../src/utils/ProgramState.java --> Total lines :32 
 ../src/utils/UIPreferences.java --> Total lines :12 
-../src/utils/ResourceLoader.java --> Total lines :66 
+../src/utils/ResourceLoader.java --> Total lines :64 
 ../src/utils/FileHandler.java --> Total lines :150 
