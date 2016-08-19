@@ -24,7 +24,7 @@ import utils.FileDrop;
 import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
-@SuppressWarnings({"serial", "static-access"})
+@SuppressWarnings({"serial", "static-access","unused"})
 public class FileCopyManager extends JFrame {
 	private Controller controller = new Controller();
 	private StatusFrame status = new StatusFrame();
@@ -60,6 +60,24 @@ public class FileCopyManager extends JFrame {
 	private Thread[] copyThreads = new Thread[2];
 	private boolean isNull(Object...t){
 		return FileHandler.isNull(t);
+	}
+	private void allowCopy(){
+		boolean condition = !files.isEmpty() && destinationPath != null;
+		copyFile.setEnabled(condition);
+		copyFiles.setEnabled(condition);
+		openDestinationFolder.setEnabled(destinationPath != null);
+	}
+	private void allowDelete(){
+		boolean condition = !files.isEmpty();
+		deleteFile.setEnabled(condition);
+		deleteAll.setEnabled(condition);
+	}
+	private void allowEdits(){
+		/*
+		 * Check if we want to enable delete and copy buttons
+		 */
+		allowCopy();
+		allowDelete();
 	}
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
@@ -120,6 +138,7 @@ public class FileCopyManager extends JFrame {
 			selectedFile = files.get(0);
 			selectedFileIndex = 0;
 			fileNames.setSelectedIndex(0);
+			allowEdits();
 			showFiles();
 			this.pack();
 		});
@@ -174,7 +193,8 @@ public class FileCopyManager extends JFrame {
 				return;
 			model.removeElementAt(index);
 			files.remove(index);		
-			fileNames.setVisible(!files.isEmpty());
+			showFiles();
+			allowEdits();
 		});
 		saveList.addActionListener((e) -> {
 			File dir = listFile.getParentFile();
@@ -203,6 +223,7 @@ public class FileCopyManager extends JFrame {
 			selectedFileIndex = state.getSindex();
 			destinationPath = state.getPath();
 			fileNames.setSelectedIndex(selectedFileIndex);
+			allowEdits();
 			showFiles();
 			this.pack();
 		});
@@ -223,6 +244,7 @@ public class FileCopyManager extends JFrame {
 					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 				}
 				curFrame.pack();
+				allowEdits();
 				showFiles();
 			}).start();
 		});	
@@ -238,6 +260,7 @@ public class FileCopyManager extends JFrame {
 					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 				}
 				curFrame.pack();
+				allowEdits();
 				showFiles();
 			}).start();
 		});
@@ -254,6 +277,7 @@ public class FileCopyManager extends JFrame {
 				msg.info(panel,"Files removed from list succcessfully","Status");
 				selectedFile = null;
 				selectedFileIndex = -1;
+				allowEdits();
 			} else
 				msg.error(null, "Operation cancelled by user", "Status");
 		});
@@ -263,9 +287,10 @@ public class FileCopyManager extends JFrame {
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			chooser.showOpenDialog(panel);
 			File selected = chooser.getSelectedFile();
-			if (selected != null)
+			if (!isNull(selected)){
 				destinationPath = selected.getAbsolutePath();
-			else
+				allowEdits();
+			}else
 				msg.error(panel,"Invalid destination");
 		});
 		stopCopy.addActionListener((e)->{
@@ -315,9 +340,10 @@ public class FileCopyManager extends JFrame {
 	}
 	public FileCopyManager preload() {
 		/*
-		*See if we need to change the main UI(change colors or font size)
-		*and if we need do it first and then show the app
+		* See if we need to change the main UI(change colors or font size)
+		* and if we need do it first and then show the app
 		*/
+		allowEdits();
 		pManager.prepareUI();
 		return this;
 	}

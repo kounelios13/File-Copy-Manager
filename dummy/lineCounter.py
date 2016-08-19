@@ -3,10 +3,10 @@ from sys import argv
 # check if a line ends with a comment terminating char
 exportFile = open("../notes.txt",'w')
 def isComment(line):
-	comments=["*","//","// ","*/","* ","/*","/**","#"," #"]
+	comments=[" *","*","//","// ","*/","* ","/*","/**","#"," #"]
 	ending=[" */","*/","**/","#"," #"]
 	for i in comments:
-		if line.startswith(i):
+		if line.strip().startswith(i):
 			return True 
 	for i in ending:
 		if line.endswith(i):
@@ -30,5 +30,5 @@ def showStatus():
 		except Exception as e:
 			print("Exception found "+e)
 	exportFile.write("Total source code lines {}. Number of source code chars {}".format(lines,chars))				 		
-files=[file.rstrip() for file in open('feed.txt' if len(argv) < 2 else argv[1],'r').readlines()]
+files=[file.strip() for file in open('feed.txt' if len(argv) < 2 else argv[1],'r').readlines()]
 showStatus()
