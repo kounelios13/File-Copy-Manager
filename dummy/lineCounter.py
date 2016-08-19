@@ -12,3 +12,4 @@ for file in files:
 	info+= "\t{} contains {} lines of source code \n".format(file,source[0])
 exportFile.write(info)
 exportFile.write("\tTotal characters {}".format(chars))	
+removeComments("./lineCounter.py")

@@ -20,10 +20,10 @@ def isComment(line):
 	comments=["*","//","// ","*/","* ","/*","/**","#"," #"]
 	ending=[" */","*/","**/","#"," #"]
 	for i in comments:
-		if line.find(i) != -1:
+		if line.startswith(i) :
 			return True 
 	for i in ending:
-		if line.find(i)!= -1:
+		if line.endswith(i):
 			return True 	
 	return False
 def removeEmptyLines(fileName):
