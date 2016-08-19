@@ -1,4 +1,0 @@
-cleaner.py
-CustomColorChooser.java
-FileCopyManager.java
-StatusFrame.java
