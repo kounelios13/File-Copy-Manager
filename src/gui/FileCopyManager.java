@@ -336,7 +336,7 @@ public class FileCopyManager extends JFrame {
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		preload().setVisible(true);
+		preload();
 	}
 	public void preload() {
 		/*
