@@ -1,4 +1,10 @@
-# changelog
+# <center>changelog</center>
+## v1.6.4.0
+	*   `destinationPath` set to null by default
+	*  `selectedFileIndex` set to -1 by default
+	*  Current release fixes #8 issue(Can't delete app settings)
+	* Refactored code
+	* Added python script that removes empty lines and writes the amount of total lines for each java file in notes.txt
 ## v1.6.3.0
 	* Each time you copy one or multiple files a new Thread is used to to prevent UI from freezing when you copy large files
 	* If you save preferences without choosing bg anf fg colors a default color for each  will be saved.
