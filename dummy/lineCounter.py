@@ -4,12 +4,16 @@ from cleaner import *
 exportFile = open("../notes.txt",'w')
 checkfeed()
 files =[i.strip() for i in open('feed.txt','r').readlines()]
-info = ""
+info  = ""
 chars = 0
+sum	  = 0
 for file in files:
 	source=getSourceCodeLines(file)
 	chars+=source[1]
+	sum+=source[0]
 	info+= "\t{} contains {} lines of source code \n".format(file,source[0])
 exportFile.write(info)
-exportFile.write("\tTotal characters {}".format(chars))	
-removeComments("./lineCounter.py")
+exportFile.write("\tTotal characters {}. Total lines {}".format(chars,sum))	
+print(info+"Total lines {}".format(sum))
+for file in files:
+	removeEmptyLines(file)

@@ -90,6 +90,7 @@ public class FileCopyManager extends JFrame {
 	}
 	@SuppressWarnings("deprecation")
 	private void initUIElements() {
+		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
 		fileMenu.addSeparator();
@@ -316,7 +317,6 @@ public class FileCopyManager extends JFrame {
 	public FileCopyManager(String name) {
 		super(name == null ? "Copy Files" : name);
 		initUIElements();
-		this.setJMenuBar(menuBar);
 		panel.setBackground(Color.white);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
@@ -330,22 +330,22 @@ public class FileCopyManager extends JFrame {
 		panel.add(stopCopy, "cell 3 6");
 		dragLabel = new JLabel("Drag files  here");
 		panel.add(dragLabel, "flowy,cell 3 7");
-		preload().setVisible(true);
+		panel.add(dragPanel, "cell 3 8");
 		this.setSize(535, 391);
 		this.setContentPane(panel);
-		panel.add(dragPanel, "cell 3 8");
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		preload().setVisible(true);
 	}
-	public FileCopyManager preload() {
+	public void preload() {
 		/*
 		* See if we need to change the main UI(change colors or font size)
 		* and if we need do it first and then show the app
 		*/
 		allowEdits();
 		pManager.prepareUI();
-		return this;
+		this.setVisible(true);
 	}
 	public FileCopyManager() {
 		this(null);
