@@ -2,6 +2,7 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -58,6 +60,14 @@ public class FileCopyManager extends JFrame {
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
+	@Override
+	public void show(){
+		this.setVisible(true);
+	}
+	@Override
+	public void hide(){
+		this.setVisible(false);
+	}
 	private boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -345,7 +355,7 @@ public class FileCopyManager extends JFrame {
 		*/
 		allowEdits();
 		pManager.prepareUI();
-		this.setVisible(true);
+		show();
 	}
 	public FileCopyManager() {
 		this(null);
