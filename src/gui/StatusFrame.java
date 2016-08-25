@@ -21,6 +21,7 @@ public class StatusFrame extends JFrame{
 		this.setVisible(true);
 	}
 	public StatusFrame text(String s){
+		this.setTitle("Copying "+s+" .");
 		currentFileLabel.setText("Copying "+s+" .");
 		this.pack();
 		return this;

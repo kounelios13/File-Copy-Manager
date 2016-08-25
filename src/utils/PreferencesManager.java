@@ -30,23 +30,25 @@ import messages.Message;
 import net.miginfocom.swing.MigLayout;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
-	public static String sep = File.separator + File.separator;
 	private FileCopyManager appFrame;
+	private Color bgColor = new Color(238,238,238),
+			      fgColor = new Color(51,51,51);
+	public static String sep = File.separator + File.separator;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
 	private boolean settingsLoaded = false;
-	private Color bgColor, fgColor;
 	private Message msg 		 = new Message();
-	private JPanel prefPanel 	 = new JPanel();
+	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
 	private CustomColorChooser colorChooser = new CustomColorChooser(appFrame,this);
 	private File settingsFile = new File("app" + sep + "settings.dat"),
-			dir = new File("app");
+						  dir = new File("app");
 	private Settings settings = new Settings();
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
 	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
-	private JButton saveSettings = new JButton("Save settings"),
+	private JButton 
+	        saveSettings  =  new JButton("Save settings"),
 			applySettings =  new JButton("Apply Settings"),
 			loadSettings  =  new JButton("Load settings"),
 			chooseColors  =  new JButton("Choose colors"),
@@ -58,14 +60,24 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	public boolean exists(){
 		return settingsFile.exists();
 	}
+	private boolean isNull(Object ...o){
+		return FileHandler.isNull(o);
+	}
 	private void updateSliders() {
 		settings.setBtnSize(buttonSlider.getValue());
 		settings.setLblSize(labelSlider.getValue());
 		updatePreview();
 	}
-	private void initUIElements() {
+	private void setColors(){
+		bgColor = settings.getBgColor();
+		fgColor = settings.getFgColor();
+	}
+	private void createFontList(){
 		for (Font f : fonts)
 			fontModel.addElement(f.getFontName());
+	}
+	private void initUIElements() {
+		createFontList();
 		saveSettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());
 		applySettings.addActionListener((e) ->	applySettings());
@@ -110,14 +122,13 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
-		if(fh.isNull(rc.getPreferences()) || settingsLoaded)
+		if(isNull(rc.getPreferences()) || settingsLoaded)
 			return;
 		settingsLoaded = true;
 		settings = rc.getPreferences();
-		if(!settings.isFontAvailable() && settings.getFontName() != null)
+		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
 			msg.error(null,settings.getFontName()+" font is not available on this system.");
-		bgColor = settings.getBgColor();
-		fgColor = settings.getFgColor();
+		setColors();
 		/**
 		 * Important note:
 		 * Do not use buttonSlider.setValue(settings.getBtnSize())
@@ -169,26 +180,24 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 		this.setVisible(true);
 	}
 	public void applySettings() {
-		bgColor = settings.getBgColor();
-		fgColor = settings.getFgColor();
+		setColors();
 		Font btn = settings.getButtonFont(),
 			 lbl = settings.getLabelFont();
-		for (JButton b : appFrame.getButtons()) {
+		Stream.of(appFrame.getButtons()).forEach(b->{
 			b.setFont(btn);	
 			b.setBackground(bgColor);
 			b.setForeground(fgColor);
-		}
-		for (JLabel label : appFrame.getLabels()) {
+		});
+		Stream.of(appFrame.getLabels()).forEach(label->{
 			label.setFont(lbl);
 			label.setForeground(fgColor);
-		}
+		});
 		appFrame.pack();
 	}
 	public void updatePreview() {
 		Font bFont = settings.getButtonFont(),
 			 lFont = settings.getLabelFont();
-		bgColor = settings.getBgColor();
-		fgColor = settings.getFgColor();
+		setColors();
 		btnSample.setFont(bFont);
 		lblSample.setFont(lFont);
 		btnSample.setBackground(bgColor);

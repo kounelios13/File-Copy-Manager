@@ -2,7 +2,6 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -18,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -29,24 +27,25 @@ import utils.ProgramState;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	private Controller controller = new Controller();
-	private StatusFrame status = new StatusFrame();
-	private FileHandler fHandler = new FileHandler();
+	private StatusFrame status 	  = new StatusFrame();
+	private FileHandler fHandler  = new FileHandler();
 	private PreferencesManager pManager = new PreferencesManager(this);
-	private Message msg = new Message();
+	private Message 	 msg = new Message();
 	private JMenuBar menuBar = new JMenuBar();
-	private JMenu fileMenu = new JMenu("File"), editMenu = new JMenu("Edit");
+	private JMenu   fileMenu = new JMenu("File"),
+				    editMenu = new JMenu("Edit");
 	private JMenuItem saveList = new JMenuItem("Save queue"),
-			exit = new JMenuItem("Exit"),
-			loadList = new JMenuItem("Load queue"),
-			openAppDirectory = new JMenuItem("Open app folder"),
-			showPreferences = new JMenuItem("Preferences"),
-			exportPreferences = new JMenuItem("Export Preferences"),
-			deleteApp=new JMenuItem("Delete app settings"),
-			restartApp=new JMenuItem("Restart Application");
-	private JCheckBoxMenuItem allowDuplicatesOption=new JCheckBoxMenuItem("Allow dupliactes in list");
-	private File selectedFile = null;
+			exit 			   = new JMenuItem("Exit"),
+			loadList           = new JMenuItem("Load queue"),
+			openAppDirectory   = new JMenuItem("Open app folder"),
+			showPreferences    = new JMenuItem("Preferences"),
+			exportPreferences  = new JMenuItem("Export Preferences"),
+			deleteApp          = new JMenuItem("Delete app settings"),
+			restartApp		   = new JMenuItem("Restart Application");
+	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
+	private File      selectedFile = null;
 	private String destinationPath = null;
-	private ArrayList<File> files = new ArrayList<>();
+	private ArrayList<File> files  = new ArrayList<>();
 	private JPanel panel = new JPanel();
 	private JFileChooser chooser = new JFileChooser();
 	private JButton addFiles, selectDestination, copyFile, copyFiles,
@@ -108,11 +107,11 @@ public class FileCopyManager extends JFrame {
 		editMenu.add(allowDuplicatesOption);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
-		addFiles = new JButton("Add files to copy");
-		copyFiles = new JButton("Copy all files");
-		deleteFile = new JButton("Delete file from list");
-		selectDestination = new JButton("Select Destination Folder");
-		deleteAll = new JButton("Delete all files from list");
+		addFiles	 	   	  = new JButton("Add files to copy");
+		copyFiles 	 	   	  = new JButton("Copy all files");
+		deleteFile 	 	   	  = new JButton("Delete file from list");
+		selectDestination  	  = new JButton("Select Destination Folder");
+		deleteAll 		   	  = new JButton("Delete all files from list");
 		openDestinationFolder = new JButton("Open Destination Folder");
 		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
 		openAppDirectory.addActionListener((e)->controller.openAppDirectory());
@@ -191,6 +190,10 @@ public class FileCopyManager extends JFrame {
 				return;
 			}		
 			int index = fileNames.getSelectedIndex();
+			/**
+			 * If index is -1
+			 * it means that either there are no files
+			 * */
 			if(index == -1)
 				return;
 			model.removeElementAt(index);
@@ -281,7 +284,7 @@ public class FileCopyManager extends JFrame {
 				selectedFileIndex = -1;
 				allowEdits();
 			} else
-				msg.error(null, "Operation cancelled by user", "Status");
+				msg.error(null, "Operation cancelled by user");
 		});
 		selectDestination.addActionListener((e) -> {
 			chooser.setDialogTitle("Select destination folder");
