@@ -6,7 +6,17 @@ public class Bar extends JFrame{
 	DefaultBoundedRangeModel model = new DefaultBoundedRangeModel();
 	JPanel panel = new JPanel();
 	JProgressBar jbar = new JProgressBar(model);
+
 	private void init(){
+		JProgressBar bb = new JProgressBar(){
+			@Override
+			public String toString(){
+				return ">_< :p";
+			}
+			public void reset(){
+				this.setValue(0);
+			}
+		};
 		JButton b = new JButton("update");
 		b.addActionListener((e)->go());
 		this.setContentPane(panel);

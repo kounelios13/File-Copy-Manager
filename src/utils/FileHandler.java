@@ -76,6 +76,19 @@ public class FileHandler{
 		}
 		Message.info(null, "List has been saved", "Status");
 	}
+	public String getNewName(File f,String dest){
+		return dest+f.getName();
+	}
+	@SuppressWarnings({"unused"})
+	public void updateCopyProgress(File victim){
+		/*
+		 * This method should be used 
+		 * while copying a file to update a progress bar 
+		 * so as the user knows how much of the file is remaining to copy
+		 * Maybe we should pass a JProgress Bar (or model)
+		 * */
+		long initSize = victim.length();
+	}
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
 		Path from = Paths.get(f.getAbsolutePath());

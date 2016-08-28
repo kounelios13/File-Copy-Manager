@@ -1,10 +1,10 @@
 package gui;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.Font;
 @SuppressWarnings({"serial"})
 public class StatusFrame extends JFrame{
 	private JPanel panel = new JPanel();
