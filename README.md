@@ -10,3 +10,5 @@ Main development branch : Master
 Inside <code>dummy</code> folder you will find a script called <code>lineCounter.py</code>
 
 This script counts the total lines of every java file that <strong>I</strong> have written for this project.
+
+Currently we can't copy files between MTP devices
