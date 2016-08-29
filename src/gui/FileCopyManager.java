@@ -161,6 +161,7 @@ public class FileCopyManager extends JFrame {
 			copyThreads[0].start();
 		});
 		copyFiles.addActionListener((e) -> {
+			fHandler.setStatusFrame(status);
 			if(isNull(destinationPath))
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{

@@ -1,4 +1,5 @@
 package utils;
+import gui.StatusFrame;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 public class FileHandler{
 	String sep = File.separator + File.separator;
 	private boolean startTimer = true;
+	private StatusFrame status = null;
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
@@ -82,6 +84,9 @@ public class FileHandler{
 	public String getNewName(File f,String dest){
 		return dest+f.getName();
 	}
+	public void setStatusFrame(StatusFrame sf){
+		status = sf;
+	}
 	public void updateCopyProgress(File victim,String dest){
 		/*
 		 * This method should be used 
@@ -95,12 +100,17 @@ public class FileHandler{
 		long initSize = victim.length();
 		/*
 		 * Now create a file input stream to manipulate the file at the destination
-		 * path(Get total size or available)
+		 * path(Get  size at a specific time via FileInputSream.available())
 		 * */
 		File output = new File(getNewName(victim,dest));
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(output);
+			/*
+			 * Timer is not working 
+			 * replace with java.util.timer
+			 * http://stackoverflow.com/questions/12908412/print-hello-world-every-x-seconds
+			 * */
 			Timer timer = new Timer(100,(e)->{
 				long copied = 0;
 				try {
@@ -108,7 +118,10 @@ public class FileHandler{
 					if(copied==initSize){
 						startTimer = false;
 						return;
-					}	
+					}
+					System.out.println("Progress :"+copied / 100);
+					if(!isNull(status))
+						status.updateProgessBar(copied);
 				} catch (Exception exc) {
 					// TODO Auto-generated catch block
 					Message.error(null,"Error while updating progress.See log file for more info.");
@@ -119,11 +132,12 @@ public class FileHandler{
 			while (startTimer) {
 				if(!timer.isRunning())
 					timer.start();
+				else
+					break;
 				/*
 				 * if(timer.isRunning()
 				 * 		break*/
 			}
-			timer.stop();
 		} catch (FileNotFoundException exc) {
 			log(exc.getMessage());
 		}
