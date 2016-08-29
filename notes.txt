@@ -5,5 +5,5 @@
 	../src/utils/ProgramState.java contains 32 lines of source code 
 	../src/utils/UIPreferences.java contains 8 lines of source code 
 	../src/utils/ResourceLoader.java contains 49 lines of source code 
-	../src/utils/FileHandler.java contains 160 lines of source code 
-	Total characters 27695. Total lines 978
+	../src/utils/FileHandler.java contains 188 lines of source code 
+	Total characters 28289. Total lines 1006

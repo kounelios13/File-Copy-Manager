@@ -2,6 +2,7 @@ package utils;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -15,10 +16,12 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import messages.Message;
 import org.apache.commons.io.FileUtils;
 public class FileHandler{
 	String sep = File.separator + File.separator;
+	private boolean startTimer = true;
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
@@ -79,15 +82,51 @@ public class FileHandler{
 	public String getNewName(File f,String dest){
 		return dest+f.getName();
 	}
-	@SuppressWarnings({"unused"})
-	public void updateCopyProgress(File victim){
+	public void updateCopyProgress(File victim,String dest){
 		/*
 		 * This method should be used 
 		 * while copying a file to update a progress bar 
 		 * so as the user knows how much of the file is remaining to copy
 		 * Maybe we should pass a JProgress Bar (or model)
 		 * */
+		/*
+		 * Calculate the size of the file to copy
+		 * */
 		long initSize = victim.length();
+		/*
+		 * Now create a file input stream to manipulate the file at the destination
+		 * path(Get total size or available)
+		 * */
+		File output = new File(getNewName(victim,dest));
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(output);
+			Timer timer = new Timer(100,(e)->{
+				long copied = 0;
+				try {
+					copied = initSize - fis.available();
+					if(copied==initSize){
+						startTimer = false;
+						return;
+					}	
+				} catch (Exception exc) {
+					// TODO Auto-generated catch block
+					Message.error(null,"Error while updating progress.See log file for more info.");
+					log(exc.getMessage());
+				}
+			});
+			timer.start();
+			while (startTimer) {
+				if(!timer.isRunning())
+					timer.start();
+				/*
+				 * if(timer.isRunning()
+				 * 		break*/
+			}
+			timer.stop();
+		} catch (FileNotFoundException exc) {
+			log(exc.getMessage());
+		}
 	}
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
