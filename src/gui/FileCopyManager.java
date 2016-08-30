@@ -90,6 +90,47 @@ public class FileCopyManager extends JFrame {
 		for(File f:files)
 			model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 	}
+	private void initDragAreas(){
+		new FileDrop(selectDestination,(e)->{
+			for(File f:e)
+			{
+				if(f.isDirectory())
+				{
+					/*
+					 * Find the first directory that was dragged*/
+					destinationPath = f.getAbsolutePath();
+					allowCopy();
+					break;
+				}
+			}
+		});
+		new FileDrop(dragPanel,(e)->{
+			/* Prevent application from freezing
+			* When dragging many files */
+			new Thread(()->{
+				updateList(e);
+			}).start();
+		});	
+		new FileDrop(this,(e)->{
+			/* Prevent application from freezing
+			* When dragging many files */
+			new Thread(()->{
+				updateList(e);
+			}).start();
+		});
+	}
+	public void updateList(File[] e){
+		for(File f:e){
+			if(!allowDuplicates)
+				if(files.indexOf(f)!= -1)
+					continue;
+			files.add(f);
+			model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+		}
+		allowEdits();
+		showFiles();
+		this.pack();
+	}
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
 	}
@@ -254,51 +295,6 @@ public class FileCopyManager extends JFrame {
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
-		new FileDrop(selectDestination,(e)->{
-			for(File f:e)
-			{
-				if(f.isDirectory())
-				{
-					/*
-					 * Find the first directory that was dragged*/
-					destinationPath = f.getAbsolutePath();
-					allowCopy();
-					break;
-				}
-			}
-		});
-		new FileDrop(dragPanel,(e)->{
-			/* Prevent application from freezing
-			* When dragging many files */
-			new Thread(()->{
-				for(File f:e){
-					if(!allowDuplicates)
-						if(files.indexOf(f)!= -1)
-							continue;
-					files.add(f);
-					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-				}
-				curFrame.pack();
-				allowEdits();
-				showFiles();
-			}).start();
-		});	
-		new FileDrop(this,(e)->{
-			/* Prevent application from freezing
-			* When dragging many files */
-			new Thread(()->{
-				for(File f:e){
-					if(!allowDuplicates)
-						if(files.indexOf(f)!= -1)
-							continue;
-					files.add(f);
-					model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
-				}
-				curFrame.pack();
-				allowEdits();
-				showFiles();
-			}).start();
-		});
 		deleteAll.addActionListener((e) -> {
 			if (files.size() < 1) {
 				msg.info(panel,"There are no files to remove from list","Warning");
@@ -328,6 +324,7 @@ public class FileCopyManager extends JFrame {
 			}else
 				msg.error(panel,"Invalid destination");
 		});
+		initDragAreas();
 		stopCopy.addActionListener((e)->{
 			try{
 				copyThreads[0].stop();
