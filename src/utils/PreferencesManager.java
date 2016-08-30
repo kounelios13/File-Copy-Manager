@@ -6,6 +6,7 @@
 package utils;
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.stream.Stream;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,8 +28,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
+
+import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {
 	private FileCopyManager appFrame;
@@ -258,7 +263,6 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 	}
 	public void deleteAppSettings() {
 		File dir = new File("app");
-		File[] contents = dir.listFiles();
 		if (!dir.exists() || dir.listFiles().length < 1) {
 			msg.error(prefPanel, "No files to delete");
 			return;
@@ -270,11 +274,14 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			msg.error(prefPanel, "Operation cancelled");
 			return;
 		}
-		Stream.of(contents).forEach(File::delete);
-		if (dir.delete())
+		try {
+			FileUtils.deleteDirectory(dir);
+		} catch (IOException exc) {
+			// TODO Auto-generated catch block
+			msg.error(null, "Could not delete app settings");
+		}
+		if (!dir.exists())
 			msg.info(prefPanel, "App settings deleted", "Success");
-		else
-			msg.error(prefPanel, "Could not delete app settings", "Failed!!!");
 		loadPreferences();
 		appFrame.restart();
 	}

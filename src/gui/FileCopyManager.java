@@ -2,6 +2,7 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -16,7 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -24,11 +27,11 @@ import utils.FileDrop;
 import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
-@SuppressWarnings({"serial", "static-access"})
+@SuppressWarnings({"serial", "static-access","unused"})
 public class FileCopyManager extends JFrame {
 	private Controller controller = new Controller();
 	private StatusFrame status 	  = new StatusFrame();
-	private FileHandler fHandler  = new FileHandler();
+	private FileHandler fHandler  = new FileHandler(status);
 	private PreferencesManager pManager = new PreferencesManager(this);
 	private Message 	 msg = new Message();
 	private JMenuBar menuBar = new JMenuBar();
@@ -58,6 +61,7 @@ public class FileCopyManager extends JFrame {
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
+	private Timer timer;
 	private boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -78,6 +82,9 @@ public class FileCopyManager extends JFrame {
 		 */
 		allowCopy();
 		allowDelete();
+	}
+	private void updateProgress(File f){
+		status.requestStatus(f, destinationPath);
 	}
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
@@ -171,7 +178,10 @@ public class FileCopyManager extends JFrame {
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
 						status.text(f.getName()).showStatus();
-						fHandler.copy(f,destinationPath,false);		
+						fHandler.copy(f,destinationPath,false);
+						if(f.isFile()){
+							updateProgress(f);
+						}
 					}
 					status.dispose();
 				});
@@ -238,6 +248,18 @@ public class FileCopyManager extends JFrame {
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
+		new FileDrop(selectDestination,(e)->{
+			for(File f:e)
+			{
+				if(f.isDirectory())
+				{
+					/*
+					 * Find the first directory that was dragged*/
+					destinationPath = f.getAbsolutePath();
+					break;
+				}
+			}
+		});
 		new FileDrop(dragPanel,(e)->{
 			/* Prevent application from freezing
 			* When dragging many files */

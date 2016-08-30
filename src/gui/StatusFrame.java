@@ -2,24 +2,44 @@ package gui;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.io.File;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import javax.swing.Timer;
+import utils.FileHandler;
 @SuppressWarnings({"serial"})
 public class StatusFrame extends JFrame{
+	private Timer timer;
 	private JPanel panel = new JPanel();
 	//value,extend,min,max
 	DefaultBoundedRangeModel model   = new DefaultBoundedRangeModel(0,1,0,100);
 	private JLabel currentFileLabel  = new JLabel("Current File");
 	private JProgressBar progressBar = new JProgressBar(model);
+	private FileHandler fileHandler  = new FileHandler(this);
 	public void updateProgessBar(long prog){
 		int value = (int)prog / 100;
 		model.setValue(value);
+	}
+	public void requestStatus(File file,String path){
+		timer = new Timer(400,(e)->{
+			long pg = fileHandler.getCopyProgress(file,path);
+			if(pg == 100){
+				stopTimer();
+				return;
+			}
+			updateProgessBar(pg);
+			System.out.println("Requested status for "+file.getName()+" .Status:"+pg);
+		});
+		timer.start();
+	}
+	public void stopTimer(){
+		timer.stop();
 	}
 	public StatusFrame(){
 		panel.setBackground(new Color(18,193,17));

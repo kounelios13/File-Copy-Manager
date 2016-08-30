@@ -21,14 +21,19 @@ import javax.swing.Timer;
 import messages.Message;
 import org.apache.commons.io.FileUtils;
 public class FileHandler{
+	private Timer timer;
 	String sep = File.separator + File.separator;
-	private boolean startTimer = true;
 	private StatusFrame status = null;
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
 				return true;
 		return false;
+	}
+	public FileHandler(){
+	}
+	public FileHandler(StatusFrame sframe){
+		this.status = sframe;
 	}
 	public static void log(String message){
 		File logFile = new File("app"+File.separator+File.separator+"log.txt"),
@@ -48,7 +53,7 @@ public class FileHandler{
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
 				StringBuilder str = new StringBuilder();
-				str.append("New log:::"+System.lineSeparator()+message);
+				str.append(System.lineSeparator()+"New log:::"+System.lineSeparator()+message);
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
@@ -87,7 +92,7 @@ public class FileHandler{
 	public void setStatusFrame(StatusFrame sf){
 		status = sf;
 	}
-	public void updateCopyProgress(File victim,String dest){
+	public long getCopyProgress(File victim,String dest){
 		/*
 		 * This method should be used 
 		 * while copying a file to update a progress bar 
@@ -98,6 +103,8 @@ public class FileHandler{
 		 * Calculate the size of the file to copy
 		 * */
 		long initSize = victim.length();
+		long copied = 0;
+		boolean errorAppeared = false;
 		/*
 		 * Now create a file input stream to manipulate the file at the destination
 		 * path(Get  size at a specific time via FileInputSream.available())
@@ -106,41 +113,23 @@ public class FileHandler{
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(output);
-			/*
-			 * Timer is not working 
-			 * replace with java.util.timer
-			 * http://stackoverflow.com/questions/12908412/print-hello-world-every-x-seconds
-			 * */
-			Timer timer = new Timer(100,(e)->{
-				long copied = 0;
-				try {
-					copied = initSize - fis.available();
-					if(copied==initSize){
-						startTimer = false;
-						return;
-					}
-					System.out.println("Progress :"+copied / 100);
-					if(!isNull(status))
-						status.updateProgessBar(copied);
-				} catch (Exception exc) {
-					// TODO Auto-generated catch block
-					Message.error(null,"Error while updating progress.See log file for more info.");
-					log(exc.getMessage());
-				}
-			});
-			timer.start();
-			while (startTimer) {
-				if(!timer.isRunning())
-					timer.start();
-				else
-					break;
-				/*
-				 * if(timer.isRunning()
-				 * 		break*/
+			fis.close();
+			copied = fis.available();
+		} catch (Exception exc) {
+			// TODO Auto-generated catch block
+			if(!errorAppeared){
+				Message.error(null, "Error while updating copy progress");
+				errorAppeared = true;
 			}
-		} catch (FileNotFoundException exc) {
+			else
+			{
+				
+				System.out.println(exc.getMessage());
+			}
 			log(exc.getMessage());
+				
 		}
+		return initSize - copied;
 	}
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
