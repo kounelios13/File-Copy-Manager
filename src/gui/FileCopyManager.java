@@ -243,7 +243,7 @@ public class FileCopyManager extends JFrame {
 				createList(files);
 			selectedFile = state.getSelectedFile();
 			selectedFileIndex = state.getSindex();
-			destinationPath = state.getPath();
+			destinationPath = new File(state.getPath()).exists()?state.getPath():null;
 			fileNames.setSelectedIndex(selectedFileIndex);
 			allowEdits();
 			showFiles();
