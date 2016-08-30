@@ -2,7 +2,6 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -19,7 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -27,6 +25,7 @@ import utils.FileDrop;
 import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
+import utils.ResourceLoader;
 @SuppressWarnings({"serial", "static-access","unused"})
 public class FileCopyManager extends JFrame {
 	private Controller controller = new Controller();
@@ -85,6 +84,11 @@ public class FileCopyManager extends JFrame {
 	}
 	private void updateProgress(File f){
 		status.requestStatus(f, destinationPath);
+	}
+	private void createList(ArrayList<File> files){
+		model.removeAllElements();
+		for(File f:files)
+			model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
 	}
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
@@ -189,7 +193,7 @@ public class FileCopyManager extends JFrame {
 			}
 			catch(Exception ee){
 				msg.error(panel, "Error occured.See log file for more");
-				fHandler.log(ee.getMessage());
+				fHandler.log(ee);
 			}
 			finally{
 				status.dispose();
@@ -221,7 +225,7 @@ public class FileCopyManager extends JFrame {
 					listFile.createNewFile();
 				} catch (Exception e1) {
 					msg.error(panel, "Cannot save list.");
-					fHandler.log(e1.getMessage());
+					fHandler.log(e1);
 				}
 			}
 			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
@@ -235,6 +239,8 @@ public class FileCopyManager extends JFrame {
 			}
 			else
 				return;
+			if(ResourceLoader.validateFiles(files))
+				createList(files);
 			selectedFile = state.getSelectedFile();
 			selectedFileIndex = state.getSindex();
 			destinationPath = state.getPath();
@@ -256,6 +262,7 @@ public class FileCopyManager extends JFrame {
 					/*
 					 * Find the first directory that was dragged*/
 					destinationPath = f.getAbsolutePath();
+					allowCopy();
 					break;
 				}
 			}

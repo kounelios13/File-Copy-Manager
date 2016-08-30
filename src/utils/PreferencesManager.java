@@ -6,7 +6,6 @@
 package utils;
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.stream.Stream;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -28,10 +26,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends JFrame implements UIPreferences {

@@ -28,7 +28,12 @@ public class StatusFrame extends JFrame{
 	}
 	public void requestStatus(File file,String path){
 		timer = new Timer(400,(e)->{
-			long pg = fileHandler.getCopyProgress(file,path);
+			long pg = 0;
+			try{
+				pg = fileHandler.getCopyProgress(file,path);
+			}
+			catch(Exception w){
+			}
 			if(pg == 100){
 				stopTimer();
 				return;

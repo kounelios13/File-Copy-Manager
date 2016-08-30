@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import messages.Message;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
@@ -11,12 +12,28 @@ public class ResourceLoader {
 	 * */
 	private FileHandler handler = null;
 	private ObjectInputStream inputStream;
-	private Message msg = new Message();
-	private String separator = File.separator+File.separator;
-	private File uiTheme=new File("app"+separator+"settings.dat"),
-		listFile = new File("app"+separator+"userlist.dat");
+	private String  separator   = File.separator+File.separator;
+	private Message msg 		= new Message();
+	private File uiTheme 		= new File("app"+separator+"settings.dat"),
+				 listFile 		= new File("app"+separator+"userlist.dat");
+	public static  boolean validateFiles(ArrayList<File>files){
+		//TODO
+		//work more on file validation especially for 'selectedFile'
+		//new addition to changelog
+		boolean modified = false;
+		for(int i = 0,max = files.size();i<max;i++){
+			if(!files.get(i).exists()){
+				files.remove(i);
+				modified = true;
+			}
+		}
+		return modified;
+	}
 	public ResourceLoader(FileHandler handler){
-		this.handler=handler;
+		this.handler = handler;
+		// Maybe a null FileHandler is passed as an argument to the constructor
+		// Doesn't hurt checking it
+		this.handler = this.handler == null? new FileHandler():handler;
 	}	
 	public Settings getPreferences(){
 		/** 
@@ -44,10 +61,13 @@ public class ResourceLoader {
 		 * 
 		 * Returns the last saved state of the main program
 		 * */
-		ProgramState p=null;
+		ProgramState p = null;
 		try {
 			inputStream = new ObjectInputStream(new FileInputStream(listFile));
 			p = (ProgramState)inputStream.readObject();
+			/**
+			* Always close an I/O stream
+			*/
 			inputStream.close();
 		}catch (IOException io) {
 			msg.error(null, "You haven't saved any list.");

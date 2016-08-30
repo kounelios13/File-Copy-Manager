@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import messages.Message;
 import org.apache.commons.io.FileUtils;
+@SuppressWarnings({"unused"})
 public class FileHandler{
 	private Timer timer;
 	String sep = File.separator + File.separator;
@@ -34,6 +35,9 @@ public class FileHandler{
 	}
 	public FileHandler(StatusFrame sframe){
 		this.status = sframe;
+	}
+	public static void log(Throwable th){
+		log(th.getMessage());
 	}
 	public static void log(String message){
 		File logFile = new File("app"+File.separator+File.separator+"log.txt"),
@@ -57,11 +61,11 @@ public class FileHandler{
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
-				Message.error(null, "IOException :"+exc);
 				/**
 				* Here we can only output the error message 
 				* that prevent us from creating a '.log' file
 				*/
+				Message.error(null, "IOException :"+exc.getMessage());
 			}
 	}
 	public void saveList(ProgramState ps,File destFile){
@@ -79,10 +83,10 @@ public class FileHandler{
 			out.writeObject(ps);
 			out.close();
 		} catch (FileNotFoundException exc) {
-			log(exc.getMessage());
+			log(exc);
 		} catch (IOException exc) {
 			Message.error(null, "IOException:"+exc);
-			log(exc.getMessage());
+			log(exc);
 		}
 		Message.info(null, "List has been saved", "Status");
 	}
@@ -92,7 +96,9 @@ public class FileHandler{
 	public void setStatusFrame(StatusFrame sf){
 		status = sf;
 	}
-	public long getCopyProgress(File victim,String dest){
+	public long getCopyProgress(File victim,String dest)
+		throws Exception
+	{
 		/*
 		 * This method should be used 
 		 * while copying a file to update a progress bar 
@@ -116,18 +122,8 @@ public class FileHandler{
 			fis.close();
 			copied = fis.available();
 		} catch (Exception exc) {
-			// TODO Auto-generated catch block
-			if(!errorAppeared){
-				Message.error(null, "Error while updating copy progress");
-				errorAppeared = true;
-			}
-			else
-			{
-				
-				System.out.println(exc.getMessage());
-			}
-			log(exc.getMessage());
-				
+			System.out.println(exc.getMessage());
+			log(exc);
 		}
 		return initSize - copied;
 	}
@@ -144,7 +140,7 @@ public class FileHandler{
 		}
 		catch(IOException io){
 			Message.error(null,"File "+fileName+" could not be copied to "+to);
-			log(io.getMessage());
+			log(io);
 			return false;
 		}
 		if(log)
@@ -165,7 +161,7 @@ public class FileHandler{
 			FileUtils.copyDirectory(dir,destFolder);
 		}
 		catch (IOException e) {
-			log(e.getMessage());
+			log(e);
 			Message.error(null,"Exception during copying directory");
 		}
 		return true;
@@ -206,7 +202,7 @@ public class FileHandler{
 			Desktop.getDesktop().open(new File(dPath));
 		} catch (Exception e1) {
 			Message.error(null, "Could not open destination file");
-			log(e1.getMessage());
+			log(e1);
 		}	
 	}
 	public void openAppDirectory() {
@@ -214,7 +210,7 @@ public class FileHandler{
 			Desktop.getDesktop().open(new File("app"));
 		} catch (Exception e1) {
 			Message.error(null, "Could not open app folder");
-			log(e1.getMessage());
+			log(e1);
 		}
 	}
 }
