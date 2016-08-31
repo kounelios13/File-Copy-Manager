@@ -33,10 +33,10 @@ public class FileCopyManager extends JFrame {
 	private StatusFrame status 	  = new StatusFrame();
 	private FileHandler fHandler  = new FileHandler(status);
 	private PreferencesManager pManager = new PreferencesManager(this);
-	private Message 	 msg = new Message();
-	private JMenuBar menuBar = new JMenuBar();
-	private JMenu   fileMenu = new JMenu("File"),
-				    editMenu = new JMenu("Edit");
+	private Message 	 msg   = new Message();
+	private JMenuBar menuBar   = new JMenuBar();
+	private JMenu   fileMenu   = new JMenu("File"),
+				    editMenu   = new JMenu("Edit");
 	private JMenuItem saveList = new JMenuItem("Save queue"),
 			exit 			   = new JMenuItem("Exit"),
 			loadList           = new JMenuItem("Load queue"),
@@ -225,9 +225,9 @@ public class FileCopyManager extends JFrame {
 						fileNames.setSelectedIndex(curIndex);
 						status.text(f.getName()).showStatus();
 						fHandler.copy(f,destinationPath,false);
-						if(f.isFile()){
+						/*if(f.isFile()){
 							updateProgress(f);
-						}
+						}*/
 					}
 					status.dispose();
 				});

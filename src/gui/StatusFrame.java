@@ -68,9 +68,10 @@ public class StatusFrame extends JFrame{
 		gbc_progressBar.anchor = GridBagConstraints.WEST;
 		gbc_progressBar.gridx = 1;
 		gbc_progressBar.gridy = 1;
-		panel.add(progressBar, gbc_progressBar);
+		//panel.add(progressBar, gbc_progressBar);
 	}
 	public void showStatus(){
+		progressBar.setVisible(false);
 		this.setVisible(true);
 	}
 	public StatusFrame text(String s){
