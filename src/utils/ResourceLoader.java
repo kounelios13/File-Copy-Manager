@@ -47,7 +47,7 @@ public class ResourceLoader {
 			s=(Settings)inputStream.readObject();
 			inputStream.close();
 		} catch (IOException exc) {
-			handler.log(exc);
+			//handler.log(exc);
 		} catch (ClassNotFoundException ci){
 			msg.error(null,
 				"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",

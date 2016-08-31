@@ -2,6 +2,7 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -29,24 +30,24 @@ import utils.ResourceLoader;
 @SuppressWarnings({"serial", "static-access","unused"})
 public class FileCopyManager extends JFrame {
 	public static String appName  = "File Copy Manager v1.6.4.0";
+	private PreferencesManager pManager 		    = new PreferencesManager(this);
+	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
 	private Controller controller = new Controller();
 	private StatusFrame status 	  = new StatusFrame();
-	private FileHandler fHandler  = new FileHandler(status);
-	private PreferencesManager pManager = new PreferencesManager(this);
-	private Message 	 msg   = new Message();
-	private JMenuBar menuBar   = new JMenuBar();
-	private JMenu   fileMenu   = new JMenu("File"),
-				    editMenu   = new JMenu("Edit");
-	private JMenuItem saveList = new JMenuItem("Save queue"),
-			exit 			   = new JMenuItem("Exit"),
-			loadList           = new JMenuItem("Load queue"),
-			openAppDirectory   = new JMenuItem("Open app folder"),
-			showPreferences    = new JMenuItem("Preferences"),
-			exportPreferences  = new JMenuItem("Export Preferences"),
-			deleteApp          = new JMenuItem("Delete app settings"),
-			restartApp		   = new JMenuItem("Restart Application");
-	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
-	private File      selectedFile = null;
+	private FileHandler fHandler  = new FileHandler(status);	
+	private Message 	 msg   	  = new Message();
+	private JMenuBar menuBar   	  = new JMenuBar();
+	private JMenu   fileMenu   	  = new JMenu("File"),
+				    editMenu   	  = new JMenu("Edit");
+	private JMenuItem saveList 	  = new JMenuItem("Save queue"),
+			exit 			   	  = new JMenuItem("Exit"),
+			loadList           	  = new JMenuItem("Load queue"),
+			openAppDirectory   	  = new JMenuItem("Open app folder"),
+			showPreferences    	  = new JMenuItem("Preferences"),
+			exportPreferences  	  = new JMenuItem("Export Preferences"),
+			deleteApp          	  = new JMenuItem("Delete app settings"),
+			restartApp		   	  = new JMenuItem("Restart Application");
+		private File      selectedFile = null;
 	private String destinationPath = null;
 	private ArrayList<File> files  = new ArrayList<>();
 	private JPanel panel = new JPanel();
@@ -139,7 +140,7 @@ public class FileCopyManager extends JFrame {
 		//First close the current instance of the program
 		this.dispose();
 		//and create a new instance
-		new FileCopyManager();
+		new FileCopyManager(appName);
 	}
 	@SuppressWarnings("deprecation")
 	private void initUIElements() {
@@ -259,6 +260,10 @@ public class FileCopyManager extends JFrame {
 			allowEdits();
 		});
 		saveList.addActionListener((e) -> {
+			if(isNull(destinationPath)){
+				msg.error(panel, "If you want to save your list please select a destination folder for your files.");
+				return;
+			}
 			File dir = listFile.getParentFile();
 			if (!dir.exists())
 				dir.mkdirs();
@@ -283,11 +288,14 @@ public class FileCopyManager extends JFrame {
 				return;
 			if(ResourceLoader.validateFiles(files)){
 				createList(files);
-				msg.info(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
+				/**
+				 * More of a warning here since there is not an error
+				 * */
+				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
 			}	
-			selectedFile = state.getSelectedFile();
-			selectedFileIndex = state.getSindex();
-			destinationPath = new File(state.getPath()).exists()?state.getPath():null;
+			selectedFile 		= state.getSelectedFile();
+			selectedFileIndex	= state.getSindex();
+			destinationPath		= state.getPath();
 			try{
 				fileNames.setSelectedIndex(selectedFileIndex);
 			}
@@ -318,8 +326,8 @@ public class FileCopyManager extends JFrame {
 				model.removeAllElements();
 				fileNames.setVisible(false);
 				msg.info(panel,"Files removed from list succcessfully","Status");
-				selectedFile = null;
-				selectedFileIndex = -1;
+				selectedFile 		= null;
+				selectedFileIndex 	= -1;
 				allowEdits();
 			} else
 				msg.error(null, "Operation cancelled by user");
@@ -339,8 +347,7 @@ public class FileCopyManager extends JFrame {
 		initDragAreas();
 		stopCopy.addActionListener((e)->{
 			try{
-				copyThreads[0].stop();
-				copyThreads[1].stop();
+				Stream.of(copyThreads).forEach(Thread::stop);
 			}
 			catch(Exception ee){
 			}
@@ -358,7 +365,7 @@ public class FileCopyManager extends JFrame {
 		return array;
 	}
 	public FileCopyManager(String name) {
-		super(name == null ? "Copy Files" : name);
+		super(name == null ? appName : name);
 		initUIElements();
 		panel.setBackground(Color.white);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));

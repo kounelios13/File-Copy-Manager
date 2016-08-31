@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"unused"})
 public class FileHandler{
 	private Timer timer;
-	String sep = File.separator + File.separator;
+	public static String sep = File.separator + File.separator;
 	private StatusFrame status = null;
 	public static boolean isNull(Object... items){
 		for(Object o:items)
@@ -31,16 +31,11 @@ public class FileHandler{
 				return true;
 		return false;
 	}
-	public FileHandler(){
-	}
-	public FileHandler(StatusFrame sframe){
-		this.status = sframe;
-	}
 	public static void log(Throwable th){
 		log(th.getMessage());
 	}
 	public static void log(String message){
-		File logFile = new File("app"+File.separator+File.separator+"log.txt"),
+		File logFile = new File("app"+sep+"log.txt"),
 				dir	 = new File("app");
 		/**
 		 * Make sure that 'app' directory exists 
@@ -57,7 +52,8 @@ public class FileHandler{
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
 				StringBuilder str = new StringBuilder();
-				str.append(System.lineSeparator()+"New log:::"+System.lineSeparator()+message);
+				str.append(System.lineSeparator()+"\t||||--------_Log Message_-------||||\n");
+				str.append(System.lineSeparator()+message);
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
@@ -67,6 +63,11 @@ public class FileHandler{
 				*/
 				Message.error(null, "IOException :"+exc.getMessage());
 			}
+	}
+	public FileHandler(){
+	}
+	public FileHandler(StatusFrame sframe){
+		this.status = sframe;
 	}
 	public void saveList(ProgramState ps,File destFile){
 		if(isNull(destFile)){
@@ -211,8 +212,13 @@ public class FileHandler{
 		}	
 	}
 	public void openAppDirectory() {
+		File dir = new File("app");
+		if(!dir.exists()){
+			Message.error(null, "No app folder has been created in your system.");
+			return;
+		}
 		try {
-			Desktop.getDesktop().open(new File("app"));
+			Desktop.getDesktop().open(dir);
 		} catch (Exception e1) {
 			Message.error(null, "Could not open app folder");
 			log(e1);
