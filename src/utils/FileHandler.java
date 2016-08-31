@@ -96,7 +96,6 @@ public class FileHandler{
 	public void setStatusFrame(StatusFrame sf){
 		status = sf;
 	}
-
 	public long getCopyProgress(File victim,String dest)
 		throws Exception
 	{
@@ -120,14 +119,12 @@ public class FileHandler{
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(output);
-
 			fis.close();
 			copied = fis.available();
 		} catch (Exception exc) {
 			System.out.println(exc.getMessage());
 			log(exc);
 		}	
-
 			/*
 			 * Timer is not working 
 			 * replace with java.util.timer
