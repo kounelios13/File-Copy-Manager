@@ -47,12 +47,12 @@ public class ResourceLoader {
 			s=(Settings)inputStream.readObject();
 			inputStream.close();
 		} catch (IOException exc) {
-			handler.log(exc.getMessage());
+			handler.log(exc);
 		} catch (ClassNotFoundException ci){
 			msg.error(null,
 				"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
 				"Invalid settings");
-			handler.log(ci.getMessage());
+			handler.log(ci);
 		}
 		return s;
 	}
@@ -71,7 +71,7 @@ public class ResourceLoader {
 			inputStream.close();
 		}catch (IOException io) {
 			msg.error(null, "You haven't saved any list.");
-			handler.log(io.getMessage());			
+			handler.log(io);			
 		} catch (ClassNotFoundException cn) {
 			msg.error(null, "Corrupted file found");
 			handler.log(cn.getMessage());

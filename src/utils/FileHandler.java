@@ -96,6 +96,7 @@ public class FileHandler{
 	public void setStatusFrame(StatusFrame sf){
 		status = sf;
 	}
+
 	public long getCopyProgress(File victim,String dest)
 		throws Exception
 	{
@@ -119,14 +120,21 @@ public class FileHandler{
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(output);
+
 			fis.close();
 			copied = fis.available();
 		} catch (Exception exc) {
 			System.out.println(exc.getMessage());
 			log(exc);
-		}
-		return initSize - copied;
-	}
+		}	
+
+			/*
+			 * Timer is not working 
+			 * replace with java.util.timer
+			 * http://stackoverflow.com/questions/12908412/print-hello-world-every-x-seconds
+			 * */
+		return copied;
+	}		
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
 		Path from = Paths.get(f.getAbsolutePath());

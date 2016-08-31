@@ -28,6 +28,7 @@ import utils.ProgramState;
 import utils.ResourceLoader;
 @SuppressWarnings({"serial", "static-access","unused"})
 public class FileCopyManager extends JFrame {
+	public static String appName  = "File Copy Manager v1.6.4.0";
 	private Controller controller = new Controller();
 	private StatusFrame status 	  = new StatusFrame();
 	private FileHandler fHandler  = new FileHandler(status);
@@ -280,12 +281,23 @@ public class FileCopyManager extends JFrame {
 			}
 			else
 				return;
-			if(ResourceLoader.validateFiles(files))
+			if(ResourceLoader.validateFiles(files)){
 				createList(files);
+				msg.info(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
+			}	
 			selectedFile = state.getSelectedFile();
 			selectedFileIndex = state.getSindex();
 			destinationPath = new File(state.getPath()).exists()?state.getPath():null;
-			fileNames.setSelectedIndex(selectedFileIndex);
+			try{
+				fileNames.setSelectedIndex(selectedFileIndex);
+			}
+			catch(IllegalArgumentException exc){
+				if(!files.isEmpty()){
+					fileNames.setSelectedIndex(0);
+					selectedFileIndex = 0;
+				}
+				fHandler.log(exc);				
+			}
 			allowEdits();
 			showFiles();
 			this.pack();
@@ -296,7 +308,7 @@ public class FileCopyManager extends JFrame {
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
 		deleteAll.addActionListener((e) -> {
-			if (files.size() < 1) {
+			if (files.isEmpty()) {
 				msg.info(panel,"There are no files to remove from list","Warning");
 				return;
 			}
@@ -390,7 +402,7 @@ public class FileCopyManager extends JFrame {
 				FileHandler.log(e.getMessage());
 			}
 			finally{
-				new FileCopyManager("File Copy Manager v1.6.4.0");
+				new FileCopyManager(appName);
 			}
 		 });
 	}
