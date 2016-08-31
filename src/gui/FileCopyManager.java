@@ -390,7 +390,7 @@ public class FileCopyManager extends JFrame {
 				FileHandler.log(e.getMessage());
 			}
 			finally{
-				new FileCopyManager();
+				new FileCopyManager("File Copy Manager v1.6.4.0");
 			}
 		 });
 	}
