@@ -2,7 +2,6 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -17,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.UIManager;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
@@ -27,7 +25,7 @@ import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
-@SuppressWarnings({"serial", "static-access","unused"})
+@SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends JFrame {
 	public static String appName  = "File Copy Manager v1.6.4.0";
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
@@ -62,7 +60,6 @@ public class FileCopyManager extends JFrame {
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
-	private Timer timer;
 	private boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -83,9 +80,6 @@ public class FileCopyManager extends JFrame {
 		 */
 		allowCopy();
 		allowDelete();
-	}
-	private void updateProgress(File f){
-		status.requestStatus(f, destinationPath);
 	}
 	private void createList(ArrayList<File> files){
 		model.removeAllElements();
@@ -171,7 +165,6 @@ public class FileCopyManager extends JFrame {
 		openAppDirectory.addActionListener((e)->controller.openAppDirectory());
 		stopCopy = new JButton("Stop copy operations");
 		model = new DefaultComboBoxModel<String>();
-		JFrame curFrame = this;
 		fileNames = new JComboBox<String>(model);
 		fileNames.setVisible(false);
 		addFiles.addActionListener((e) -> {
@@ -345,14 +338,6 @@ public class FileCopyManager extends JFrame {
 				msg.error(panel,"Invalid destination");
 		});
 		initDragAreas();
-		stopCopy.addActionListener((e)->{
-			try{
-				Stream.of(copyThreads).forEach(Thread::stop);
-			}
-			catch(Exception ee){
-			}
-			status.dispose();
-		});
 		stopCopy.setVisible(false);
 	}
 	public JLabel[] getLabels() {

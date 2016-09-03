@@ -1,4 +1,4 @@
-package utils;
+package interfaces;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 public interface UIPreferences {

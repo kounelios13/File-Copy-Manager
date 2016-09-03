@@ -10,8 +10,8 @@ public class ResourceLoader {
 	/***
 	 * Handle loading of app related files
 	 * */
-	private FileHandler handler = null;
 	private ObjectInputStream inputStream;
+	private FileHandler handler = null;
 	private String  separator   = File.separator+File.separator;
 	private Message msg 		= new Message();
 	private File uiTheme 		= new File("app"+separator+"settings.dat"),

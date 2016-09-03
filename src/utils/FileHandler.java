@@ -120,8 +120,9 @@ public class FileHandler{
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(output);
-			fis.close();
 			copied = fis.available();
+			fis.close();
+			
 		} catch (Exception exc) {
 			System.out.println(exc.getMessage());
 			log(exc);
