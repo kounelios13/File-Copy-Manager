@@ -6,6 +6,7 @@
 package utils;
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
+import interfaces.IView;
 import interfaces.UIPreferences;
 
 import java.awt.Color;
@@ -35,7 +36,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
-public class PreferencesManager extends JFrame implements UIPreferences {
+public class PreferencesManager extends JFrame implements UIPreferences,IView {
 	private FileCopyManager appFrame;
 	private Color bgColor = new Color(238,238,238),
 			      fgColor = new Color(51,51,51);
@@ -181,6 +182,10 @@ public class PreferencesManager extends JFrame implements UIPreferences {
 			fh.log(io.getMessage());
 		}
 		this.setVisible(false);
+	}
+	@Override
+	public void toggleUI(){
+		this.setVisible(!this.isVisible());
 	}
 	public void editPreferences() {
 		this.setVisible(true);

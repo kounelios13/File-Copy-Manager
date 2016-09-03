@@ -7,14 +7,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.File;
 import javax.swing.DefaultBoundedRangeModel;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 import utils.FileHandler;
 @SuppressWarnings({"serial"})
-public class StatusFrame extends JFrame{
+public class StatusFrame extends View{
 	private Timer timer;
 	private JPanel panel = new JPanel();
 	//value,extend,min,max
@@ -47,6 +46,7 @@ public class StatusFrame extends JFrame{
 		timer.stop();
 	}
 	public StatusFrame(){
+		super("",600,100);
 		panel.setBackground(new Color(18,193,17));
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{182, 69, 146, 0};
@@ -60,7 +60,6 @@ public class StatusFrame extends JFrame{
 		gbc_currentFileLabel.gridx = 1;
 		gbc_currentFileLabel.gridy = 0;
 		panel.add(currentFileLabel, gbc_currentFileLabel);
-		this.setSize(600,100);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setContentPane(panel);
 		GridBagConstraints gbc_progressBar = new GridBagConstraints();

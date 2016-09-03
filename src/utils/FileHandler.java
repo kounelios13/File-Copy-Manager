@@ -122,7 +122,6 @@ public class FileHandler{
 			fis = new FileInputStream(output);
 			copied = fis.available();
 			fis.close();
-			
 		} catch (Exception exc) {
 			System.out.println(exc.getMessage());
 			log(exc);

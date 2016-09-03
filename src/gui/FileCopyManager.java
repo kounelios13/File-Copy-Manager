@@ -7,7 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -26,7 +25,7 @@ import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
 @SuppressWarnings({"serial", "static-access"})
-public class FileCopyManager extends JFrame {
+public class FileCopyManager extends View{
 	public static String appName  = "File Copy Manager v1.6.4.0";
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
@@ -136,7 +135,6 @@ public class FileCopyManager extends JFrame {
 		//and create a new instance
 		new FileCopyManager(appName);
 	}
-	@SuppressWarnings("deprecation")
 	private void initUIElements() {
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
@@ -350,7 +348,7 @@ public class FileCopyManager extends JFrame {
 		return array;
 	}
 	public FileCopyManager(String name) {
-		super(name == null ? appName : name);
+		super(name == null ? appName : name,535,391);
 		initUIElements();
 		panel.setBackground(Color.white);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));
@@ -366,7 +364,6 @@ public class FileCopyManager extends JFrame {
 		dragLabel = new JLabel("Drag files  here");
 		panel.add(dragLabel, "flowy,cell 3 7");
 		panel.add(dragPanel, "cell 3 8");
-		this.setSize(535, 391);
 		this.setContentPane(panel);
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -380,7 +377,7 @@ public class FileCopyManager extends JFrame {
 		*/
 		allowEdits();
 		pManager.prepareUI();
-		this.setVisible(true);
+		toggleUI();
 	}
 	public FileCopyManager() {
 		this(null);
