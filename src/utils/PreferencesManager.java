@@ -6,9 +6,8 @@
 package utils;
 import gui.CustomColorChooser;
 import gui.FileCopyManager;
-import interfaces.IView;
+import gui.View;
 import interfaces.UIPreferences;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -20,23 +19,19 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.stream.Stream;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
-public class PreferencesManager extends JFrame implements UIPreferences,IView {
+public class PreferencesManager extends View implements UIPreferences{
 	private FileCopyManager appFrame;
 	private Color bgColor = new Color(238,238,238),
 			      fgColor = new Color(51,51,51);
@@ -101,7 +96,7 @@ public class PreferencesManager extends JFrame implements UIPreferences,IView {
 	 * @wbp.parser.constructor
 	 */
 	public PreferencesManager(FileCopyManager frame) {
-		super("Preferences");
+		super("Preferences",600,800);
 		appFrame = frame;
 		initUIElements();
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
@@ -182,10 +177,6 @@ public class PreferencesManager extends JFrame implements UIPreferences,IView {
 			fh.log(io.getMessage());
 		}
 		this.setVisible(false);
-	}
-	@Override
-	public void toggleUI(){
-		this.setVisible(!this.isVisible());
 	}
 	public void editPreferences() {
 		this.setVisible(true);

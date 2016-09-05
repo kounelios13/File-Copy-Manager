@@ -24,7 +24,7 @@ import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
-@SuppressWarnings({"serial", "static-access"})
+@SuppressWarnings({"all","serial", "static-access"})
 public class FileCopyManager extends View{
 	public static String appName  = "File Copy Manager v1.6.4.0";
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
@@ -44,7 +44,7 @@ public class FileCopyManager extends View{
 			exportPreferences  	  = new JMenuItem("Export Preferences"),
 			deleteApp          	  = new JMenuItem("Delete app settings"),
 			restartApp		   	  = new JMenuItem("Restart Application");
-		private File      selectedFile = null;
+	private File      selectedFile = null;
 	private String destinationPath = null;
 	private ArrayList<File> files  = new ArrayList<>();
 	private JPanel panel = new JPanel();
@@ -59,7 +59,7 @@ public class FileCopyManager extends View{
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
-	private boolean isNull(Object...t){
+	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
 	private void allowCopy(){
@@ -166,9 +166,9 @@ public class FileCopyManager extends View{
 		fileNames = new JComboBox<String>(model);
 		fileNames.setVisible(false);
 		addFiles.addActionListener((e) -> {
+			chooser.setDialogTitle("Select files to copy");
 			chooser.setMultiSelectionEnabled(true);
 			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			chooser.setDialogTitle("Select files to copy");
 			int r = chooser.showOpenDialog(panel);
 			if (r != JFileChooser.APPROVE_OPTION)
 				return;
@@ -283,10 +283,17 @@ public class FileCopyManager extends View{
 				 * More of a warning here since there is not an error
 				 * */
 				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
-			}	
-			selectedFile 		= state.getSelectedFile();
-			selectedFileIndex	= state.getSindex();
-			destinationPath		= state.getPath();
+			}
+			/**
+			 * While loading the list 
+			 * check if the saved destination folder exists
+			 * and if the saved selectedFile is still available to the application
+			 * */
+			boolean selectedFileExists = state.getSelectedFile().exists(),
+					destinationExists  = new File(state.getPath()).exists();
+			selectedFile 		= !selectedFileExists ? null:state.getSelectedFile();
+			selectedFileIndex	= selectedFileExists  ? state.getSindex():-1;
+			destinationPath		= destinationExists   ? state.getPath():null;
 			try{
 				fileNames.setSelectedIndex(selectedFileIndex);
 			}
@@ -316,9 +323,9 @@ public class FileCopyManager extends View{
 				files.clear();
 				model.removeAllElements();
 				fileNames.setVisible(false);
-				msg.info(panel,"Files removed from list succcessfully","Status");
 				selectedFile 		= null;
 				selectedFileIndex 	= -1;
+				msg.info(panel,"Files removed from list succcessfully","Status");
 				allowEdits();
 			} else
 				msg.error(null, "Operation cancelled by user");
@@ -348,7 +355,11 @@ public class FileCopyManager extends View{
 		return array;
 	}
 	public FileCopyManager(String name) {
-		super(name == null ? appName : name,535,391);
+		/**
+		 * Arguments for super()
+		 * String title ,int width , int height
+		 */
+		super((isNull(name) ? appName : name),535,391);
 		initUIElements();
 		panel.setBackground(Color.white);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));
@@ -368,6 +379,10 @@ public class FileCopyManager extends View{
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		/*
+		 * By setting resizable to false 
+		 * we stop user from resizing the main UI frame**/
+		this.setResizable(false);
 		preload();
 	}
 	public void preload() {
