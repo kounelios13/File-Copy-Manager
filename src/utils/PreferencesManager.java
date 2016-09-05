@@ -18,6 +18,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.StandardWatchEventKinds;
 import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -30,7 +36,7 @@ import javax.swing.JSlider;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
-@SuppressWarnings({"static-access", "serial"})
+@SuppressWarnings({"all","static-access", "serial"})
 public class PreferencesManager extends View implements UIPreferences{
 	private FileCopyManager appFrame;
 	private Color bgColor = new Color(238,238,238),
@@ -61,6 +67,23 @@ public class PreferencesManager extends View implements UIPreferences{
 	private Font[] fonts = UIPreferences.fonts;
 	public boolean exists(){
 		return settingsFile.exists();
+	}
+	private void watchForUpdates(){
+		/*
+		 * This method will be used to detect any new files in the app directory
+		 * **/
+		//Path appPath = new Path("");
+		Path appDir =Paths.get("app");
+		try {
+			WatchService watcher = FileSystems.getDefault().newWatchService();
+		/*	  WatchKey key = dir.register(watcher,
+                      ENTRY_CREATE,
+                      ENTRY_DELETE,
+                      ENTRY_MODIFY);*/
+		} catch (IOException exc) {
+			// TODO Auto-generated catch block
+			fh.log(exc);
+		}
 	}
 	private boolean isNull(Object ...o){
 		return FileHandler.isNull(o);
@@ -239,7 +262,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			try {
 				f.createNewFile();
 			} catch (Exception e) {
-				fh.log(e.getMessage());
+				fh.log(e);
 				return;
 			}
 		try {
@@ -255,7 +278,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			writer.write(str.toString());
 			writer.close();
 		} catch (IOException exc) {
-			fh.log(exc.getMessage());
+			fh.log(exc);
 		}
 	}
 	public void deleteAppSettings() {
@@ -275,6 +298,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			FileUtils.deleteDirectory(dir);
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
+			fh.log(exc);
 			msg.error(null, "Could not delete app settings");
 		}
 		if (!dir.exists())

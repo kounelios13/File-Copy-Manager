@@ -1,4 +1,9 @@
 package utils;
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import gui.StatusFrame;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -10,10 +15,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.CopyOption;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -29,6 +39,51 @@ public class FileHandler{
 		for(Object o:items)
 			if(o==null)
 				return true;
+		return false;
+	}
+	public static boolean watchForUpdates(String fileName){
+		File temp = new File(fileName);
+		Path target = Paths.get(temp.getAbsolutePath());
+		try{
+			Boolean isFolder = (Boolean)Files.getAttribute(target,
+                    "basic:isDirectory", NOFOLLOW_LINKS);
+			if(!isFolder)
+				throw new IllegalArgumentException("Path: " +target+ " is not a folder");
+		}
+		catch(Exception e){
+			log(e);
+		}
+		FileSystem fs = target.getFileSystem();
+		 try (WatchService service = fs.newWatchService()) {
+            // We register the path to the service
+            // We watch for creation events
+            target.register(service, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE); 
+            // Start the infinite polling loop
+            WatchKey key = null;
+            while (true) {
+                key = service.take();
+                // Dequeueing events
+                Kind<?> kind = null;
+                for (WatchEvent<?> watchEvent : key.pollEvents()) {
+                    // Get the type of the event
+                    kind = watchEvent.kind();
+                    if (OVERFLOW == kind) {
+                        continue; // loop
+                    }
+                    Path newPath = ((WatchEvent<Path>) watchEvent).context();
+                   	if(kind == ENTRY_MODIFY)
+                   		if(newPath.equals(fileName))
+                   			return true;
+                }
+                if (!key.reset()) {
+                    break; // loop
+                }
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
 		return false;
 	}
 	public static void log(Throwable th){
