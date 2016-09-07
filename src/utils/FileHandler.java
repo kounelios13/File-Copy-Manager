@@ -4,6 +4,8 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import static messages.Message.info;
+import static messages.Message.error;
 import gui.StatusFrame;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
-import messages.Message;
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"unused"})
 public class FileHandler{
@@ -43,7 +44,9 @@ public class FileHandler{
 	}
 	public static boolean watchForUpdates(String fileName){
 		File temp = new File(fileName);
-		Path target = Paths.get(temp.getAbsolutePath());
+		// If file is app//settings.dat
+		// getParent() returns the directory of the file -> "app"
+		Path target = Paths.get(temp.getParent());
 		try{
 			Boolean isFolder = (Boolean)Files.getAttribute(target,
                     "basic:isDirectory", NOFOLLOW_LINKS);
@@ -70,7 +73,8 @@ public class FileHandler{
                     if (OVERFLOW == kind) {
                         continue; // loop
                     }
-                    Path newPath = ((WatchEvent<Path>) watchEvent).context();
+                    @SuppressWarnings("unchecked")
+					Path newPath = ((WatchEvent<Path>) watchEvent).context();
                    	if(kind == ENTRY_MODIFY)
                    		if(newPath.equals(fileName))
                    			return true;
@@ -80,9 +84,9 @@ public class FileHandler{
                 }
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            log(ioe);
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            log(ie);
         }
 		return false;
 	}
@@ -101,7 +105,7 @@ public class FileHandler{
 			try {
 				logFile.createNewFile();
 			} catch (IOException exc) {
-				Message.error(null, "IOException :"+exc);	
+				error(null, "IOException :"+exc);	
 				return;
 			}
 			try {
@@ -116,7 +120,7 @@ public class FileHandler{
 				* Here we can only output the error message 
 				* that prevent us from creating a '.log' file
 				*/
-				Message.error(null, "IOException :"+exc.getMessage());
+				error(null, "IOException :"+exc.getMessage());
 			}
 	}
 	public FileHandler(){
@@ -126,12 +130,12 @@ public class FileHandler{
 	}
 	public void saveList(ProgramState ps,File destFile){
 		if(isNull(destFile)){
-			Message.error(null, "Destination folder has not been selected", "Destination Empty");
+			error(null, "Destination folder has not been selected", "Destination Empty");
 			return;
 		}
 		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
-			Message.error(null,"No files have been selected","Empty list");
+			error(null,"No files have been selected","Empty list");
 			return;
 		}
 		try {
@@ -141,10 +145,10 @@ public class FileHandler{
 		} catch (FileNotFoundException exc) {
 			log(exc);
 		} catch (IOException exc) {
-			Message.error(null, "IOException:"+exc);
+			error(null, "IOException:"+exc);
 			log(exc);
 		}
-		Message.info(null, "List has been saved", "Status");
+		info(null, "List has been saved", "Status");
 	}
 	public String getNewName(File f,String dest){
 		return dest+f.getName();
@@ -200,15 +204,15 @@ public class FileHandler{
 			Files.copy(from, to, options);
 		}
 		catch(IOException io){
-			Message.error(null,"File "+fileName+" could not be copied to "+to);
+			error(null,"File "+fileName+" could not be copied to "+to);
 			log(io);
 			return false;
 		}
 		if(log)
 			if(new File(dest+sep+fileName).exists())
-				Message.info(null,fileName+" copied successfully");
+				info(null,fileName+" copied successfully");
 			else
-				Message.error(null,fileName+" could not be copied");
+				error(null,fileName+" could not be copied");
 		return true;
 	}
 	public boolean copyFile(File f,String dest,boolean log){
@@ -223,7 +227,7 @@ public class FileHandler{
 		}
 		catch (IOException e) {
 			log(e);
-			Message.error(null,"Exception during copying directory");
+			error(null,"Exception during copying directory");
 		}
 		return true;
 	}
@@ -256,26 +260,26 @@ public class FileHandler{
 	}
 	public void openDestination(String dPath) {
 		if (isNull(dPath)) {
-			Message.error(null, "No folder selected","Missing destination folder");
+			error(null, "No folder selected","Missing destination folder");
 			return;
 		}
 		try {
 			Desktop.getDesktop().open(new File(dPath));
 		} catch (Exception e1) {
-			Message.error(null, "Could not open destination file");
+			error(null, "Could not open destination file");
 			log(e1);
 		}	
 	}
 	public void openAppDirectory() {
 		File dir = new File("app");
 		if(!dir.exists()){
-			Message.error(null, "No app folder has been created in your system.");
+			error(null, "No app folder has been created in your system.");
 			return;
 		}
 		try {
 			Desktop.getDesktop().open(dir);
 		} catch (Exception e1) {
-			Message.error(null, "Could not open app folder");
+			error(null, "Could not open app folder");
 			log(e1);
 		}
 	}
