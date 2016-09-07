@@ -84,6 +84,8 @@ public class FileCopyManager extends View{
 		model.removeAllElements();
 		for(File f:files)
 			model.addElement(f.getName()+(f.isDirectory()?" (Folder)":""));
+		if(!files.isEmpty())
+			fileNames.setSelectedIndex(selectedFileIndex);
 	}
 	private void initDragAreas(){
 		new FileDrop(selectDestination,(e)->{
@@ -277,13 +279,13 @@ public class FileCopyManager extends View{
 			}
 			else
 				return;
-			if(ResourceLoader.validateFiles(files)){
+			if(ResourceLoader.filesModified(files)){
 				/**
 				 * More of a warning here since there is not an error
 				 * */
+				selectedFileIndex = !files.isEmpty()?0:-1;
 				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
 			}
-			createList(files);
 			/**
 			 * While loading the list 
 			 * check if the saved destination folder exists
@@ -294,6 +296,7 @@ public class FileCopyManager extends View{
 			selectedFile 		= !selectedFileExists ? null:state.getSelectedFile();
 			selectedFileIndex	= selectedFileExists  ? state.getSindex():-1;
 			destinationPath		= destinationExists   ? state.getPath():null;
+			createList(files);
 			try{
 				fileNames.setSelectedIndex(selectedFileIndex);
 			}
@@ -328,7 +331,7 @@ public class FileCopyManager extends View{
 				msg.info(panel,"Files removed from list succcessfully","Status");
 				allowEdits();
 			} else
-				msg.error(null, "Operation cancelled by user");
+				msg.error("Operation cancelled by user");
 		});
 		selectDestination.addActionListener((e) -> {
 			chooser.setDialogTitle("Select destination folder");
@@ -362,7 +365,7 @@ public class FileCopyManager extends View{
 		super((isNull(name) ? appName : name),535,391);
 		initUIElements();
 		panel.setBackground(Color.white);
-		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][][][grow]"));
+		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][-237.00][][grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");

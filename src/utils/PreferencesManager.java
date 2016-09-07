@@ -148,7 +148,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		settingsLoaded = true;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
-			msg.error(null,settings.getFontName()+" font is not available on this system.");
+			msg.error(settings.getFontName()+" font is not available on this system.");
 		setColors();
 		/**
 		 * Important note:
@@ -181,7 +181,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e1) {
-				msg.error(null, "Can't save preferences");
+				msg.error( "Can't save preferences");
 				fh.log(e1.getMessage());
 			} finally {
 				if (settingsFile.exists()) {
@@ -192,7 +192,7 @@ public class PreferencesManager extends View implements UIPreferences{
 				applySettings();
 			}
 		} catch (IOException io) {
-			msg.error(null, "IOException occured", "IO");
+			msg.error( "IOException occured", "IO");
 			fh.log(io.getMessage());
 		}
 		this.setVisible(false);
@@ -249,7 +249,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		ch.setApproveButtonText("Select");
 		int n = ch.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION) {
-		 	msg.info(null,"Operation aborted");
+		 	msg.info("Operation aborted");
 			return;
 		}
 		File f = new File(ch.getSelectedFile() + File.separator
@@ -295,7 +295,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
 			fh.log(exc);
-			msg.error(null, "Could not delete app settings");
+			msg.error( "Could not delete app settings");
 		}
 		if (!dir.exists())
 			msg.info(prefPanel, "App settings deleted", "Success");

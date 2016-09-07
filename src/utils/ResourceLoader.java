@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import messages.Message;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
@@ -16,18 +17,16 @@ public class ResourceLoader {
 	private Message msg 		= new Message();
 	private File uiTheme 		= new File("app"+separator+"settings.dat"),
 				 listFile 		= new File("app"+separator+"userlist.dat");
-	public static  boolean validateFiles(ArrayList<File>files){
-		//TODO
-		//work more on file validation especially for 'selectedFile'
+	public static  boolean filesModified(ArrayList<File>files){
 		//new addition to changelog
-		boolean modified = false;
-		for(int i = 0,max = files.size();i<max;i++){
-			if(!files.get(i).exists()){
+		// See if any of the files saved ,has been deleted
+		int initSize = files.size();
+		//files.size() must be re executed every time the loop runs to avoid index out of bounds
+		for(int i = 0;i<files.size();i++){
+			if(!files.get(i).exists())
 				files.remove(i);
-				modified = true;
-			}
 		}
-		return modified;
+		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){
 		this.handler = handler;
@@ -49,7 +48,7 @@ public class ResourceLoader {
 		} catch (IOException exc) {
 			//handler.log(exc);
 		} catch (ClassNotFoundException ci){
-			msg.error(null,
+			msg.error(
 				"Settings come from an older version of program that is not supported.Please choose new settings and press 'Save'",
 				"Invalid settings");
 			handler.log(ci);
@@ -70,10 +69,10 @@ public class ResourceLoader {
 			*/
 			inputStream.close();
 		}catch (IOException io) {
-			msg.error(null, "You haven't saved any list.");
+			msg.error("You haven't saved any list.");
 			handler.log(io);			
 		} catch (ClassNotFoundException cn) {
-			msg.error(null, "Corrupted file found");
+			msg.error("Corrupted file found");
 			handler.log(cn.getMessage());
 		}	
 		return p;

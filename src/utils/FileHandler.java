@@ -105,7 +105,7 @@ public class FileHandler{
 			try {
 				logFile.createNewFile();
 			} catch (IOException exc) {
-				error(null, "IOException :"+exc);	
+				error("IOException :"+exc);	
 				return;
 			}
 			try {
@@ -120,7 +120,7 @@ public class FileHandler{
 				* Here we can only output the error message 
 				* that prevent us from creating a '.log' file
 				*/
-				error(null, "IOException :"+exc.getMessage());
+				error("IOException :"+exc.getMessage());
 			}
 	}
 	public FileHandler(){
@@ -145,7 +145,7 @@ public class FileHandler{
 		} catch (FileNotFoundException exc) {
 			log(exc);
 		} catch (IOException exc) {
-			error(null, "IOException:"+exc);
+			error("IOException:"+exc);
 			log(exc);
 		}
 		info(null, "List has been saved", "Status");
@@ -204,15 +204,15 @@ public class FileHandler{
 			Files.copy(from, to, options);
 		}
 		catch(IOException io){
-			error(null,"File "+fileName+" could not be copied to "+to);
+			error("File "+fileName+" could not be copied to "+to);
 			log(io);
 			return false;
 		}
 		if(log)
 			if(new File(dest+sep+fileName).exists())
-				info(null,fileName+" copied successfully");
+				info(fileName+" copied successfully");
 			else
-				error(null,fileName+" could not be copied");
+				error(fileName+" could not be copied");
 		return true;
 	}
 	public boolean copyFile(File f,String dest,boolean log){
@@ -227,7 +227,7 @@ public class FileHandler{
 		}
 		catch (IOException e) {
 			log(e);
-			error(null,"Exception during copying directory");
+			error("Exception during copying directory");
 		}
 		return true;
 	}
@@ -266,20 +266,20 @@ public class FileHandler{
 		try {
 			Desktop.getDesktop().open(new File(dPath));
 		} catch (Exception e1) {
-			error(null, "Could not open destination file");
+			error("Could not open destination file");
 			log(e1);
 		}	
 	}
 	public void openAppDirectory() {
 		File dir = new File("app");
 		if(!dir.exists()){
-			error(null, "No app folder has been created in your system.");
+			error("No app folder has been created in your system.");
 			return;
 		}
 		try {
 			Desktop.getDesktop().open(dir);
 		} catch (Exception e1) {
-			error(null, "Could not open app folder");
+			error("Could not open app folder");
 			log(e1);
 		}
 	}
