@@ -278,12 +278,13 @@ public class FileCopyManager extends View{
 			else
 				return;
 			if(ResourceLoader.validateFiles(files)){
-				createList(files);
+				
 				/**
 				 * More of a warning here since there is not an error
 				 * */
 				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
 			}
+			createList(files);
 			/**
 			 * While loading the list 
 			 * check if the saved destination folder exists
@@ -403,7 +404,7 @@ public class FileCopyManager extends View{
 				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
 			catch (Throwable e) {
-				FileHandler.log(e.getMessage());
+				FileHandler.log(e);
 			}
 			finally{
 				new FileCopyManager(appName);
