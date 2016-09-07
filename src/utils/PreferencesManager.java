@@ -70,20 +70,15 @@ public class PreferencesManager extends View implements UIPreferences{
 	}
 	private void watchForUpdates(){
 		/*
-		 * This method will be used to detect any new files in the app directory
-		 * **/
-		//Path appPath = new Path("");
-		Path appDir =Paths.get("app");
-		try {
-			WatchService watcher = FileSystems.getDefault().newWatchService();
-		/*	  WatchKey key = dir.register(watcher,
-                      ENTRY_CREATE,
-                      ENTRY_DELETE,
-                      ENTRY_MODIFY);*/
-		} catch (IOException exc) {
-			// TODO Auto-generated catch block
-			fh.log(exc);
-		}
+		 * This causes errors fix is not available
+		 * new Thread(()->{
+		*	boolean updateFinished = false;
+		*	while(!updateFinished){
+		*		updateFinished = FileHandler.watchForUpdates("app//settings.dat");
+		*	}
+		*	loadPreferences();
+		*	return;
+		}).start(); */
 	}
 	private boolean isNull(Object ...o){
 		return FileHandler.isNull(o);
@@ -122,6 +117,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		super("Preferences",600,800);
 		appFrame = frame;
 		initUIElements();
+		watchForUpdates();
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
 				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
