@@ -278,7 +278,6 @@ public class FileCopyManager extends View{
 			else
 				return;
 			if(ResourceLoader.validateFiles(files)){
-				
 				/**
 				 * More of a warning here since there is not an error
 				 * */
