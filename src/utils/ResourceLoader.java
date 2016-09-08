@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import messages.Message;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
@@ -22,11 +21,15 @@ public class ResourceLoader {
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
 		//files.size() must be re executed every time the loop runs to avoid index out of bounds
-		for(int i = 0;i<files.size();i++){
-			if(!files.get(i).exists())
-				files.remove(i);
+		// Remove any file from the arraylist if this file does not exist
+		files.removeIf(f->{
+			return !f.exists();
+		});
+		files.trimToSize();
+		if(initSize != files.size()){
+			return true;
 		}
-		return initSize != files.size();
+		return false;
 	}
 	public ResourceLoader(FileHandler handler){
 		this.handler = handler;

@@ -137,6 +137,9 @@ public class FileCopyManager extends View{
 		//and create a new instance
 		new FileCopyManager(appName);
 	}
+	private JButton btn(String name){
+		return new JButton(name);
+	}
 	private void initUIElements() {
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
@@ -155,12 +158,12 @@ public class FileCopyManager extends View{
 		editMenu.add(allowDuplicatesOption);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
-		addFiles	 	   	  = new JButton("Add files to copy");
-		copyFiles 	 	   	  = new JButton("Copy all files");
-		deleteFile 	 	   	  = new JButton("Delete file from list");
-		selectDestination  	  = new JButton("Select Destination Folder");
-		deleteAll 		   	  = new JButton("Delete all files from list");
-		openDestinationFolder = new JButton("Open Destination Folder");
+		addFiles	 	   	  = btn("Add files to copy");
+		copyFiles 	 	   	  = btn("Copy all files");
+		deleteFile 	 	   	  = btn("Delete file from list");
+		selectDestination  	  = btn("Select Destination Folder");
+		deleteAll 		   	  = btn("Delete all files from list");
+		openDestinationFolder = btn("Open Destination Folder");
 		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
 		openAppDirectory.addActionListener((e)->controller.openAppDirectory());
 		stopCopy = new JButton("Stop copy operations");
@@ -253,8 +256,12 @@ public class FileCopyManager extends View{
 			allowEdits();
 		});
 		saveList.addActionListener((e) -> {
-			if(isNull(destinationPath)){
-				msg.error(panel, "If you want to save your list please select a destination folder for your files.");
+			if(isNull(destinationPath) || files.isEmpty()){
+				String err = files.isEmpty() && isNull(destinationPath)?
+						"Please add some files and select a destination folder.":files.isEmpty()?
+								"You haven't added any file.":"If you want to save your list please select"
+									+" a destination folder for your files.";
+				msg.error(err);
 				return;
 			}
 			File dir = listFile.getParentFile();
@@ -283,7 +290,7 @@ public class FileCopyManager extends View{
 				/**
 				 * More of a warning here since there is not an error
 				 * */
-				selectedFileIndex = !files.isEmpty()?0:-1;
+				//selectedFileIndex = !files.isEmpty()?0:-1;
 				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
 			}
 			/**
