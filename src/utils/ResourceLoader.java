@@ -22,14 +22,9 @@ public class ResourceLoader {
 		int initSize = files.size();
 		//files.size() must be re executed every time the loop runs to avoid index out of bounds
 		// Remove any file from the arraylist if this file does not exist
-		files.removeIf(f->{
-			return !f.exists();
-		});
+		files.removeIf(f->!f.exists());
 		files.trimToSize();
-		if(initSize != files.size()){
-			return true;
-		}
-		return false;
+		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){
 		this.handler = handler;
@@ -76,7 +71,7 @@ public class ResourceLoader {
 			handler.log(io);			
 		} catch (ClassNotFoundException cn) {
 			msg.error("Corrupted file found");
-			handler.log(cn.getMessage());
+			handler.log(cn);
 		}	
 		return p;
 	}

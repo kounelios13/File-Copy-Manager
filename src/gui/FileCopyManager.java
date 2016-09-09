@@ -31,7 +31,7 @@ public class FileCopyManager extends View{
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
 	private Controller controller = new Controller();
 	private StatusFrame status 	  = new StatusFrame();
-	private FileHandler fHandler  = new FileHandler(status);	
+	private FileHandler fHandler  = new FileHandler();	
 	private Message 	 msg   	  = new Message();
 	private JMenuBar menuBar   	  = new JMenuBar();
 	private JMenu   fileMenu   	  = new JMenu("File"),
@@ -106,6 +106,7 @@ public class FileCopyManager extends View{
 			* When dragging many files */
 			new Thread(()->{
 				updateList(e);
+				pack();
 			}).start();
 		});	
 		new FileDrop(this,(e)->{
@@ -113,6 +114,7 @@ public class FileCopyManager extends View{
 			* When dragging many files */
 			new Thread(()->{
 				updateList(e);
+				pack();
 			}).start();
 		});
 	}
@@ -199,7 +201,7 @@ public class FileCopyManager extends View{
 		});
 		copyFile = new JButton("Copy selected file");
 		copyFile.addActionListener((e) -> {
-			String message = destinationPath== null && selectedFile == null?"Selecte at least a file and a destination folder "
+			String message = destinationPath== null && selectedFile == null?"Select at least a file and a destination folder "
 					:selectedFile == null?" Select at least one file to copy":"Select a directory to copy selected file(s) in";
 			if (isNull(destinationPath,selectedFile)) {
 				msg.error(panel, message);
@@ -211,7 +213,6 @@ public class FileCopyManager extends View{
 			copyThreads[0].start();
 		});
 		copyFiles.addActionListener((e) -> {
-			fHandler.setStatusFrame(status);
 			if(isNull(destinationPath))
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
 			try{

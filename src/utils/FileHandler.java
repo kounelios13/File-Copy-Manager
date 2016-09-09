@@ -1,97 +1,39 @@
 package utils;
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
-import static messages.Message.info;
 import static messages.Message.error;
-import gui.StatusFrame;
+import static messages.Message.info;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.file.CopyOption;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
 import org.apache.commons.io.FileUtils;
-@SuppressWarnings({"unused"})
+@SuppressWarnings({})
 public class FileHandler{
-	private Timer timer;
+	/**
+	 * 
+	 * See this web site for an alternative way to copy files while showing graphical progress
+	 * http://filecopylibrary.sourceforge.net/
+	 * */
 	public static String sep = File.separator + File.separator;
-	private StatusFrame status = null;
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
 				return true;
 		return false;
 	}
-	public static boolean watchForUpdates(String fileName){
-		File temp = new File(fileName);
-		// If file is app//settings.dat
-		// getParent() returns the directory of the file -> "app"
-		Path target = Paths.get(temp.getParent());
-		try{
-			Boolean isFolder = (Boolean)Files.getAttribute(target,
-                    "basic:isDirectory", NOFOLLOW_LINKS);
-			if(!isFolder)
-				throw new IllegalArgumentException("Path: " +target+ " is not a folder");
-		}
-		catch(Exception e){
-			log(e);
-		}
-		FileSystem fs = target.getFileSystem();
-		 try (WatchService service = fs.newWatchService()) {
-            // We register the path to the service
-            // We watch for creation events
-            target.register(service, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE); 
-            // Start the infinite polling loop
-            WatchKey key = null;
-            while (true) {
-                key = service.take();
-                // Dequeueing events
-                Kind<?> kind = null;
-                for (WatchEvent<?> watchEvent : key.pollEvents()) {
-                    // Get the type of the event
-                    kind = watchEvent.kind();
-                    if (OVERFLOW == kind) {
-                        continue; // loop
-                    }
-                    @SuppressWarnings("unchecked")
-					Path newPath = ((WatchEvent<Path>) watchEvent).context();
-                   	if(kind == ENTRY_MODIFY)
-                   		if(newPath.equals(fileName))
-                   			return true;
-                }
-                if (!key.reset()) {
-                    break; // loop
-                }
-            }
-        } catch (IOException ioe) {
-            log(ioe);
-        } catch (InterruptedException ie) {
-            log(ie);
-        }
-		return false;
-	}
 	public static void log(Throwable th){
-		log(th.getMessage());
+		log(th);
 	}
 	public static void log(String message){
 		File logFile = new File("app"+sep+"log.txt"),
@@ -125,17 +67,14 @@ public class FileHandler{
 	}
 	public FileHandler(){
 	}
-	public FileHandler(StatusFrame sframe){
-		this.status = sframe;
-	}
 	public void saveList(ProgramState ps,File destFile){
 		if(isNull(destFile)){
-			error(null, "Destination folder has not been selected", "Destination Empty");
+			error("Destination folder has not been selected", "Destination Empty");
 			return;
 		}
 		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
-			error(null,"No files have been selected","Empty list");
+			error("No files have been selected","Empty list");
 			return;
 		}
 		try {
@@ -148,49 +87,15 @@ public class FileHandler{
 			error("IOException:"+exc);
 			log(exc);
 		}
-		info(null, "List has been saved", "Status");
+		info("List has been saved", "Status");
 	}
-	public String getNewName(File f,String dest){
+	public String getDestinationName(File f,String dest){
 		return dest+f.getName();
-	}
-	public void setStatusFrame(StatusFrame sf){
-		status = sf;
 	}
 	public long getCopyProgress(File victim,String dest)
 		throws Exception
 	{
-		/*
-		 * This method should be used 
-		 * while copying a file to update a progress bar 
-		 * so as the user knows how much of the file is remaining to copy
-		 * Maybe we should pass a JProgress Bar (or model)
-		 * */
-		/*
-		 * Calculate the size of the file to copy
-		 * */
-		long initSize = victim.length();
-		long copied = 0;
-		boolean errorAppeared = false;
-		/*
-		 * Now create a file input stream to manipulate the file at the destination
-		 * path(Get  size at a specific time via FileInputSream.available())
-		 * */
-		File output = new File(getNewName(victim,dest));
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(output);
-			copied = fis.available();
-			fis.close();
-		} catch (Exception exc) {
-			System.out.println(exc.getMessage());
-			log(exc);
-		}	
-			/*
-			 * Timer is not working 
-			 * replace with java.util.timer
-			 * http://stackoverflow.com/questions/12908412/print-hello-world-every-x-seconds
-			 * */
-		return copied;
+		return 0;
 	}		
 	private boolean copySingleFile(File f,String dest,boolean log){
 		String fileName = f.getName();
@@ -260,7 +165,7 @@ public class FileHandler{
 	}
 	public void openDestination(String dPath) {
 		if (isNull(dPath)) {
-			error(null, "No folder selected","Missing destination folder");
+			error("No folder selected","Missing destination folder");
 			return;
 		}
 		try {
