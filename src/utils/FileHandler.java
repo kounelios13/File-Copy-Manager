@@ -25,7 +25,7 @@ public class FileHandler{
 	 * See this web site for an alternative way to copy files while showing graphical progress
 	 * http://filecopylibrary.sourceforge.net/
 	 * */
-	public static String sep = File.separator + File.separator;
+	private static String sep = File.separator + File.separator;
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
@@ -87,14 +87,20 @@ public class FileHandler{
 			error("IOException:"+exc);
 			log(exc);
 		}
-		info("List has been saved", "Status");
+		info("List has been saved");
 	}
 	public String getDestinationName(File f,String dest){
 		return dest+f.getName();
 	}
+	@Deprecated
 	public long getCopyProgress(File victim,String dest)
 		throws Exception
 	{
+		/*
+		 * Return the progress
+		 * **/
+		//Deprecated
+		//To be removed
 		return 0;
 	}		
 	private boolean copySingleFile(File f,String dest,boolean log){
@@ -139,7 +145,7 @@ public class FileHandler{
 	public boolean copy(File f,String dest,boolean log){
 		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
 	}
-	public String fileName(File f){
+	private String fileName(File f){
 		return f.isFile()?f.getName()+(f.isDirectory()?" (Folder)":""):"";
 	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
@@ -164,8 +170,10 @@ public class FileHandler{
 		return temp;
 	}
 	public void openDestination(String dPath) {
-		if (isNull(dPath)) {
-			error("No folder selected","Missing destination folder");
+		File target = new File(dPath);
+		if (isNull(dPath) || !target.exists()) {
+			error(target.exists()?"No folder selected":"Destination folder does not exist"
+				,"Missing destination folder");
 			return;
 		}
 		try {

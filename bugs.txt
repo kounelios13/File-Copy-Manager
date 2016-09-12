@@ -7,3 +7,4 @@ Bugs
 Todo
 Improve error messages-->done
 After copying file check if it copied in the ouput directory-->done
+When adding a file check if its name is longer than a certain character limit

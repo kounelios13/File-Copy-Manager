@@ -2,7 +2,6 @@ package utils;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
-@SuppressWarnings("all")
 public class Controller {
 	private FileHandler handler = new FileHandler();
 	public void saveList(ProgramState ps,File d){
