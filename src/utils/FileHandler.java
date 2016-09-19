@@ -1,7 +1,6 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
-
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -12,12 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-
 import ch.fhnw.filecopier.*;
-
 @SuppressWarnings({"all"})
 public class FileHandler{
 	/**
@@ -109,8 +105,8 @@ public class FileHandler{
 		//To be removed
 		return 0;
 	}		
-	
 	public boolean copy(File f,String dest,boolean log){
+		info("trying to copy "+f.getName());
 		Source[] src= {new Source(f.getAbsolutePath())};
 		try {
 			copyEngine.copy(new CopyJob(src,new String[]{dest}));

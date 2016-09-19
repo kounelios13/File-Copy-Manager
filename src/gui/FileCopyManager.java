@@ -1,5 +1,6 @@
 package gui;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -24,13 +25,12 @@ import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
-@SuppressWarnings({"all","serial", "static-access"})
+@SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends View{
 	public static String appName  = "File Copy Manager v1.6.4.0";
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
 	private Controller controller = new Controller();
-	private StatusFrame status 	  = new StatusFrame();
 	private FileHandler fHandler  = new FileHandler();	
 	private Message 	 msg   	  = new Message();
 	private JMenuBar menuBar   	  = new JMenuBar();
@@ -59,6 +59,7 @@ public class FileCopyManager extends View{
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
+	private Component copyPanel = fHandler.getCopyPanel();
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -207,27 +208,34 @@ public class FileCopyManager extends View{
 				msg.error(panel, message);
 				return;
 			}
+			/*
+			* Show progress while copying a file
+			**/
+			copyPanel.setVisible(true);
 			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
+				// File may have been copied or an error occurred
+				// No matter what hide progress
+				copyPanel.setVisible(false);
 			});
 			copyThreads[0].start();
 		});
 		copyFiles.addActionListener((e) -> {
 			if(isNull(destinationPath))
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
+			//No need to start a new thread if there is nothing to copy
+			if(files.isEmpty())
+				return;
 			try{
 				copyThreads[1]=
 				new Thread(()->{
+					copyPanel.setVisible(true);
 					for(File f:files){
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
-						status.text(f.getName()).showStatus();
-						fHandler.copy(f,destinationPath,false);
-						/*if(f.isFile()){
-							updateProgress(f);
-						}*/
+						fHandler.copy(f, destinationPath, false);
 					}
-					status.dispose();
+					copyPanel.setVisible(false);
 				});
 				copyThreads[1].start();
 			}
@@ -236,7 +244,7 @@ public class FileCopyManager extends View{
 				fHandler.log(ee);
 			}
 			finally{
-				status.dispose();
+				copyPanel.setVisible(false);
 			}
 		});
 		deleteFile.addActionListener((e) -> {
@@ -355,6 +363,8 @@ public class FileCopyManager extends View{
 		});
 		initDragAreas();
 		stopCopy.setVisible(false);
+		copyPanel.setVisible(false);
+		panel.add(copyPanel);
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel};
