@@ -1,6 +1,8 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
+
+import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,16 +11,14 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import org.apache.commons.io.FileUtils;
-@SuppressWarnings({})
+
+import ch.fhnw.filecopier.*;
+
+@SuppressWarnings({"all"})
 public class FileHandler{
 	/**
 	 * 
@@ -26,6 +26,8 @@ public class FileHandler{
 	 * http://filecopylibrary.sourceforge.net/
 	 * */
 	private static String sep = File.separator + File.separator;
+	private FileCopierPanel copierPanel = new FileCopierPanel();
+	private FileCopier copyEngine = new FileCopier();
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
@@ -65,6 +67,10 @@ public class FileHandler{
 				error("IOException :"+exc.getMessage());
 			}
 	}
+	public Component getCopyPanel(){
+		copierPanel.setFileCopier(copyEngine);
+		return copierPanel; 
+	}
 	public FileHandler(){
 	}
 	public void saveList(ProgramState ps,File destFile){
@@ -103,47 +109,17 @@ public class FileHandler{
 		//To be removed
 		return 0;
 	}		
-	private boolean copySingleFile(File f,String dest,boolean log){
-		String fileName = f.getName();
-		Path from = Paths.get(f.getAbsolutePath());
-		Path to = Paths.get(dest+sep+fileName);
-		CopyOption[] options = new CopyOption[]{
-			      StandardCopyOption.REPLACE_EXISTING,
-			      StandardCopyOption.COPY_ATTRIBUTES
-			    }; 
-		try{
-			Files.copy(from, to, options);
-		}
-		catch(IOException io){
-			error("File "+fileName+" could not be copied to "+to);
-			log(io);
-			return false;
-		}
-		if(log)
-			if(new File(dest+sep+fileName).exists())
-				info(fileName+" copied successfully");
-			else
-				error(fileName+" could not be copied");
-		return true;
-	}
-	public boolean copyFile(File f,String dest,boolean log){
-		return copySingleFile(f,dest,log);
-	}
-	public boolean copyDir(File dir,String dest){
-		File destFolder = new File(dest+sep+dir.getName());
-		if(!destFolder.exists())
-			destFolder.mkdirs();
-		try {
-			FileUtils.copyDirectory(dir,destFolder);
-		}
-		catch (IOException e) {
-			log(e);
-			error("Exception during copying directory");
-		}
-		return true;
-	}
+	
 	public boolean copy(File f,String dest,boolean log){
-		return f.isDirectory()?copyDir(f,dest):copyFile(f,dest,log);
+		Source[] src= {new Source(f.getAbsolutePath())};
+		try {
+			copyEngine.copy(new CopyJob(src,new String[]{dest}));
+		} catch (IOException exc) {
+			// TODO Auto-generated catch block
+			error("Couldn't copy "+f.getName()+" to "+dest);
+			log(exc);
+		}
+		return false;
 	}
 	private String fileName(File f){
 		return f.isFile()?f.getName()+(f.isDirectory()?" (Folder)":""):"";
