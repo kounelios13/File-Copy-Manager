@@ -1,5 +1,4 @@
-	../src/gui/FileCopyManager.java contains 393 lines of source code 
-	../src/gui/StatusFrame.java contains 55 lines of source code 
+	../src/gui/FileCopyManager.java contains 410 lines of source code 
 	../src/utils/Controller.java contains 19 lines of source code 
 	../src/utils/PreferencesManager.java contains 338 lines of source code 
 	../src/utils/ProgramState.java contains 32 lines of source code 
@@ -8,4 +7,4 @@
 	../src/utils/ResourceLoader.java contains 56 lines of source code 
 	../src/utils/FileHandler.java contains 148 lines of source code 
 	../src/gui/View.java contains 13 lines of source code 
-	Total characters 30185. Total lines 1066
+	Total characters 28679. Total lines 1028

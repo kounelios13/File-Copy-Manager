@@ -1,6 +1,7 @@
 package gui;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -60,6 +61,7 @@ public class FileCopyManager extends View{
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
 	private Component copyPanel = fHandler.getCopyPanel();
+	private StatusFrame status = new StatusFrame(this);
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -118,6 +120,9 @@ public class FileCopyManager extends View{
 				pack();
 			}).start();
 		});
+	}
+	public Container getCopyPanel(){
+		return (Container) copyPanel;
 	}
 	public void updateList(File[] e){
 		for(File f:e){
@@ -212,10 +217,12 @@ public class FileCopyManager extends View{
 			* Show progress while copying a file
 			**/
 			copyPanel.setVisible(true);
+			status.toggleUI();
 			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
 				// File may have been copied or an error occurred
 				// No matter what hide progress
+				status.toggleUI();
 				copyPanel.setVisible(false);
 			});
 			copyThreads[0].start();
@@ -230,12 +237,14 @@ public class FileCopyManager extends View{
 				copyThreads[1]=
 				new Thread(()->{
 					copyPanel.setVisible(true);
+					status.toggleUI();
 					for(File f:files){
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
 						fHandler.copy(f, destinationPath, false);
 					}
 					copyPanel.setVisible(false);
+					status.toggleUI();
 				});
 				copyThreads[1].start();
 			}
@@ -364,7 +373,7 @@ public class FileCopyManager extends View{
 		initDragAreas();
 		stopCopy.setVisible(false);
 		copyPanel.setVisible(false);
-		panel.add(copyPanel);
+		//panel.add(copyPanel);
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel};
@@ -430,5 +439,14 @@ public class FileCopyManager extends View{
 				new FileCopyManager(appName);
 			}
 		 });
+	}
+}
+@SuppressWarnings("serial")
+class StatusFrame extends View{
+	public StatusFrame(FileCopyManager fm){
+		super("Progress",200,200);
+		this.setContentPane(fm.getCopyPanel());
+		this.setVisible(false);
+		this.setLocationRelativeTo(null);
 	}
 }
