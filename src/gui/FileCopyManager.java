@@ -219,6 +219,19 @@ public class FileCopyManager extends View{
 			copyPanel.setVisible(true);
 			status.toggleUI();
 			copyThreads[0]=new Thread(()->{
+				if(selectedFile.getName().indexOf('+') != -1){
+					//When copying a file that contains "+" as a part of its name 
+					//The program will not be able to copy it
+					if(!fHandler.handleSpecialName(selectedFile))
+					{
+						msg.error("Selected file contains some special symbols."
+								+"Couldn't rename it and copy it");
+						fHandler.log("Couldn't rename "+selectedFile.getName()+"\n"
+								+".File was not copied");
+						return;
+					}
+					
+				}	
 				fHandler.copy(selectedFile, destinationPath,true);
 				// File may have been copied or an error occurred
 				// No matter what hide progress
@@ -239,6 +252,15 @@ public class FileCopyManager extends View{
 					copyPanel.setVisible(true);
 					status.toggleUI();
 					for(File f:files){
+						if(f.getName().indexOf('+') != -1){
+							if(!fHandler.handleSpecialName(f)){
+								msg.error("Selected file contains some special symbols."
+										+"Couldn't rename it and copy it");
+								fHandler.log("Couldn't rename "+f.getName()+"\n"
+										+".File was not copied");
+								continue;
+							}
+						}
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
 						fHandler.copy(f, destinationPath, false);
@@ -444,9 +466,10 @@ public class FileCopyManager extends View{
 @SuppressWarnings("serial")
 class StatusFrame extends View{
 	public StatusFrame(FileCopyManager fm){
-		super("Progress",200,200);
+		super("Progress",400,200);
 		this.setContentPane(fm.getCopyPanel());
 		this.setVisible(false);
+		this.pack(); 
 		this.setLocationRelativeTo(null);
 	}
 }

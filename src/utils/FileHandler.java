@@ -1,6 +1,7 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
+
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -11,10 +12,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import ch.fhnw.filecopier.*;
-@SuppressWarnings({"all"})
+
+import ch.fhnw.filecopier.CopyJob;
+import ch.fhnw.filecopier.FileCopier;
+import ch.fhnw.filecopier.FileCopierPanel;
+import ch.fhnw.filecopier.Source;
 public class FileHandler{
 	/**
 	 * 
@@ -63,6 +68,14 @@ public class FileHandler{
 				error("IOException :"+exc.getMessage());
 			}
 	}
+	public boolean handleSpecialName(File f){
+		String oldName = f.getAbsolutePath();
+		/*if(oldName.contains("+"))
+			info("");*/
+		String fixedName = oldName.replace("+","_");
+		return f.renameTo(new File(fixedName));
+		
+	}
 	public Component getCopyPanel(){
 		copierPanel.setFileCopier(copyEngine);
 		return copierPanel; 
@@ -94,19 +107,8 @@ public class FileHandler{
 	public String getDestinationName(File f,String dest){
 		return dest+f.getName();
 	}
-	@Deprecated
-	public long getCopyProgress(File victim,String dest)
-		throws Exception
-	{
-		/*
-		 * Return the progress
-		 * **/
-		//Deprecated
-		//To be removed
-		return 0;
-	}		
 	public boolean copy(File f,String dest,boolean log){
-		info("trying to copy "+f.getName());
+		//info("trying to copy "+f.getName());
 		Source[] src= {new Source(f.getAbsolutePath())};
 		try {
 			copyEngine.copy(new CopyJob(src,new String[]{dest}));
