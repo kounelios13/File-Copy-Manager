@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -18,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -331,15 +333,26 @@ public class FileCopyManager extends View{
 			}
 			else
 				return;
+			int oldSize = files.size();
 			if(ResourceLoader.filesModified(files)){
 				/**
 				 * More of a warning here since there is not an error
 				 * */
 				//selectedFileIndex = !files.isEmpty()?0:-1;
+				int missingNum = oldSize - files.size();
+				XString missingFiles = new XString("Number of files missing:"+missingNum);
+				for(File f:files)
+					if(!f.exists())
+						missingFiles.append(f.getName());
+				String message 
+						= !files.isEmpty()?
+						"Some of the files you saved last time do not exist and have been deleted from your list."
+						:"None of the files you saved last time is available.";
 				if(!files.isEmpty())
-					msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
+					msg.warning(panel,message);
 				else
-					msg.error(panel,"None of the files you saved last time is available.");
+					msg.error(panel,message);
+				fHandler.log(message+System.lineSeparator()+missingFiles);
 			}
 			/**
 			 * While loading the list 
@@ -483,4 +496,31 @@ class StatusFrame extends View{
 		this.pack(); 
 		this.setLocationRelativeTo(null);
 	}
+}
+class XString{
+	private String text;
+	public void setText(String txt){
+		this.text = txt;
+	}
+	public String getText(){
+		return toString();
+	}
+	public void append(String name) {
+		// TODO Auto-generated method stub
+		this.text+=name;
+	}
+	public String toString(){
+		return text;
+	
+	}
+	public XString(){
+		
+	}
+	public XString(String message){
+		this.text = message;
+	}
+	public boolean isEmpty(){
+		return toString().length()<1;
+	}
+	
 }
