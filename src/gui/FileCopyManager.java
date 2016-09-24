@@ -62,6 +62,9 @@ public class FileCopyManager extends View{
 	private Thread[] copyThreads = new Thread[2];
 	private Component copyPanel = fHandler.getCopyPanel();
 	private StatusFrame status = new StatusFrame(this);
+	private JLabel outputFolderLabel = new JLabel("Output folder:None"),
+					selectedFileLabel = new JLabel("Selected File:None");
+	private JPanel currentStatusPanel = new JPanel();
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -149,6 +152,8 @@ public class FileCopyManager extends View{
 		return new JButton(name);
 	}
 	private void initUIElements() {
+		currentStatusPanel.add(outputFolderLabel);
+		currentStatusPanel.add(selectedFileLabel);
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -400,7 +405,7 @@ public class FileCopyManager extends View{
 		//panel.add(copyPanel);
 	}
 	public JLabel[] getLabels() {
-		JLabel[] labels = {dragLabel};
+		JLabel[] labels = {dragLabel,outputFolderLabel,selectedFileLabel};
 		return labels;
 	}
 	public JButton[] getButtons() {
@@ -416,7 +421,8 @@ public class FileCopyManager extends View{
 		super((isNull(name) ? appName : name),535,391);
 		initUIElements();
 		panel.setBackground(Color.white);
-		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][-237.00][][grow]"));
+		currentStatusPanel.setBackground(Color.white);
+		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][27.00][][-11.00,grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");
@@ -429,6 +435,7 @@ public class FileCopyManager extends View{
 		dragLabel = new JLabel("Drag files  here");
 		panel.add(dragLabel, "flowy,cell 3 7");
 		panel.add(dragPanel, "cell 3 8");
+		panel.add(currentStatusPanel,"cell 0 10");
 		this.setContentPane(panel);
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
