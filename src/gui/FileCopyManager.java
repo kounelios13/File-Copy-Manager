@@ -29,6 +29,7 @@ import utils.ResourceLoader;
 @SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends View{
 	public static String appName  = "File Copy Manager v1.6.4.0";
+	public static final Color TRANSPARENT_COLOR = new Color(0,0,0,0);
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
 	private Controller controller = new Controller();
@@ -420,8 +421,9 @@ public class FileCopyManager extends View{
 		 */
 		super((isNull(name) ? appName : name),535,391);
 		initUIElements();
-		panel.setBackground(Color.white);
-		currentStatusPanel.setBackground(Color.white);
+		
+		//Set a transparent background color with RGBA
+		currentStatusPanel.setBackground(TRANSPARENT_COLOR);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][27.00][][-11.00,grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
