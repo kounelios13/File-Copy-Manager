@@ -121,7 +121,7 @@ public class FileCopyManager extends View{
 			}).start();
 		});
 	}
-	public Container getCopyPanel(){
+	protected Container getCopyPanel(){
 		return (Container) copyPanel;
 	}
 	public void updateList(File[] e){
@@ -222,7 +222,7 @@ public class FileCopyManager extends View{
 				if(selectedFile.getName().indexOf('+') != -1){
 					//When copying a file that contains "+" as a part of its name 
 					//The program will not be able to copy it
-					if(!fHandler.handleSpecialName(selectedFile))
+					if(!fHandler.isSpecialNameHandled(selectedFile))
 					{
 						msg.error("Selected file contains some special symbols."
 								+"Couldn't rename it and copy it");
@@ -253,7 +253,7 @@ public class FileCopyManager extends View{
 					status.toggleUI();
 					for(File f:files){
 						if(f.getName().indexOf('+') != -1){
-							if(!fHandler.handleSpecialName(f)){
+							if(!fHandler.isSpecialNameHandled(f)){
 								msg.error("Selected file contains some special symbols."
 										+"Couldn't rename it and copy it");
 								fHandler.log("Couldn't rename "+f.getName()+"\n"
@@ -331,7 +331,10 @@ public class FileCopyManager extends View{
 				 * More of a warning here since there is not an error
 				 * */
 				//selectedFileIndex = !files.isEmpty()?0:-1;
-				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
+				if(!files.isEmpty())
+					msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
+				else
+					msg.error(panel,"None of the files you saved last time is available.");
 			}
 			/**
 			 * While loading the list 
@@ -466,7 +469,7 @@ public class FileCopyManager extends View{
 @SuppressWarnings("serial")
 class StatusFrame extends View{
 	public StatusFrame(FileCopyManager fm){
-		super("Progress",400,200);
+		super("Progress",600,200);
 		this.setContentPane(fm.getCopyPanel());
 		this.setVisible(false);
 		this.pack(); 

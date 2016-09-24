@@ -36,7 +36,7 @@ public class FileHandler{
 		return false;
 	}
 	public static void log(Throwable th){
-		log(th);
+		log(th.getMessage());
 	}
 	public static void log(String message){
 		File logFile = new File("app"+sep+"log.txt"),
@@ -68,7 +68,7 @@ public class FileHandler{
 				error("IOException :"+exc.getMessage());
 			}
 	}
-	public boolean handleSpecialName(File f){
+	public boolean isSpecialNameHandled(File f){
 		String oldName = f.getAbsolutePath();
 		/*if(oldName.contains("+"))
 			info("");*/
