@@ -230,7 +230,6 @@ public class FileCopyManager extends View{
 								+".File was not copied");
 						return;
 					}
-					
 				}	
 				fHandler.copy(selectedFile, destinationPath,true);
 				// File may have been copied or an error occurred

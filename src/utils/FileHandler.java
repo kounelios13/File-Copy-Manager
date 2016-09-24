@@ -1,7 +1,6 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
-
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -12,10 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-
 import ch.fhnw.filecopier.CopyJob;
 import ch.fhnw.filecopier.FileCopier;
 import ch.fhnw.filecopier.FileCopierPanel;
@@ -74,7 +71,6 @@ public class FileHandler{
 			info("");*/
 		String fixedName = oldName.replace("+","_");
 		return f.renameTo(new File(fixedName));
-		
 	}
 	public Component getCopyPanel(){
 		copierPanel.setFileCopier(copyEngine);
