@@ -8,3 +8,6 @@ Todo
 Improve error messages-->done
 After copying file check if it copied in the ouput directory-->done
 When adding a file check if its name is longer than a certain character limit
+
+When copy a special file it is renamed in the source directory before being copied to target directory
+Rename file both in source and target directory after copy is completed to their respective original names
