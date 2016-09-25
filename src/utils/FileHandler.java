@@ -107,7 +107,7 @@ public class FileHandler{
 		//info("trying to copy "+f.getName());
 		if(f.getName().indexOf('+') != -1){
 			String logText = "File contains '+' character.Trying to rename it in order to copy it";
-			String oldName = f.getName();
+			String oldName = f.getAbsolutePath();
 			File fixedFile = new File(oldName.replace('+', '_'));
 			boolean renamed = f.renameTo(fixedFile);
 			if(renamed)
