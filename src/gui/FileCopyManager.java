@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -19,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -227,18 +225,6 @@ public class FileCopyManager extends View{
 			copyPanel.setVisible(true);
 			status.toggleUI();
 			copyThreads[0]=new Thread(()->{
-				if(selectedFile.getName().indexOf('+') != -1){
-					//When copying a file that contains "+" as a part of its name 
-					//The program will not be able to copy it
-					if(!fHandler.isSpecialNameHandled(selectedFile))
-					{
-						msg.error("Selected file contains some special symbols."
-								+"Couldn't rename it and copy it");
-						fHandler.log("Couldn't rename "+selectedFile.getName()+"\n"
-								+".File was not copied");
-						return;
-					}
-				}	
 				fHandler.copy(selectedFile, destinationPath,true);
 				// File may have been copied or an error occurred
 				// No matter what hide progress
@@ -259,15 +245,6 @@ public class FileCopyManager extends View{
 					copyPanel.setVisible(true);
 					status.toggleUI();
 					for(File f:files){
-						if(f.getName().indexOf('+') != -1){
-							if(!fHandler.isSpecialNameHandled(f)){
-								msg.error("Selected file contains some special symbols."
-										+"Couldn't rename it and copy it");
-								fHandler.log("Couldn't rename "+f.getName()+"\n"
-										+".File was not copied");
-								continue;
-							}
-						}
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
 						fHandler.copy(f, destinationPath, false);
@@ -434,7 +411,6 @@ public class FileCopyManager extends View{
 		 */
 		super((isNull(name) ? appName : name),535,391);
 		initUIElements();
-		
 		//Set a transparent background color with RGBA
 		currentStatusPanel.setBackground(TRANSPARENT_COLOR);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][27.00][][-11.00,grow]"));
@@ -511,10 +487,8 @@ class XString{
 	}
 	public String toString(){
 		return text;
-	
 	}
 	public XString(){
-		
 	}
 	public XString(String message){
 		this.text = message;
@@ -522,5 +496,4 @@ class XString{
 	public boolean isEmpty(){
 		return toString().length()<1;
 	}
-	
 }

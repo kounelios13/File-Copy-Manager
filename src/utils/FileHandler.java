@@ -105,6 +105,31 @@ public class FileHandler{
 	}
 	public boolean copy(File f,String dest,boolean log){
 		//info("trying to copy "+f.getName());
+		if(f.getName().indexOf('+') != -1){
+			String logText = "File contains '+' character.Trying to rename it in order to copy it";
+			String oldName = f.getName();
+			File fixedFile = new File(oldName.replace('+', '_'));
+			boolean renamed = f.renameTo(fixedFile);
+			if(renamed)
+				logText += "File renamed in order to be copied."+System.lineSeparator();
+			else{
+				logText +="File couldn't be renamed.Cannot copy file."+System.lineSeparator();
+				log(logText);
+				return false;
+			}			
+			//Renamed file re-execute copy() to copy file
+			boolean copied = copy(fixedFile,dest,log);
+			if(copied){
+				logText += "Managed to copy file"+System.lineSeparator();
+				File finalFile = new File(dest+"/"+oldName);
+				if(!fixedFile.renameTo(finalFile))
+					logText += "Couldn't rename file back to its original name";
+			}
+			else{
+				logText += "File could not be copied to destination."+System.lineSeparator();
+			}
+			log(logText);
+		}
 		Source[] src= {new Source(f.getAbsolutePath())};
 		try {
 			copyEngine.copy(new CopyJob(src,new String[]{dest}));
