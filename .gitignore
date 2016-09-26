@@ -5,3 +5,5 @@ notes.txt
 *.class
 dummy/*.bat
 src/drive
+*.docx
+*.psd

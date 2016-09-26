@@ -17,6 +17,7 @@ import ch.fhnw.filecopier.CopyJob;
 import ch.fhnw.filecopier.FileCopier;
 import ch.fhnw.filecopier.FileCopierPanel;
 import ch.fhnw.filecopier.Source;
+import static utils.FileUtils.*;
 public class FileHandler{
 	/**
 	 * 
@@ -105,11 +106,12 @@ public class FileHandler{
 	}
 	public boolean copy(File f,String dest,boolean log){
 		//info("trying to copy "+f.getName());
-		if(f.getName().indexOf('+') != -1){
+		if(isSpecialFile(f,'+')){
 			String logText = "File contains '+' character.Trying to rename it in order to copy it";
 			String oldName = f.getAbsolutePath();
+			String originalFileName = f.getName();
 			File fixedFile = new File(oldName.replace('+', '_'));
-			boolean renamed = f.renameTo(fixedFile);
+			boolean renamed =renameFile(f,fixedFile);
 			if(renamed)
 				logText += "File renamed in order to be copied."+System.lineSeparator();
 			else{
@@ -124,6 +126,8 @@ public class FileHandler{
 				File finalFile = new File(dest+"/"+oldName);
 				if(!fixedFile.renameTo(finalFile))
 					logText += "Couldn't rename file back to its original name";
+				renameFile(finalFile, new File(dest+"/"+originalFileName));
+				renameFile(f,new File(f.getParentFile()+"/"+originalFileName));
 			}
 			else{
 				logText += "File could not be copied to destination."+System.lineSeparator();

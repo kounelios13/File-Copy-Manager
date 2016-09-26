@@ -5,6 +5,7 @@
 	../src/interfaces/UIPreferences.java contains 8 lines of source code 
 	../src/interfaces/IView.java contains 4 lines of source code 
 	../src/utils/ResourceLoader.java contains 56 lines of source code 
-	../src/utils/FileHandler.java contains 172 lines of source code 
+	../src/utils/FileHandler.java contains 176 lines of source code 
+	../src/utils/FileUtils.java contains 22 lines of source code 
 	../src/gui/View.java contains 13 lines of source code 
-	Total characters 30789. Total lines 1097
+	Total characters 31562. Total lines 1123

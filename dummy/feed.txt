@@ -6,4 +6,5 @@
 ../src/interfaces/IView.java
 ../src/utils/ResourceLoader.java
 ../src/utils/FileHandler.java
+../src/utils/FileUtils.java
 ../src/gui/View.java
