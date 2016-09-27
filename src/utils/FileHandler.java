@@ -113,16 +113,16 @@ public class FileHandler{
 			File fixedFile = new File(oldName.replace('+', '_'));
 			boolean renamed =renameFile(f,fixedFile);
 			if(renamed)
-				logText += "File renamed in order to be copied."+System.lineSeparator();
+				logText += "File renamed in order to be copied.\n";
 			else{
-				logText +="File couldn't be renamed.Cannot copy file."+System.lineSeparator();
+				logText +="File couldn't be renamed.Cannot copy file.\n";
 				log(logText);
 				return false;
 			}			
 			//Renamed file re-execute copy() to copy file
 			boolean copied = copy(fixedFile,dest,log);
 			if(copied){
-				logText += "Managed to copy file"+System.lineSeparator();
+				logText += "Managed to copy file\n";
 				File finalFile = new File(dest+"/"+oldName);
 				if(!fixedFile.renameTo(finalFile))
 					logText += "Couldn't rename file back to its original name";
@@ -130,7 +130,7 @@ public class FileHandler{
 				renameFile(f,new File(f.getParentFile()+"/"+originalFileName));
 			}
 			else{
-				logText += "File could not be copied to destination."+System.lineSeparator();
+				logText += "File could not be copied to destination.\n";
 			}
 			log(logText);
 		}
