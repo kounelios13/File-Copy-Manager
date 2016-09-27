@@ -1,5 +1,4 @@
 ../src/gui/FileCopyManager.java
-../src/gui/StatusFrame.java
 ../src/utils/Controller.java
 ../src/utils/PreferencesManager.java
 ../src/utils/ProgramState.java
@@ -7,4 +6,5 @@
 ../src/interfaces/IView.java
 ../src/utils/ResourceLoader.java
 ../src/utils/FileHandler.java
+../src/utils/FileUtils.java
 ../src/gui/View.java

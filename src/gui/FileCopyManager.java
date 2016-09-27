@@ -1,5 +1,7 @@
 package gui;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -24,13 +26,13 @@ import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
-@SuppressWarnings({"all","serial", "static-access"})
+@SuppressWarnings({"serial", "static-access"})
 public class FileCopyManager extends View{
 	public static String appName  = "File Copy Manager v1.6.4.0";
+	public static final Color TRANSPARENT_COLOR = new Color(0,0,0,0);
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
 	private Controller controller = new Controller();
-	private StatusFrame status 	  = new StatusFrame();
 	private FileHandler fHandler  = new FileHandler();	
 	private Message 	 msg   	  = new Message();
 	private JMenuBar menuBar   	  = new JMenuBar();
@@ -59,6 +61,11 @@ public class FileCopyManager extends View{
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
+	private Component copyPanel = fHandler.getCopyPanel();
+	private StatusFrame status = new StatusFrame(this);
+	private JLabel outputFolderLabel = new JLabel("Output folder:None"),
+					selectedFileLabel = new JLabel("Selected File:None");
+	private JPanel currentStatusPanel = new JPanel();
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -118,6 +125,9 @@ public class FileCopyManager extends View{
 			}).start();
 		});
 	}
+	protected Container getCopyPanel(){
+		return (Container) copyPanel;
+	}
 	public void updateList(File[] e){
 		for(File f:e){
 			if(!allowDuplicates)
@@ -143,6 +153,8 @@ public class FileCopyManager extends View{
 		return new JButton(name);
 	}
 	private void initUIElements() {
+		currentStatusPanel.add(outputFolderLabel);
+		currentStatusPanel.add(selectedFileLabel);
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -207,27 +219,38 @@ public class FileCopyManager extends View{
 				msg.error(panel, message);
 				return;
 			}
+			/*
+			* Show progress while copying a file
+			**/
+			copyPanel.setVisible(true);
+			status.toggleUI();
 			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
+				// File may have been copied or an error occurred
+				// No matter what hide progress
+				status.toggleUI();
+				copyPanel.setVisible(false);
 			});
 			copyThreads[0].start();
 		});
 		copyFiles.addActionListener((e) -> {
 			if(isNull(destinationPath))
 				msg.error(panel, "Please select a destination folder","No destination folder selected");
+			//No need to start a new thread if there is nothing to copy
+			if(files.isEmpty())
+				return;
 			try{
 				copyThreads[1]=
 				new Thread(()->{
+					copyPanel.setVisible(true);
+					status.toggleUI();
 					for(File f:files){
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
-						status.text(f.getName()).showStatus();
-						fHandler.copy(f,destinationPath,false);
-						/*if(f.isFile()){
-							updateProgress(f);
-						}*/
+						fHandler.copy(f, destinationPath, false);
 					}
-					status.dispose();
+					copyPanel.setVisible(false);
+					status.toggleUI();
 				});
 				copyThreads[1].start();
 			}
@@ -236,7 +259,7 @@ public class FileCopyManager extends View{
 				fHandler.log(ee);
 			}
 			finally{
-				status.dispose();
+				copyPanel.setVisible(false);
 			}
 		});
 		deleteFile.addActionListener((e) -> {
@@ -287,12 +310,26 @@ public class FileCopyManager extends View{
 			}
 			else
 				return;
+			int oldSize = files.size();
 			if(ResourceLoader.filesModified(files)){
 				/**
 				 * More of a warning here since there is not an error
 				 * */
 				//selectedFileIndex = !files.isEmpty()?0:-1;
-				msg.warning(panel, "Some of the files you saved last time do not exist and have been deleted from your list.");
+				int missingNum = oldSize - files.size();
+				XString missingFiles = new XString("Number of files missing:"+missingNum);
+				for(File f:files)
+					if(!f.exists())
+						missingFiles.append(f.getName());
+				String message 
+						= !files.isEmpty()?
+						"Some of the files you saved last time do not exist and have been deleted from your list."
+						:"None of the files you saved last time is available.";
+				if(!files.isEmpty())
+					msg.warning(panel,message);
+				else
+					msg.error(panel,message);
+				fHandler.log(message+System.lineSeparator()+missingFiles);
 			}
 			/**
 			 * While loading the list 
@@ -355,9 +392,11 @@ public class FileCopyManager extends View{
 		});
 		initDragAreas();
 		stopCopy.setVisible(false);
+		copyPanel.setVisible(false);
+		//panel.add(copyPanel);
 	}
 	public JLabel[] getLabels() {
-		JLabel[] labels = {dragLabel};
+		JLabel[] labels = {dragLabel,outputFolderLabel,selectedFileLabel};
 		return labels;
 	}
 	public JButton[] getButtons() {
@@ -372,8 +411,9 @@ public class FileCopyManager extends View{
 		 */
 		super((isNull(name) ? appName : name),535,391);
 		initUIElements();
-		panel.setBackground(Color.white);
-		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][-237.00][][grow]"));
+		//Set a transparent background color with RGBA
+		currentStatusPanel.setBackground(TRANSPARENT_COLOR);
+		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][27.00][][-11.00,grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
 		panel.add(copyFiles, "cell 3 0");
@@ -386,6 +426,7 @@ public class FileCopyManager extends View{
 		dragLabel = new JLabel("Drag files  here");
 		panel.add(dragLabel, "flowy,cell 3 7");
 		panel.add(dragPanel, "cell 3 8");
+		panel.add(currentStatusPanel,"cell 0 10");
 		this.setContentPane(panel);
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -420,5 +461,39 @@ public class FileCopyManager extends View{
 				new FileCopyManager(appName);
 			}
 		 });
+	}
+}
+@SuppressWarnings("serial")
+class StatusFrame extends View{
+	public StatusFrame(FileCopyManager fm){
+		super("Progress",600,200);
+		this.setContentPane(fm.getCopyPanel());
+		this.setVisible(false);
+		this.pack(); 
+		this.setLocationRelativeTo(null);
+	}
+}
+class XString{
+	private String text;
+	public void setText(String txt){
+		this.text = txt;
+	}
+	public String getText(){
+		return toString();
+	}
+	public void append(String name) {
+		// TODO Auto-generated method stub
+		this.text+=name;
+	}
+	public String toString(){
+		return text;
+	}
+	public XString(){
+	}
+	public XString(String message){
+		this.text = message;
+	}
+	public boolean isEmpty(){
+		return toString().length()<1;
 	}
 }

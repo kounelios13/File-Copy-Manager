@@ -11,4 +11,6 @@ Inside <code>dummy</code> folder you will find a script called <code>lineCounter
 
 This script counts the total lines of every java file that <strong>I</strong> have written for this project.
 
-Currently we can't copy files between MTP devices
+Current problems:
+* Can't copy files between PC and and MTP devices
+* Can't copy files which contain <code>+</code> character as part of their name
