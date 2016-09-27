@@ -83,7 +83,7 @@ public class FileCopyManager extends View{
 	private Thread[] copyThreads = new Thread[2];
 	private Component copyPanel = fHandler.getCopyPanel();
 	private StatusFrame status = new StatusFrame(this);
-	private JLabel outputFolderLabel = new JLabel("Output folder:None"),
+	private JLabel outputFolderLabel = new JLabel("Output Folder:None"),
 					selectedFileLabel = new JLabel("Selected File:None");
 	private JPanel currentStatusPanel = new JPanel();
 	private static boolean isNull(Object...t){
@@ -91,8 +91,11 @@ public class FileCopyManager extends View{
 	}
 	private void allowCopy(){
 		boolean condition = !files.isEmpty() && destinationPath != null;
-		if(condition){
+		if(destinationPath != null){
 			outputFolderLabel.setText("Output folder:"+destinationPath);
+		}
+		if(!files.isEmpty()){
+			selectedFileLabel.setText("Selected File:"+selectedFile.getName());
 		}
 		copyFile.setEnabled(condition);
 		copyFiles.setEnabled(condition);
@@ -416,7 +419,11 @@ public class FileCopyManager extends View{
 		initDragAreas();
 		stopCopy.setVisible(false);
 		copyPanel.setVisible(false);
+		currentStatusPanel.setLayout(new MigLayout());
+		currentStatusPanel.add(outputFolderLabel,"wrap");
+		currentStatusPanel.add(selectedFileLabel, "wrap");
 		//panel.add(copyPanel);
+		currentStatusPanel.setVisible(false);
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel,outputFolderLabel,selectedFileLabel};
@@ -449,7 +456,7 @@ public class FileCopyManager extends View{
 		dragLabel = new JLabel("Drag files  here");
 		panel.add(dragLabel, "flowy,cell 3 7");
 		panel.add(dragPanel, "cell 3 8");
-		panel.add(currentStatusPanel,"cell 0 10");
+		//panel.add(currentStatusPanel,"cell 0 10");
 		this.setContentPane(panel);
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
