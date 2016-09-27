@@ -1,3 +1,23 @@
+/*
+ * PreferencesManager.java
+ *
+ * Created on 27.09.2016, 13:35:49
+ *
+ * This file is part of the File Copy Manager project.
+ * 
+ * The File Copy Manager is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ * 
+ * The File Copy Manager is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
 * <h1>PreferencesManager
 * <p>allow the user to edit font,font size ,background and foreground color of UI elements
@@ -8,6 +28,7 @@ import gui.CustomColorChooser;
 import gui.FileCopyManager;
 import gui.View;
 import interfaces.UIPreferences;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -18,13 +39,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.StandardWatchEventKinds;
 import java.util.stream.Stream;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,9 +49,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"all","static-access", "serial"})
 public class PreferencesManager extends View implements UIPreferences{
 	private FileCopyManager appFrame;
@@ -290,15 +306,18 @@ public class PreferencesManager extends View implements UIPreferences{
 			msg.error(prefPanel, "Operation cancelled");
 			return;
 		}
-		try {
-			FileUtils.deleteDirectory(dir);
+		/*try {
+			FileUtils.delete(dir);
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
 			fh.log(exc);
 			msg.error( "Could not delete app settings");
-		}
+		}*/
+		FileUtils.delete(dir);
 		if (!dir.exists())
 			msg.info(prefPanel, "App settings deleted", "Success");
+		else
+			msg.warning("App settings could not be deleted");
 		loadPreferences();
 		appFrame.restart();
 	}
