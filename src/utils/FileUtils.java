@@ -42,5 +42,4 @@ public class FileUtils {
 	public static boolean delete(String fileName){
 		return delete(new File(fileName));
 	}
-	
 }
