@@ -154,7 +154,18 @@ public class FileHandler{
 			}
 			log(logText);
 		}
+		
+		if(f.isDirectory()){
+			for(File cur:f.listFiles())
+				try{
+					copy(cur,dest,false);
+				}
+				catch(Exception e){
+					continue;
+				}
+		}
 		Source[] src= {new Source(f.getAbsolutePath())};
+		
 		try {
 			copyEngine.copy(new CopyJob(src,new String[]{dest}));
 		} catch (IOException exc) {

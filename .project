@@ -3,6 +3,7 @@
 	<name>File copy</name>
 	<comment></comment>
 	<projects>
+		<project>java-file-copy-library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
