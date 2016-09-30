@@ -438,8 +438,11 @@ public class FileCopyManager extends View{
 		/**
 		 * Arguments for super()
 		 * String title ,int width , int height
+		 * By setting resizable to false 
+		 * we stop user from resizing the main UI frame
+		 *
 		 */
-		super((isNull(name) ? appName : name),535,391);
+		super((isNull(name) ? appName : name),535,391,false);
 		initUIElements();
 		//Set a transparent background color with RGBA
 		currentStatusPanel.setBackground(TRANSPARENT_COLOR);
@@ -461,10 +464,6 @@ public class FileCopyManager extends View{
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-		/*
-		 * By setting resizable to false 
-		 * we stop user from resizing the main UI frame**/
-		this.setResizable(false);
 		preload();
 	}
 	public void preload() {

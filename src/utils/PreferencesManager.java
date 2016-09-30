@@ -81,18 +81,6 @@ public class PreferencesManager extends View implements UIPreferences{
 	public boolean exists(){
 		return settingsFile.exists();
 	}
-	private void watchForUpdates(){
-		/*
-		 * This causes errors fix is not available
-		 * new Thread(()->{
-		*	boolean updateFinished = false;
-		*	while(!updateFinished){
-		*		updateFinished = FileHandler.watchForUpdates("app//settings.dat");
-		*	}
-		*	loadPreferences();
-		*	return;
-		}).start(); */
-	}
 	private boolean isNull(Object ...o){
 		return FileHandler.isNull(o);
 	}
@@ -127,10 +115,11 @@ public class PreferencesManager extends View implements UIPreferences{
 	 * @wbp.parser.constructor
 	 */
 	public PreferencesManager(FileCopyManager frame) {
-		super("Preferences",600,800);
+		super("Preferences",600,800,false);
+		if(isNull(frame))
+			throw new IllegalArgumentException("You have to provide an instance of JFrame to work on.");
 		appFrame = frame;
 		initUIElements();
-		watchForUpdates();
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
 				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");

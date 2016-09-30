@@ -27,6 +27,9 @@ public  class View extends JFrame implements IView{
 		super(title);
 		this.setSize(width, height);
 	}
+	public View(String title,int width,int height,boolean resizable){
+		this.setResizable(resizable);
+	}
 	public void toggleUI(){
 		this.setVisible(!this.isVisible());
 	}
