@@ -154,6 +154,10 @@ public class FileCopyManager extends View{
 	protected Container getCopyPanel(){
 		return (Container) copyPanel;
 	}
+	@Override
+	public String toString(){
+		return "FileCopyManager";
+	}
 	public void updateList(File[] e){
 		for(File f:e){
 			if(!allowDuplicates)
@@ -494,6 +498,10 @@ public class FileCopyManager extends View{
 }
 @SuppressWarnings("serial")
 class StatusFrame extends View{
+	@Override
+	public String toString(){
+		return this.getClass().getName();
+	}
 	public StatusFrame(FileCopyManager fm){
 		super("Progress",600,200);
 		this.setContentPane(fm.getCopyPanel());
@@ -503,24 +511,28 @@ class StatusFrame extends View{
 	}
 }
 class XString{
-	private String text;
+	private StringBuilder text;
 	public void setText(String txt){
-		this.text = txt;
+		//Clear the current String Builder
+		this.text.delete(0,text.length());
+		//Then append the current received string
+		this.text.append(txt);
 	}
 	public String getText(){
 		return toString();
 	}
-	public void append(String name) {
+	public XString append(String name) {
 		// TODO Auto-generated method stub
-		this.text+=name;
+		this.text.append(name);
+		return this;
 	}
 	public String toString(){
-		return text;
+		return text.toString();
 	}
 	public XString(){
 	}
 	public XString(String message){
-		this.text = message;
+		this.text.append(message);
 	}
 	public boolean isEmpty(){
 		return toString().length()<1;

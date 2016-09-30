@@ -140,6 +140,10 @@ public class PreferencesManager extends View implements UIPreferences{
 		this.pack();
 	}
 	@Override
+	public String toString(){
+		return "PreferencesManager";
+	}
+	@Override
 	public void loadPreferences(){
 		/*
 		 * Since we use a proxy if an exception is thrown the program will not start
