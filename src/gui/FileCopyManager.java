@@ -2,7 +2,6 @@ package gui;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -17,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -130,7 +128,6 @@ public class FileCopyManager extends View{
 			}).start();
 		});
 	}
-
 	@Override
 	public String toString(){
 		return "FileCopyManager";
@@ -229,7 +226,6 @@ public class FileCopyManager extends View{
 			/*
 			* Show progress while copying a file
 			**/
-	
 			status.toggleUI();
 			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
@@ -249,7 +245,6 @@ public class FileCopyManager extends View{
 			try{
 				copyThreads[1]=
 				new Thread(()->{
-
 					status.toggleUI();
 					for(File f:files){
 						int curIndex = files.indexOf(f);
@@ -257,7 +252,6 @@ public class FileCopyManager extends View{
 						fHandler.copy(f, destinationPath, false);
 						status.update(f);
 					}
-					
 					status.toggleUI();
 				});
 				copyThreads[1].start();

@@ -21,7 +21,6 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
-
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -34,13 +33,10 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitorInputStream;
-
 import org.apache.commons.io.FileUtils;
-
 public class FileHandler{
 	/**
 	 * 
@@ -89,7 +85,6 @@ public class FileHandler{
 	}
 	//TODO
 	public Component getCopyPanel(){
-		
 		return null; 
 	}
 	public FileHandler(){
