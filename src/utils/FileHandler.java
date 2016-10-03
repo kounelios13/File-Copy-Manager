@@ -25,19 +25,19 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import ch.fhnw.filecopier.CopyJob;
+import javax.swing.ProgressMonitorInputStream;
 import ch.fhnw.filecopier.FileCopier;
 import ch.fhnw.filecopier.FileCopierPanel;
-import ch.fhnw.filecopier.Source;
-import static utils.FileUtils.*;
 public class FileHandler{
 	/**
 	 * 
@@ -86,13 +86,6 @@ public class FileHandler{
 				error("IOException :"+exc.getMessage());
 			}
 	}
-	public boolean isSpecialNameHandled(File f){
-		String oldName = f.getAbsolutePath();
-		/*if(oldName.contains("+"))
-			info("");*/
-		String fixedName = oldName.replace("+","_");
-		return f.renameTo(new File(fixedName));
-	}
 	public Component getCopyPanel(){
 		copierPanel.setFileCopier(copyEngine);
 		return copierPanel; 
@@ -122,56 +115,41 @@ public class FileHandler{
 		info("List has been saved");
 	}
 	public String getDestinationName(File f,String dest){
-		return dest+f.getName();
+		return dest+"/"+f.getName();
 	}
+	public File getDestFile(File srcFile,String dest){
+		return new File(getDestinationName(srcFile,dest));
+	}
+	@SuppressWarnings("all")
 	public boolean copy(File f,String dest,boolean log){
-		//info("trying to copy "+f.getName());
-		if(isSpecialFile(f,'+')){
-			String logText = "File contains '+' character.Trying to rename it in order to copy it";
-			String oldName = f.getAbsolutePath();
-			String originalFileName = f.getName();
-			File fixedFile = new File(oldName.replace('+', '_'));
-			boolean renamed =renameFile(f,fixedFile);
-			if(renamed)
-				logText += "File renamed in order to be copied.\n";
-			else{
-				logText +="File couldn't be renamed.Cannot copy file.\n";
-				log(logText);
-				return false;
-			}			
-			//Renamed file re-execute copy() to copy file
-			boolean copied = copy(fixedFile,dest,log);
-			if(copied){
-				logText += "Managed to copy file\n";
-				File finalFile = new File(dest+"/"+oldName);
-				if(!fixedFile.renameTo(finalFile))
-					logText += "Couldn't rename file back to its original name";
-				renameFile(finalFile, new File(dest+"/"+originalFileName));
-				renameFile(f,new File(f.getParentFile()+"/"+originalFileName));
-			}
-			else{
-				logText += "File could not be copied to destination.\n";
-			}
-			log(logText);
-		}
-		if(f.isDirectory()){
-			for(File cur:f.listFiles())
-				try{
-					copy(cur,dest,false);
-				}
-				catch(Exception e){
-					continue;
-				}
-		}
-		Source[] src= {new Source(f.getAbsolutePath())};
+		/**
+		 * 
+		 * */
+		File destFile = getDestFile(f,dest);
 		try {
-			copyEngine.copy(new CopyJob(src,new String[]{dest}));
+			FileInputStream fis = new FileInputStream(f);
+			if(!f.exists())
+				error("File not exists");
+			FileOutputStream fos= new FileOutputStream(dest+"/"+f.getName());
+			FileChannel outChannel  = fos.getChannel(),
+						  inChannel = fis.getChannel();
+			ProgressMonitorInputStream pmis = new ProgressMonitorInputStream(null,"Copying",fis);
+			pmis.getProgressMonitor().setMillisToPopup(10);
+			pmis.getProgressMonitor().setNote("Copying "+f.getName());
+			outChannel.transferFrom(inChannel, 0, f.length());
+			outChannel.close();
+			fis.close();
+			fos.close();
+			outChannel.close();
+			inChannel.close();
+		} catch (FileNotFoundException exc) {
+			// TODO Auto-generated catch block
+			exc.printStackTrace();
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
-			error("Couldn't copy "+f.getName()+" to "+dest);
-			log(exc);
+			exc.printStackTrace();
 		}
-		return false;
+		return destFile.exists();
 	}
 	private String fileName(File f){
 		return f.isFile()?f.getName()+(f.isDirectory()?" (Folder)":""):"";

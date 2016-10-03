@@ -1,5 +1,5 @@
 app
-bin
+bin/
 demos
 notes.txt
 *.class

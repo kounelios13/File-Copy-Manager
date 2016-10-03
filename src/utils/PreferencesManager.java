@@ -49,7 +49,8 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
-@SuppressWarnings({"all","static-access", "serial"})
+import org.apache.commons.io.FileUtils;
+@SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends View implements UIPreferences{
 	private FileCopyManager appFrame;
 	private Color bgColor = new Color(238,238,238),
@@ -62,7 +63,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
-	private CustomColorChooser colorChooser = new CustomColorChooser(appFrame,this);
+	private CustomColorChooser colorChooser = new CustomColorChooser(this);
 	private File settingsFile = new File("app" + sep + "settings.dat"),
 						  dir = new File("app");
 	private Settings settings = new Settings();
@@ -109,7 +110,9 @@ public class PreferencesManager extends View implements UIPreferences{
 		chooseColors.addActionListener((e) -> colorChooser.setVisible(true));
 		buttonSlider.addChangeListener((e) -> updateSliders());
 		labelSlider.addChangeListener((e) -> updateSliders());
-		btnSample.addActionListener((e) -> msg.info(prefPanel,"Stop pressing me. \n I won't do anything", "Idiot alert"));
+		btnSample.addActionListener((e) ->{
+			Message.info("Do not press me","Useless alert");
+		});
 	}
 	/**
 	 * @wbp.parser.constructor
@@ -296,14 +299,14 @@ public class PreferencesManager extends View implements UIPreferences{
 			msg.error(prefPanel, "Operation cancelled");
 			return;
 		}
-		/*try {
-			FileUtils.delete(dir);
+		try {
+			FileUtils.deleteDirectory(dir);
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
 			fh.log(exc);
 			msg.error( "Could not delete app settings");
-		}*/
-		FileUtils.delete(dir);
+		}
+		//FileUtils.delete(dir);
 		if (!dir.exists())
 			msg.info(prefPanel, "App settings deleted", "Success");
 		else

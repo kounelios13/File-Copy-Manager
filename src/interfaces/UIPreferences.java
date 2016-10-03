@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package interfaces;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 public interface UIPreferences{
@@ -29,4 +30,7 @@ public interface UIPreferences{
 	final static Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 	public void loadPreferences();
 	public void savePreferences();	
+	public void setBg(Color bg);
+	public void setFg(Color fg);
+	public void updatePreview();
 }

@@ -9,6 +9,9 @@ chars = 0
 sum	  = 0
 for file in files:
 	source=getSourceCodeLines(file)
+	#found a file that contains no lines or FileNotFound exception was thrown
+	if source[0] < 1:
+		continue
 	chars+=source[1]
 	sum+=source[0]
 	info+= "\t{} contains {} lines of source code \n".format(file,source[0])

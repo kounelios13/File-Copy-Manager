@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package gui;
+import interfaces.UIPreferences;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -27,16 +28,13 @@ import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import utils.PreferencesManager;
-@SuppressWarnings("unused")
 public class CustomColorChooser extends JDialog {
 	private static final long serialVersionUID = -7374804525631377356L;
-	private FileCopyManager gui;
-	private PreferencesManager pMan;
+	private UIPreferences pMan;
     private JColorChooser colorChooser;
     private JButton backgroundButton,
-    		foregroundButton,
-    		okButton;
+    				foregroundButton,
+    						okButton;
     private Color bgColor,
     			  fgColor;
     public Color getBgColor(){
@@ -45,12 +43,11 @@ public class CustomColorChooser extends JDialog {
     public Color getFgColor(){
     	return fgColor; 
     }
-    public CustomColorChooser(FileCopyManager g,PreferencesManager p){
+    public CustomColorChooser(UIPreferences settingsManager){
     	this((JComponent)null);
-    	gui = g;
-    	pMan = p;
+    	pMan = settingsManager;
     }
-    private void init(){
+    private void initUIComponents(){
     	colorChooser = new JColorChooser();
         backgroundButton = new JButton("Background Color");       
         foregroundButton = new JButton("Foreground Color");
@@ -62,8 +59,8 @@ public class CustomColorChooser extends JDialog {
     		pMan.updatePreview();
     	});
     }
-    public CustomColorChooser(JComponent targetComponent) {
-        init();
+    private CustomColorChooser(JComponent targetComponent) {
+        initUIComponents();
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(backgroundButton);
         buttonPanel.add(foregroundButton);

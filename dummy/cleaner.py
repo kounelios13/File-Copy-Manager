@@ -27,7 +27,10 @@ def isComment(line):
 			return True 	
 	return False
 def removeEmptyLines(fileName):
-	file = open(fileName,'r')
+	try:
+		file = open(fileName,'r')
+	except FileNotFoundError:
+		return
 	lines = file.readlines()
 	file.close()
 	file = open(fileName,'w')
@@ -47,7 +50,10 @@ def removeComments(fileName):
 	output.writelines([line for line in lines if len(line.strip())> 0 and not isComment(line.strip())])
 
 def getSourceCodeLines(file):
-	lines = [l for l in open(file,'r').readlines() if not isComment(l.strip()) and len(l.strip())> 0]
+	try:
+		lines = [l for l in open(file,'r').readlines() if not isComment(l.strip()) and len(l.strip())> 0]
+	except FileNotFoundError:
+		return [0,0]
 	chars = 0
 	for l in lines:
 		chars+=len(l.strip())
