@@ -21,6 +21,7 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
+
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -33,11 +34,13 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.ProgressMonitorInputStream;
-import ch.fhnw.filecopier.FileCopier;
-import ch.fhnw.filecopier.FileCopierPanel;
+
+import org.apache.commons.io.FileUtils;
+
 public class FileHandler{
 	/**
 	 * 
@@ -45,8 +48,6 @@ public class FileHandler{
 	 * http://filecopylibrary.sourceforge.net/
 	 * */
 	private static String sep = File.separator + File.separator;
-	private FileCopierPanel copierPanel = new FileCopierPanel();
-	private FileCopier copyEngine = new FileCopier();
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
@@ -86,9 +87,10 @@ public class FileHandler{
 				error("IOException :"+exc.getMessage());
 			}
 	}
+	//TODO
 	public Component getCopyPanel(){
-		copierPanel.setFileCopier(copyEngine);
-		return copierPanel; 
+		
+		return null; 
 	}
 	public FileHandler(){
 	}
@@ -127,10 +129,10 @@ public class FileHandler{
 		 * */
 		File destFile = getDestFile(f,dest);
 		try {
-			FileInputStream fis = new FileInputStream(f);
+			/*FileInputStream fis = new FileInputStream(f);
 			if(!f.exists())
 				error("File not exists");
-			FileOutputStream fos= new FileOutputStream(dest+"/"+f.getName());
+			FileOutputStream fos= new FileOutputStream(destFile);
 			FileChannel outChannel  = fos.getChannel(),
 						  inChannel = fis.getChannel();
 			ProgressMonitorInputStream pmis = new ProgressMonitorInputStream(null,"Copying",fis);
@@ -141,7 +143,14 @@ public class FileHandler{
 			fis.close();
 			fos.close();
 			outChannel.close();
-			inChannel.close();
+			inChannel.close();*/
+			if(destFile.isDirectory()){
+				FileUtils.copyDirectory(f, destFile.isDirectory()?destFile:destFile.getParentFile());
+				info("copy completed");
+			}else{
+				FileUtils.copyDirectoryToDirectory(f, destFile.isDirectory()?destFile:destFile.getParentFile());
+				info("copy completed");
+			}	
 		} catch (FileNotFoundException exc) {
 			// TODO Auto-generated catch block
 			exc.printStackTrace();
@@ -183,7 +192,7 @@ public class FileHandler{
 			return;
 		}
 		try {
-			Desktop.getDesktop().open(new File(dPath));
+			Desktop.getDesktop().open(target);
 		} catch (Exception e1) {
 			error("Could not open destination file");
 			log(e1);

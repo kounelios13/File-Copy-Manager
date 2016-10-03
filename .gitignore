@@ -1,4 +1,5 @@
 app
+bin
 bin/
 bin/gui/*.class
 demos

@@ -1,29 +1,8 @@
-/*
- * FileCopyManager.java
- *
- * Created on 27.09.2016, 13:35:49
- *
- * This file is part of the File Copy Manager project.
- * 
- * The File Copy Manager is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of the License,
- * or (at your option) any later version.
- * 
- * The File Copy Manager is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package gui;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -38,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -81,7 +61,6 @@ public class FileCopyManager extends View{
 	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
-	private Component copyPanel = fHandler.getCopyPanel();
 	private StatusFrame status = new StatusFrame(this);
 	private JLabel outputFolderLabel = new JLabel("Output Folder:None"),
 					selectedFileLabel = new JLabel("Selected File:None");
@@ -151,9 +130,7 @@ public class FileCopyManager extends View{
 			}).start();
 		});
 	}
-	protected Container getCopyPanel(){
-		return (Container) copyPanel;
-	}
+
 	@Override
 	public String toString(){
 		return "FileCopyManager";
@@ -252,14 +229,14 @@ public class FileCopyManager extends View{
 			/*
 			* Show progress while copying a file
 			**/
-			copyPanel.setVisible(true);
+	
 			status.toggleUI();
 			copyThreads[0]=new Thread(()->{
 				fHandler.copy(selectedFile, destinationPath,true);
 				// File may have been copied or an error occurred
 				// No matter what hide progress
 				status.toggleUI();
-				copyPanel.setVisible(false);
+				status.update(selectedFile);
 			});
 			copyThreads[0].start();
 		});
@@ -272,14 +249,15 @@ public class FileCopyManager extends View{
 			try{
 				copyThreads[1]=
 				new Thread(()->{
-					copyPanel.setVisible(true);
+
 					status.toggleUI();
 					for(File f:files){
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
 						fHandler.copy(f, destinationPath, false);
+						status.update(f);
 					}
-					copyPanel.setVisible(false);
+					
 					status.toggleUI();
 				});
 				copyThreads[1].start();
@@ -289,7 +267,7 @@ public class FileCopyManager extends View{
 				fHandler.log(ee);
 			}
 			finally{
-				copyPanel.setVisible(false);
+				status.toggleUI();
 			}
 		});
 		deleteFile.addActionListener((e) -> {
@@ -334,12 +312,10 @@ public class FileCopyManager extends View{
 		});
 		loadList.addActionListener((e) -> {
 			ProgramState state = controller.loadList(model, files);
-			if(state != null){
-				allowDuplicates = state.allowDuplicates();
-				allowDuplicatesOption.setSelected(allowDuplicates);
-			}
-			else
+			if(isNull(state))
 				return;
+			allowDuplicates = state.allowDuplicates();
+			allowDuplicatesOption.setSelected(allowDuplicates);
 			int oldSize = files.size();
 			if(ResourceLoader.filesModified(files)){
 				/**
@@ -347,10 +323,10 @@ public class FileCopyManager extends View{
 				 * */
 				//selectedFileIndex = !files.isEmpty()?0:-1;
 				int missingNum = oldSize - files.size();
-				XString missingFiles = new XString("Number of files missing:"+missingNum);
+				XString missingFiles = new XString("Number of files missing:"+missingNum+"\n");
 				for(File f:files)
 					if(!f.exists())
-						missingFiles.append(f.getName());
+						missingFiles.append(f.getName()+"\n");
 				String message 
 						= !files.isEmpty()?
 						"Some of the files you saved last time do not exist and have been deleted from your list."
@@ -359,7 +335,7 @@ public class FileCopyManager extends View{
 					msg.warning(panel,message);
 				else
 					msg.error(panel,message);
-				fHandler.log(message+System.lineSeparator()+missingFiles);
+				fHandler.log(message+System.lineSeparator()+missingFiles.toString());
 			}
 			/**
 			 * While loading the list 
@@ -422,11 +398,9 @@ public class FileCopyManager extends View{
 		});
 		initDragAreas();
 		stopCopy.setVisible(false);
-		copyPanel.setVisible(false);
 		currentStatusPanel.setLayout(new MigLayout());
 		currentStatusPanel.add(outputFolderLabel,"wrap");
 		currentStatusPanel.add(selectedFileLabel, "wrap");
-		//panel.add(copyPanel);
 		currentStatusPanel.setVisible(false);
 	}
 	public JLabel[] getLabels() {
@@ -498,16 +472,27 @@ public class FileCopyManager extends View{
 }
 @SuppressWarnings("serial")
 class StatusFrame extends View{
+	JLabel fileNameLabel = new JLabel("Copying :");
+	JPanel panel = new JPanel(){{
+		setLayout(new MigLayout());
+		add(fileNameLabel);
+	}};
 	@Override
 	public String toString(){
 		return this.getClass().getName();
 	}
 	public StatusFrame(FileCopyManager fm){
 		super("Progress",600,200);
-		this.setContentPane(fm.getCopyPanel());
+		this.setContentPane(panel);
 		this.setVisible(false);
 		this.pack(); 
-		this.setLocationRelativeTo(null);
+		this.setLocationRelativeTo(fm.getContentPane());
+	}
+	public void update(File file){
+		update(file.getName());
+	}
+	private void update(String fileName){
+		fileNameLabel.setText("Copying :"+fileName);
 	}
 }
 class XString{
@@ -526,6 +511,7 @@ class XString{
 		this.text.append(name);
 		return this;
 	}
+	@Override
 	public String toString(){
 		return text.toString();
 	}
