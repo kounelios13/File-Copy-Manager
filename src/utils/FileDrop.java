@@ -1,23 +1,3 @@
-/*
- * FileDrop.java
- *
- * Created on 27.09.2016, 13:35:49
- *
- * This file is part of the File Copy Manager project.
- * 
- * The File Copy Manager is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 3 of the License,
- * or (at your option) any later version.
- * 
- * The File Copy Manager is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package utils;
 import java.awt.Color;
 import java.awt.Component;
@@ -256,7 +236,7 @@ public class FileDrop
                     // over the drag target.
                 }   // end dragOver
                 @SuppressWarnings("unchecked")
-				public void drop(DropTargetDropEvent evt )
+                public void drop(DropTargetDropEvent evt )
                 {   log( out, "FileDrop: drop event." );
                     try
                     {   // Get whatever was dropped
@@ -369,13 +349,13 @@ public class FileDrop
             boolean support = false;
             try
             {  
-            	@SuppressWarnings("unused")
-				Class<?> arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants");
+                @SuppressWarnings("unused")
+                Class<?> arbitraryDndClass = Class.forName( "java.awt.dnd.DnDConstants");
                 support = true;
             }   // end try
             catch( Exception e )
             {  
-            	support = false;
+                support = false;
             }   // end catch
             supportsDnD = support;
         }   // end if: first time through
@@ -427,7 +407,7 @@ public class FileDrop
                 }   // end if: null parent
                 else
                 {   
-                	new DropTarget(c, dropListener);
+                    new DropTarget(c, dropListener);
                     log( out, "FileDrop: Drop target added to component." );
                 }   // end else: parent not null
             }   // end hierarchyChanged
@@ -448,12 +428,12 @@ public class FileDrop
     /** Determine if the dragged data is a file list. */
     private boolean isDragOk( final PrintStream out, final DropTargetDragEvent evt )
     {   
-    	boolean ok = false;
+        boolean ok = false;
         // Get data flavors being dragged
        DataFlavor[] flavors = evt.getCurrentDataFlavors();
         // See if any of the flavors are a file list
         int i = 0;
-    	int max = flavors.length;
+        int max = flavors.length;
         while( !ok && i < max )
         {   
             // BEGIN 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
@@ -468,8 +448,7 @@ public class FileDrop
         // If logging is enabled, show data flavors
         if( out != null )
         {   
-
-        	if(max == 0 )
+            if(max == 0 )
                 log( out, "FileDrop: no data flavors." );
             for( i = 0; i < max; i++ )
                 log( out, flavors[i].toString() );
@@ -494,7 +473,7 @@ public class FileDrop
      */
     public static boolean remove(Component c)
     {  
-    	return remove( null, c, true );
+        return remove( null, c, true );
     }   // end remove
     /**
      * Removes the drag-and-drop hooks from the component and optionally
@@ -513,7 +492,7 @@ public class FileDrop
             c.setDropTarget( null );
             if( recursive && ( c instanceof Container ) )
             {   
-            	Component[] comps = ((Container)c).getComponents();
+                Component[] comps = ((Container)c).getComponents();
                 for( int i = 0,max = comps.length; i < max; i++ )
                     remove( out, comps[i], recursive );
                 return true;
@@ -561,7 +540,7 @@ public class FileDrop
      * @version 1.2
      */
     @SuppressWarnings("serial")
-	public static class Event extends EventObject {
+    public static class Event extends EventObject {
         private File[] files;
         /**
          * Constructs an {@link Event} with the array
@@ -707,7 +686,7 @@ public class FileDrop
          */
         public DataFlavor getCustomDataFlavor()
         {   
-        	return customFlavor;
+            return customFlavor;
         }   // end getCustomDataFlavor
     /* ********  T R A N S F E R A B L E   M E T H O D S  ******** */    
         /**
@@ -767,7 +746,6 @@ public class FileDrop
          */
         public boolean isDataFlavorSupported(DataFlavor flavor) 
         {
-
             // We can't do anything else
             return flavor.equals(DATA_FLAVOR)|| flavor.equals(DataFlavor.stringFlavor);
         }   // end isDataFlavorSupported
