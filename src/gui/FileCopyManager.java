@@ -226,13 +226,13 @@ public class FileCopyManager extends View{
 			/*
 			* Show progress while copying a file
 			**/
-			status.toggleUI();
+			status.setVisible(true);
 			copyThreads[0]=new Thread(()->{
+				status.update(selectedFile);
 				fHandler.copy(selectedFile, destinationPath,true);
 				// File may have been copied or an error occurred
 				// No matter what hide progress
-				status.toggleUI();
-				status.update(selectedFile);
+				status.dispose();
 			});
 			copyThreads[0].start();
 		});
@@ -245,14 +245,15 @@ public class FileCopyManager extends View{
 			try{
 				copyThreads[1]=
 				new Thread(()->{
-					status.toggleUI();
+					status.setVisible(true);
 					for(File f:files){
 						int curIndex = files.indexOf(f);
 						fileNames.setSelectedIndex(curIndex);
-						fHandler.copy(f, destinationPath, false);
 						status.update(f);
+						fHandler.copy(f, destinationPath, false);
+						
 					}
-					status.toggleUI();
+					status.dispose();
 				});
 				copyThreads[1].start();
 			}

@@ -1,22 +1,23 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
+
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.ProgressMonitorInputStream;
+
 import org.apache.commons.io.FileUtils;
+//@SuppressWarnings("unused")
 public class FileHandler{
 	/**
 	 * 
@@ -119,12 +120,12 @@ public class FileHandler{
 			fos.close();
 			outChannel.close();
 			inChannel.close();*/
-			if(destFile.isDirectory()){
-				FileUtils.copyDirectory(f, destFile.isDirectory()?destFile:destFile.getParentFile());
-				info("copy completed");
+			if(f.isDirectory()){
+				FileUtils.copyDirectory(f,destFile);
+				//info("copy completed");
 			}else{
-				FileUtils.copyDirectoryToDirectory(f, destFile.isDirectory()?destFile:destFile.getParentFile());
-				info("copy completed");
+				FileUtils.copyFile(f, destFile);
+				//info("copy completed");
 			}	
 		} catch (FileNotFoundException exc) {
 			// TODO Auto-generated catch block
