@@ -75,6 +75,8 @@ public class PreferencesManager extends View implements UIPreferences{
 	}
 	private void initUIElements() {
 		createFontList();
+		/*buttonSlider.setUI(new ColoredThumbSliderUI(buttonSlider,Color.red));
+		labelSlider.setUI(new ColoredThumbSliderUI(labelSlider,Color.red));*/
 		saveSettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());
 		applySettings.addActionListener((e) ->	applySettings());
@@ -169,16 +171,17 @@ public class PreferencesManager extends View implements UIPreferences{
 				fh.log(e1.getMessage());
 			} finally {
 				if (settingsFile.exists()) {
-					msg.info(null, "Created preferences file", "Status");
+					msg.info("Created preferences file", "Status");
 					// Created needed file.Re-execute to save
 					savePreferences();
 				}
-				applySettings();
 			}
 		} catch (IOException io) {
 			msg.error( "IOException occured", "IO");
 			fh.log(io.getMessage());
 		}
+		if(settingsFile.exists())
+			applySettings();
 		this.setVisible(false);
 	}
 	public void editPreferences() {
