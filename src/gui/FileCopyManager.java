@@ -251,7 +251,6 @@ public class FileCopyManager extends View{
 						fileNames.setSelectedIndex(curIndex);
 						status.update(f);
 						fHandler.copy(f, destinationPath, false);
-						
 					}
 					status.dispose();
 				});

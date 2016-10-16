@@ -1,7 +1,6 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
-
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
@@ -12,10 +11,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-
 import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
 public class FileHandler{
