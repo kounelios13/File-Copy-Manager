@@ -34,7 +34,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
 	private boolean settingsLoaded = false;
-	private Message msg 		 = new Message();
+	//private Message msg 		 = new Message();
 	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
@@ -103,8 +103,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		prefPanel.setLayout(new MigLayout("", "[97px][97px]",
 				"[][][][][][23px][][]"));
 		prefPanel.add(fontCombo, "cell 0 0,growx,aligny center");
-		prefPanel
-				.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
+		prefPanel.add(lblButtonFontSize, "cell 0 1,alignx center,aligny center");
 		prefPanel.add(buttonSlider, "cell 0 2,growx");
 		prefPanel.add(btnSample, "cell 1 2");
 		prefPanel.add(lblLabelFontSize, "cell 0 3,alignx center,aligny center");
@@ -134,7 +133,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		settingsLoaded = true;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
-			msg.error(settings.getFontName()+" font is not available on this system.");
+			Message.error(settings.getFontName()+" font is not available on this system.");
 		setColors();
 		/**
 		 * Important note:
@@ -167,17 +166,17 @@ public class PreferencesManager extends View implements UIPreferences{
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e1) {
-				msg.error( "Can't save preferences");
+				Message.error( "Can't save preferences");
 				fh.log(e1.getMessage());
 			} finally {
 				if (settingsFile.exists()) {
-					msg.info("Created preferences file", "Status");
+					Message.info("Created preferences file", "Status");
 					// Created needed file.Re-execute to save
 					savePreferences();
 				}
 			}
 		} catch (IOException io) {
-			msg.error( "IOException occured", "IO");
+			Message.error( "IOException occured", "IO");
 			fh.log(io.getMessage());
 		}
 		if(settingsFile.exists())
@@ -192,6 +191,9 @@ public class PreferencesManager extends View implements UIPreferences{
 		Font btn = settings.getButtonFont(),
 			 lbl = settings.getLabelFont();
 		Stream.of(appFrame.getButtons()).forEach(b->{
+			/**
+			 * We use a stream since we don't care about the order of the elements
+			 * */
 			b.setFont(btn);	
 			b.setBackground(bgColor);
 			b.setForeground(fgColor);
@@ -225,7 +227,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	public void exportSettings() {
 		File dir = new File("app");
 		if (!dir.exists()) {
-			msg.error(prefPanel, "There are no setiings saved by user");
+			Message.error(prefPanel, "There are no setiings saved by user");
 			return;
 		}
 		StringBuilder str = null;
@@ -236,7 +238,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		ch.setApproveButtonText("Select");
 		int n = ch.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION) {
-		 	msg.info("Operation aborted");
+		 	Message.info("Operation aborted");
 			return;
 		}
 		File f = new File(ch.getSelectedFile() + File.separator
@@ -267,28 +269,26 @@ public class PreferencesManager extends View implements UIPreferences{
 	public void deleteAppSettings() {
 		File dir = new File("app");
 		if (!dir.exists() || dir.listFiles().length < 1) {
-			msg.error(prefPanel, "No files to delete");
+			Message.error(prefPanel, "No files to delete");
 			return;
 		}
 		boolean delete = JOptionPane
 				.showConfirmDialog(null,
 						"Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
 		if (!delete) {
-			msg.error(prefPanel, "Operation cancelled");
+			Message.error(prefPanel, "Operation cancelled");
 			return;
 		}
 		try {
 			FileUtils.deleteDirectory(dir);
 		} catch (IOException exc) {
-			// TODO Auto-generated catch block
 			fh.log(exc);
-			msg.error( "Could not delete app settings");
+			Message.error( "Could not delete app settings");
 		}
-		//FileUtils.delete(dir);
 		if (!dir.exists())
-			msg.info(prefPanel, "App settings deleted", "Success");
+			Message.info(prefPanel, "App settings deleted", "Success");
 		else
-			msg.warning("App settings could not be deleted");
+			Message.warning("App settings could not be deleted");
 		loadPreferences();
 		appFrame.restart();
 	}

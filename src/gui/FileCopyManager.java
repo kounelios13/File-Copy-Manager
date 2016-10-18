@@ -1,5 +1,7 @@
 package gui;
 import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -7,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -35,7 +38,8 @@ public class FileCopyManager extends View{
 	private Message 	 msg   	  = new Message();
 	private JMenuBar menuBar   	  = new JMenuBar();
 	private JMenu   fileMenu   	  = new JMenu("File"),
-				    editMenu   	  = new JMenu("Edit");
+				    editMenu   	  = new JMenu("Edit"),
+				    aboutMenu	  = new JMenu("Help");
 	private JMenuItem saveList 	  = new JMenuItem("Save queue"),
 			exit 			   	  = new JMenuItem("Exit"),
 			loadList           	  = new JMenuItem("Load queue"),
@@ -43,7 +47,8 @@ public class FileCopyManager extends View{
 			showPreferences    	  = new JMenuItem("Preferences"),
 			exportPreferences  	  = new JMenuItem("Export Preferences"),
 			deleteApp          	  = new JMenuItem("Delete app settings"),
-			restartApp		   	  = new JMenuItem("Restart Application");
+			restartApp		   	  = new JMenuItem("Restart Application"),
+			showAboutInfo		  = new JMenuItem("About File Copy Manager");
 	private File      selectedFile = null;
 	private String destinationPath = null;
 	private ArrayList<File> files  = new ArrayList<>();
@@ -172,10 +177,12 @@ public class FileCopyManager extends View{
 		editMenu.addSeparator();
 		editMenu.add(deleteApp);
 		editMenu.addSeparator();
+		aboutMenu.add(showAboutInfo);
 		allowDuplicatesOption.addActionListener((e)->allowDuplicates = allowDuplicatesOption.isSelected());
 		editMenu.add(allowDuplicatesOption);
 		menuBar.add(fileMenu);
 		menuBar.add(editMenu);
+		menuBar.add(aboutMenu);
 		addFiles	 	   	  = btn("Add files to copy");
 		copyFiles 	 	   	  = btn("Copy all files");
 		deleteFile 	 	   	  = btn("Delete file from list");
@@ -361,6 +368,9 @@ public class FileCopyManager extends View{
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
 		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
 		restartApp.addActionListener((e)->restart());
+		showAboutInfo.addActionListener((e)->{
+			SwingUtilities.invokeLater(()->new InfoPage());
+		});
 		deleteAll.addActionListener((e) -> {
 			if (files.isEmpty()) {
 				msg.info(panel,"There are no files to remove from list","Warning");
@@ -501,7 +511,6 @@ class XString{
 		return toString();
 	}
 	public XString append(String name) {
-		// TODO Auto-generated method stub
 		this.text.append(name);
 		return this;
 	}
@@ -516,5 +525,24 @@ class XString{
 	}
 	public boolean isEmpty(){
 		return toString().length()<1;
+	}
+}
+@SuppressWarnings("all")
+class InfoPage extends JFrame{
+	private static final long serialVersionUID = 1L;
+	private JPanel mainPanel = new JPanel(){{
+		LayoutManager layout = new GridLayout();
+	}};
+	private void initUI(){
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//pack();
+		setSize(250,100);
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setVisible(true);
+	}
+	public InfoPage(){
+		super("About");
+		initUI();
 	}
 }
