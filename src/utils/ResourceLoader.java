@@ -16,7 +16,7 @@ public class ResourceLoader {
 	private Message msg 		= new Message();
 	private File uiTheme 		= new File("app"+separator+"settings.dat"),
 				 listFile 		= new File("app"+separator+"userlist.dat");
-	public static  boolean filesModified(ArrayList<File>files){
+	public static  boolean filesRemoved(ArrayList<File>files){
 		//new addition to changelog
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
@@ -58,10 +58,10 @@ public class ResourceLoader {
 		 * 
 		 * Returns the last saved state of the main program
 		 * */
-		ProgramState p = null;
+		ProgramState programState = null;
 		try {
 			inputStream = new ObjectInputStream(new FileInputStream(listFile));
-			p = (ProgramState)inputStream.readObject();
+			programState = (ProgramState)inputStream.readObject();
 			/**
 			* Always close an I/O stream
 			*/
@@ -73,6 +73,6 @@ public class ResourceLoader {
 			msg.error("Corrupted file found");
 			handler.log(cn);
 		}	
-		return p;
+		return programState;
 	}
 }
