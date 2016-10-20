@@ -57,12 +57,15 @@ public class ResourceLoader {
 		/**
 		 * 
 		 * Returns the last saved state of the main program
+		 * (list of files added,selected file and destination folder)
 		 * */
 		ProgramState programState = null;
 		try {
 			inputStream = new ObjectInputStream(new FileInputStream(listFile));
 			programState = (ProgramState)inputStream.readObject();
 			/**
+			* If you don't close an I/O stream when you finish
+			* you won't be able to make any edits to the files you are using
 			* Always close an I/O stream
 			*/
 			inputStream.close();

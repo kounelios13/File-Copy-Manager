@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import messages.Message;
+import static messages.Message.*;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
@@ -34,7 +34,6 @@ public class PreferencesManager extends View implements UIPreferences{
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
 	private boolean settingsLoaded = false;
-	//private Message msg 		 = new Message();
 	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
@@ -75,8 +74,6 @@ public class PreferencesManager extends View implements UIPreferences{
 	}
 	private void initUIElements() {
 		createFontList();
-		/*buttonSlider.setUI(new ColoredThumbSliderUI(buttonSlider,Color.red));
-		labelSlider.setUI(new ColoredThumbSliderUI(labelSlider,Color.red));*/
 		saveSettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());
 		applySettings.addActionListener((e) ->	applySettings());
@@ -88,7 +85,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		buttonSlider.addChangeListener((e) -> updateSliders());
 		labelSlider.addChangeListener((e) -> updateSliders());
 		btnSample.addActionListener((e) ->{
-			Message.info("Do not press me","Useless alert");
+			info("Do not press me","Useless alert");
 		});
 	}
 	/**
@@ -133,7 +130,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		settingsLoaded = true;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
-			Message.error(settings.getFontName()+" font is not available on this system.");
+			error(settings.getFontName()+" font is not available on this system.");
 		setColors();
 		/**
 		 * Important note:
@@ -150,7 +147,8 @@ public class PreferencesManager extends View implements UIPreferences{
 				break;
 			else
 				i++;
-		fontCombo.setSelectedIndex(i>=fonts.length?settings.getFontIndex("Arial"):i);
+		int backupFontIndex = settings.getFontIndex("Arial");
+		fontCombo.setSelectedIndex(i>=fonts.length?backupFontIndex:i);
 	}
 	@Override
 	public void savePreferences(){
@@ -166,17 +164,17 @@ public class PreferencesManager extends View implements UIPreferences{
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e1) {
-				Message.error( "Can't save preferences");
+				error("Can't save preferences");
 				fh.log(e1.getMessage());
 			} finally {
 				if (settingsFile.exists()) {
-					Message.info("Created preferences file", "Status");
+					info("Created preferences file");
 					// Created needed file.Re-execute to save
 					savePreferences();
 				}
 			}
 		} catch (IOException io) {
-			Message.error( "IOException occured", "IO");
+			error( "IOException occured", "IO");
 			fh.log(io.getMessage());
 		}
 		if(settingsFile.exists())
@@ -227,21 +225,21 @@ public class PreferencesManager extends View implements UIPreferences{
 	public void exportSettings() {
 		File dir = new File("app");
 		if (!dir.exists()) {
-			Message.error(prefPanel, "There are no setiings saved by user");
+			error(prefPanel, "There are no setiings saved by user");
 			return;
 		}
 		StringBuilder str = null;
-		JFileChooser ch = new JFileChooser();
-		ch.setCurrentDirectory(new File("app"));
-		ch.setDialogTitle("Choose wher to export file");
-		ch.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		ch.setApproveButtonText("Select");
-		int n = ch.showOpenDialog(null);
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("app"));
+		chooser.setDialogTitle("Choose wher to export file");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setApproveButtonText("Select");
+		int n = chooser.showOpenDialog(null);
 		if (n != JFileChooser.APPROVE_OPTION) {
-		 	Message.info("Operation aborted");
+		 	info("Operation aborted");
 			return;
 		}
-		File f = new File(ch.getSelectedFile() + File.separator
+		File f = new File(chooser.getSelectedFile() + File.separator
 				+ File.separator + "export.txt");
 		if (!f.exists())
 			try {
@@ -269,26 +267,26 @@ public class PreferencesManager extends View implements UIPreferences{
 	public void deleteAppSettings() {
 		File dir = new File("app");
 		if (!dir.exists() || dir.listFiles().length < 1) {
-			Message.error(prefPanel, "No files to delete");
+			error(prefPanel, "No files to delete");
 			return;
 		}
 		boolean delete = JOptionPane
 				.showConfirmDialog(null,
 						"Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
 		if (!delete) {
-			Message.error(prefPanel, "Operation cancelled");
+			error(prefPanel, "Operation cancelled");
 			return;
 		}
 		try {
 			FileUtils.deleteDirectory(dir);
 		} catch (IOException exc) {
 			fh.log(exc);
-			Message.error( "Could not delete app settings");
+			error( "Could not delete app settings");
 		}
 		if (!dir.exists())
-			Message.info(prefPanel, "App settings deleted", "Success");
+			info(prefPanel, "App settings deleted", "Success");
 		else
-			Message.warning("App settings could not be deleted");
+			warning("App settings could not be deleted");
 		loadPreferences();
 		appFrame.restart();
 	}

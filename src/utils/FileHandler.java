@@ -1,7 +1,6 @@
 package utils;
 import static messages.Message.error;
 import static messages.Message.info;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,15 +12,19 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import messages.Message;
 import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
 public class FileHandler{
-	/**
-	 * 
-	 * See this web site for an alternative way to copy files while showing graphical progress
-	 * http://filecopylibrary.sourceforge.net/
-	 * */
 	private static String sep = File.separator + File.separator;
+	private static boolean logApplicationErrors = false;
+	public static void setAdvancedLogs(boolean value){
+		/*
+		 * Decide if we want to log errors messages that were not caused by an exception
+		 * but from a mistake made by the user
+		 * **/
+		logApplicationErrors = value;
+	}
 	public static boolean isNull(Object... items){
 		for(Object o:items)
 			if(o==null)
@@ -43,7 +46,10 @@ public class FileHandler{
 			try {
 				logFile.createNewFile();
 			} catch (IOException exc) {
-				error("IOException :"+exc);	
+				String errorMessage = 
+						(logFile.exists()?"IOException occured:":"Couldn't create log file:")
+							+"\n"+exc.getMessage();	
+				error(errorMessage);
 				return;
 			}
 			try {
@@ -61,20 +67,20 @@ public class FileHandler{
 				error("IOException :"+exc.getMessage());
 			}
 	}
-	//TODO
-	public Component getCopyPanel(){
-		return null; 
-	}
 	public FileHandler(){
 	}
 	public void saveList(ProgramState ps,File destFile){
 		if(isNull(destFile)){
 			error("Destination folder has not been selected", "Destination Empty");
+			if(logApplicationErrors)
+				log("No destination folder has been selected");
 			return;
 		}
 		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
 			error("No files have been selected","Empty list");
+			if(!logApplicationErrors)
+				log("No files selected to copy");
 			return;
 		}
 		try {
@@ -102,21 +108,6 @@ public class FileHandler{
 		 * */
 		File destFile = getDestFile(f,dest);
 		try {
-			/*FileInputStream fis = new FileInputStream(f);
-			if(!f.exists())
-				error("File not exists");
-			FileOutputStream fos= new FileOutputStream(destFile);
-			FileChannel outChannel  = fos.getChannel(),
-						  inChannel = fis.getChannel();
-			ProgressMonitorInputStream pmis = new ProgressMonitorInputStream(null,"Copying",fis);
-			pmis.getProgressMonitor().setMillisToPopup(10);
-			pmis.getProgressMonitor().setNote("Copying "+f.getName());
-			outChannel.transferFrom(inChannel, 0, f.length());
-			outChannel.close();
-			fis.close();
-			fos.close();
-			outChannel.close();
-			inChannel.close();*/
 			if(f.isDirectory()){
 				FileUtils.copyDirectory(f,destFile);
 				//info("copy completed");
@@ -125,11 +116,9 @@ public class FileHandler{
 				//info("copy completed");
 			}	
 		} catch (FileNotFoundException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+			log(exc);
 		} catch (IOException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+			log(exc);
 		}
 		return destFile.exists();
 	}
@@ -159,6 +148,13 @@ public class FileHandler{
 	}
 	public void openDestination(String dPath) {
 		File target = new File(dPath);
+		// Check if Desktop class is supported in the platform the program is running on
+		if(!Desktop.isDesktopSupported()){
+			String msg = "The platform you are using does not support Desktop class";
+			Message.error(msg, "Unsupported Operation");
+			log(msg);
+			return;
+		}
 		if (isNull(dPath) || !target.exists()) {
 			error(target.exists()?"No folder selected":"Destination folder does not exist"
 				,"Missing destination folder");
@@ -173,6 +169,13 @@ public class FileHandler{
 	}
 	public void openAppDirectory() {
 		File dir = new File("app");
+		// Check if Desktop class is supported in the platform the program is running on
+		if(!Desktop.isDesktopSupported()){
+			String msg = "The platform you are using does not support Desktop class";
+			Message.error(msg, "Unsupported Operation");
+			log(msg);
+			return;
+		}
 		if(!dir.exists()){
 			error("No app folder has been created in your system.");
 			return;
