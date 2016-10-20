@@ -1,8 +1,9 @@
 package gui;
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.Desktop;
 import java.awt.LayoutManager;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -27,7 +28,7 @@ import utils.FileHandler;
 import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
-@SuppressWarnings({"serial", "static-access"})
+@SuppressWarnings({"serial"})
 public class FileCopyManager extends View{
 	public static String appName  = "File Copy Manager v1.6.5.0";
 	public static final Color TRANSPARENT_COLOR = new Color(0,0,0,0);
@@ -35,7 +36,6 @@ public class FileCopyManager extends View{
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
 	private Controller controller = new Controller();
 	private FileHandler fHandler  = new FileHandler();	
-	private Message 	 msg   	  = new Message();
 	private JMenuBar menuBar   	  = new JMenuBar();
 	private JMenu   fileMenu   	  = new JMenu("File"),
 				    editMenu   	  = new JMenu("Edit"),
@@ -192,6 +192,7 @@ public class FileCopyManager extends View{
 		openDestinationFolder.addActionListener((e)->controller.openDestination(destinationPath));
 		openAppDirectory.addActionListener((e)->controller.openAppDirectory());
 		stopCopy = new JButton("Stop copy operations");
+		stopCopy.setVisible(false);
 		model = new DefaultComboBoxModel<String>();
 		fileNames = new JComboBox<String>(model);
 		fileNames.setVisible(false);
@@ -227,7 +228,7 @@ public class FileCopyManager extends View{
 			String message = destinationPath== null && selectedFile == null?"Select at least a file and a destination folder "
 					:selectedFile == null?" Select at least one file to copy":"Select a directory to copy selected file(s) in";
 			if (isNull(destinationPath,selectedFile)) {
-				msg.error(panel, message);
+				Message.error(panel, message);
 				return;
 			}
 			/*
@@ -245,7 +246,7 @@ public class FileCopyManager extends View{
 		});
 		copyFiles.addActionListener((e) -> {
 			if(isNull(destinationPath))
-				msg.error(panel, "Please select a destination folder","No destination folder selected");
+				Message.error(panel, "Please select a destination folder","No destination folder selected");
 			//No need to start a new thread if there is nothing to copy
 			if(files.isEmpty())
 				return;
@@ -264,8 +265,8 @@ public class FileCopyManager extends View{
 				copyThreads[1].start();
 			}
 			catch(Exception ee){
-				msg.error(panel, "Error occured.See log file for more");
-				fHandler.log(ee);
+				Message.error(panel, "Error occured.See log file for more");
+				FileHandler.log(ee);
 			}
 			finally{
 				status.toggleUI();
@@ -273,7 +274,7 @@ public class FileCopyManager extends View{
 		});
 		deleteFile.addActionListener((e) -> {
 			if (isNull(selectedFile)) {
-				msg.error(null, "No file is selected", "Error");
+				Message.error("No file is selected");
 				return;
 			}		
 			int index = fileNames.getSelectedIndex();
@@ -294,7 +295,7 @@ public class FileCopyManager extends View{
 						"Please add some files and select a destination folder.":files.isEmpty()?
 								"You haven't added any file.":"If you want to save your list please select"
 									+" a destination folder for your files.";
-				msg.error(err);
+				Message.error(err);
 				return;
 			}
 			File dir = listFile.getParentFile();
@@ -304,8 +305,8 @@ public class FileCopyManager extends View{
 				try {
 					listFile.createNewFile();
 				} catch (Exception e1) {
-					msg.error(panel, "Cannot save list.");
-					fHandler.log(e1);
+					Message.error(panel, "Cannot save list.");
+					FileHandler.log(e1);
 				}
 			}
 			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
@@ -318,7 +319,7 @@ public class FileCopyManager extends View{
 			allowDuplicates = state.allowDuplicates();
 			allowDuplicatesOption.setSelected(allowDuplicates);
 			int oldSize = files.size();
-			if(ResourceLoader.filesModified(files)){
+			if(ResourceLoader.filesRemoved(files)){
 				/**
 				 * More of a warning here since there is not an error
 				 * */
@@ -333,10 +334,10 @@ public class FileCopyManager extends View{
 						"Some of the files you saved last time do not exist and have been deleted from your list."
 						:"None of the files you saved last time is available.";
 				if(!files.isEmpty())
-					msg.warning(panel,message);
+					Message.warning(panel,message);
 				else
-					msg.error(panel,message);
-				fHandler.log(message+System.lineSeparator()+missingFiles.toString());
+					Message.error(panel,message);
+				FileHandler.log(message+"\n"+missingFiles.toString());
 			}
 			/**
 			 * While loading the list 
@@ -357,7 +358,7 @@ public class FileCopyManager extends View{
 					fileNames.setSelectedIndex(0);
 					selectedFileIndex = 0;
 				}
-				fHandler.log(exc);				
+				FileHandler.log(exc);				
 			}
 			allowEdits();
 			showFiles();
@@ -373,7 +374,7 @@ public class FileCopyManager extends View{
 		});
 		deleteAll.addActionListener((e) -> {
 			if (files.isEmpty()) {
-				msg.info(panel,"There are no files to remove from list","Warning");
+				Message.warning(panel,"There are no files to remove from list");
 				return;
 			}
 			boolean go = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete tall files from list?") == JOptionPane.OK_OPTION;
@@ -383,10 +384,10 @@ public class FileCopyManager extends View{
 				fileNames.setVisible(false);
 				selectedFile 		= null;
 				selectedFileIndex 	= -1;
-				msg.info(panel,"Files removed from list succcessfully","Status");
+				Message.info(panel,"Files removed from list succcessfully");
 				allowEdits();
 			} else
-				msg.error("Operation cancelled by user");
+				Message.error("Operation cancelled by user");
 		});
 		selectDestination.addActionListener((e) -> {
 			chooser.setDialogTitle("Select destination folder");
@@ -398,14 +399,14 @@ public class FileCopyManager extends View{
 				destinationPath = selected.getAbsolutePath();
 				allowEdits();
 			}else
-				msg.error(panel,"Invalid destination");
+				Message.error(panel,"Invalid destination");
 		});
 		initDragAreas();
-		stopCopy.setVisible(false);
+		/*stopCopy.setVisible(false);
 		currentStatusPanel.setLayout(new MigLayout());
 		currentStatusPanel.add(outputFolderLabel,"wrap");
 		currentStatusPanel.add(selectedFileLabel, "wrap");
-		currentStatusPanel.setVisible(false);
+		currentStatusPanel.setVisible(false);*/
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel,outputFolderLabel,selectedFileLabel};
@@ -422,7 +423,6 @@ public class FileCopyManager extends View{
 		 * String title ,int width , int height
 		 * By setting resizable to false 
 		 * we stop user from resizing the main UI frame
-		 *
 		 */
 		super((isNull(name) ? appName : name),535,391,false);
 		initUIElements();
@@ -441,7 +441,6 @@ public class FileCopyManager extends View{
 		dragLabel = new JLabel("Drag files  here");
 		panel.add(dragLabel, "flowy,cell 3 7");
 		panel.add(dragPanel, "cell 3 8");
-		//panel.add(currentStatusPanel,"cell 0 10");
 		this.setContentPane(panel);
 		this.pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -462,7 +461,7 @@ public class FileCopyManager extends View{
 	}
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
-			 try {
+			try{
 				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
 			catch (Throwable e) {
@@ -500,7 +499,7 @@ class StatusFrame extends View{
 	}
 }
 class XString{
-	private StringBuilder text;
+	private StringBuilder text = new StringBuilder();
 	public void setText(String txt){
 		//Clear the current String Builder
 		this.text.delete(0,text.length());
@@ -518,8 +517,7 @@ class XString{
 	public String toString(){
 		return text.toString();
 	}
-	public XString(){
-	}
+	public XString(){}
 	public XString(String message){
 		this.text.append(message);
 	}
@@ -530,13 +528,31 @@ class XString{
 @SuppressWarnings("all")
 class InfoPage extends JFrame{
 	private static final long serialVersionUID = 1L;
+	JLabel nameLabel = new JLabel(FileCopyManager.appName),
+			copyrightLabel = new JLabel("Copyright ©2016. kounelios13");
 	private JPanel mainPanel = new JPanel(){{
-		LayoutManager layout = new GridLayout();
+		LayoutManager layout = new MigLayout();
+		add(nameLabel);
+		add(copyrightLabel,"wrap");
+		JButton btn = new JButton("Visit my GitHub page");
+		btn.addActionListener(e->{
+			URL url;
+			try {
+				url= new URL("https://github.com/kounelios13");
+				Desktop.getDesktop().browse(url.toURI());
+			} catch (Exception exc) {
+				Message.error("Cannot open GitHub profila page.");
+			}
+		});
+		add(btn,"cell 1 0");
 	}};
+	public JLabel[] getLabels (){
+		return new JLabel[]{nameLabel,copyrightLabel};
+	}
 	private void initUI(){
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		//pack();
-		setSize(250,100);
+		setContentPane(mainPanel);
+		setSize(250,120);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
