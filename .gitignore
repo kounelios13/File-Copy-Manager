@@ -6,6 +6,6 @@ demos
 notes.txt
 *.class
 dummy/*.bat
-src/drive
+src/gui/XOptionPane.java
 *.docx
 *.psd
