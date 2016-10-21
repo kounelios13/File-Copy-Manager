@@ -141,6 +141,8 @@ public class PreferencesManager extends View implements UIPreferences{
 			labelSize = settings.getLblSize();
 		labelSlider.setValue(labelSize);
 		buttonSlider.setValue(btnSize);
+		/*labelSlider.getModel().setValue(settings.getLblSize());
+		buttonSlider.getModel().setValue(settings.getBtnSize());*/
 		int i = 0;
 		for (Font f : fonts)
 			if (f.getFontName().equals(settings.getFontName()))
@@ -231,7 +233,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		StringBuilder str = null;
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new File("app"));
-		chooser.setDialogTitle("Choose wher to export file");
+		chooser.setDialogTitle("Select a folder to export file");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setApproveButtonText("Select");
 		int n = chooser.showOpenDialog(null);
@@ -240,7 +242,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			return;
 		}
 		File f = new File(chooser.getSelectedFile() + File.separator
-				+ File.separator + "export.txt");
+				+ File.separator + "export.rtf");
 		if (!f.exists())
 			try {
 				f.createNewFile();
@@ -249,15 +251,14 @@ public class PreferencesManager extends View implements UIPreferences{
 				return;
 			}
 		try {
-			String ls =System.lineSeparator();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-			writer.write("------File Copy Manager Preferences------\n\n\n\n");
-			writer.write(ls);
+			String ls ="\n";
+			BufferedWriter writer = new BufferedWriter(new FileWriter(f));		
 			str = new StringBuilder(); 
-			str.append("Font name:" + settings.getFontName()+ls+ "Button Font Size:"+ls+ settings.getBtnSize()+ls);
-			str.append("Label Font Size:"+ls+ settings.getLblSize() +ls+ls);
-			str.append("Background color:" +ls+ toCol(bgColor)+ls);
-			str.append("Foreground color:" +ls+ toCol(fgColor) +ls);
+			str.append("------File Copy Manager Preferences------\n\n");
+			str.append("\tFont name:" + settings.getFontName()+ls+ "\tButton Font Size:"+ settings.getBtnSize()+ls);
+			str.append("\tLabel Font Size:"+ settings.getLblSize()+ls);
+			str.append("\tBackground color:"+ toCol(bgColor)+ls);
+			str.append("\tForeground color:"+ toCol(fgColor) +ls);
 			writer.write(str.toString());
 			writer.close();
 		} catch (IOException exc) {
