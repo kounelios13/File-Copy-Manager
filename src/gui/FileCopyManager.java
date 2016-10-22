@@ -29,7 +29,7 @@ import utils.PreferencesManager;
 import utils.ProgramState;
 import utils.ResourceLoader;
 @SuppressWarnings({"serial"})
-public class FileCopyManager extends View{
+public class FileCopyManager extends ApplicationScreen{
 	public static String appName  = "File Copy Manager v1.6.5.0";
 	public static final Color TRANSPARENT_COLOR = new Color(0,0,0,0);
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
@@ -402,11 +402,6 @@ public class FileCopyManager extends View{
 				Message.error(panel,"Invalid destination");
 		});
 		initDragAreas();
-		/*stopCopy.setVisible(false);
-		currentStatusPanel.setLayout(new MigLayout());
-		currentStatusPanel.add(outputFolderLabel,"wrap");
-		currentStatusPanel.add(selectedFileLabel, "wrap");
-		currentStatusPanel.setVisible(false);*/
 	}
 	public JLabel[] getLabels() {
 		JLabel[] labels = {dragLabel,outputFolderLabel,selectedFileLabel};
@@ -424,7 +419,7 @@ public class FileCopyManager extends View{
 		 * By setting resizable to false 
 		 * we stop user from resizing the main UI frame
 		 */
-		super((isNull(name) ? appName : name),535,391,false);
+		super(appName,535,391,false);
 		initUIElements();
 		//Set a transparent background color with RGBA
 		currentStatusPanel.setBackground(TRANSPARENT_COLOR);
@@ -512,6 +507,16 @@ class XString{
 	public XString append(String name) {
 		this.text.append(name);
 		return this;
+	}
+	public void newLine(){
+		this.text.append("\n");
+	}
+	public void newLine(int times){
+		for(int i=0;i<Math.abs(times);i++)
+			newLine();
+	}
+	public StringBuilder reverse(){
+		return text.reverse();
 	}
 	@Override
 	public String toString(){
