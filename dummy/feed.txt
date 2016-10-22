@@ -1,5 +1,6 @@
 ../src/gui/FileCopyManager.java
 ../src/gui/View.java
+../src/gui/ApplicationScreen.java
 ../src/gui/CustomColorChooser.java
 ../src/utils/Controller.java
 ../src/utils/PreferencesManager.java

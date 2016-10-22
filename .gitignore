@@ -6,6 +6,8 @@ demos
 notes.txt
 *.class
 dummy/*.bat
+src/utils/*.py
+src/utils/*.html
 src/experiments/*.java
 *.docx
 *.psd
