@@ -8,6 +8,7 @@ notes.txt
 dummy/*.bat
 src/utils/*.py
 src/utils/*.html
+src/utils/HtmlCreator.java
 src/experiments/*.java
 *.docx
 *.psd

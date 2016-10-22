@@ -1,6 +1,9 @@
 package utils;
+import static messages.Message.error;
+import static messages.Message.info;
+import static messages.Message.warning;
+import gui.ApplicationScreen;
 import gui.CustomColorChooser;
-import gui.FileCopyManager;
 import gui.View;
 import interfaces.UIPreferences;
 import java.awt.Color;
@@ -14,6 +17,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.stream.Stream;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,12 +26,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import static messages.Message.*;
+
 import net.miginfocom.swing.MigLayout;
+
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends View implements UIPreferences{
-	private FileCopyManager appFrame;
+	private ApplicationScreen appFrame;
 	private Color bgColor = new Color(238,238,238),
 			      fgColor = new Color(51,51,51);
 	public static String sep = File.separator + File.separator;
@@ -91,7 +96,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PreferencesManager(FileCopyManager frame) {
+	public PreferencesManager(ApplicationScreen frame) {
 		super("Preferences",600,800,false);
 		if(isNull(frame))
 			throw new IllegalArgumentException("You have to provide an instance of JFrame to work on.");
@@ -221,7 +226,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	public void setFg(Color c) {
 		settings.setFgColor(c);
 	}
-	private String toCol(Color c) {
+	public String toCol(Color c) {
 		return "rgb(" + c.getRed() + "," + c.getGreen() + "," + c.getBlue()+ ")";
 	}
 	public void exportSettings() {
@@ -241,6 +246,12 @@ public class PreferencesManager extends View implements UIPreferences{
 		 	info("Operation aborted");
 			return;
 		}
+		/*boolean html = JOptionPane.showConfirmDialog
+				(null,"Export preferences to an html file(requires python 3 or newer)?"+
+						"If you press cancel an rtf file will be created insted")==JOptionPane.OK_OPTION;
+		if(html){
+			return;
+		}*/
 		File f = new File(chooser.getSelectedFile() + File.separator
 				+ File.separator + "export.rtf");
 		if (!f.exists())
@@ -286,8 +297,11 @@ public class PreferencesManager extends View implements UIPreferences{
 		}
 		if (!dir.exists())
 			info(prefPanel, "App settings deleted", "Success");
-		else
-			warning("App settings could not be deleted");
+		else{
+			String msg = "App settings could not be deleted";
+			warning(msg);
+			fh.log(msg);
+		}
 		loadPreferences();
 		appFrame.restart();
 	}
@@ -297,7 +311,10 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * abort any other operation
 		 * */
 		if(!exists())
+		{
+			fh.log("There is no preferences file to load.");
 			return;
+		}
 		loadPreferences();
 		updatePreview();
 		applySettings();	

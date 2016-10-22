@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
 public class FileHandler{
 	private static String sep = File.separator + File.separator;
-	private static boolean logApplicationErrors = false;
+	private static boolean logApplicationErrors = true;
 	public static void setAdvancedLogs(boolean value){
 		/*
 		 * Decide if we want to log errors messages that were not caused by an exception
@@ -50,6 +50,8 @@ public class FileHandler{
 						(logFile.exists()?"IOException occured:":"Couldn't create log file:")
 							+"\n"+exc.getMessage();	
 				error(errorMessage);
+				if(logFile.exists())
+					log(errorMessage);
 				return;
 			}
 			try {
@@ -60,11 +62,9 @@ public class FileHandler{
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
-				/**
-				* Here we can only output the error message 
-				* that prevent us from creating a '.log' file
-				*/
 				error("IOException :"+exc.getMessage());
+				if(logFile.exists())
+					log(exc);
 			}
 	}
 	public FileHandler(){
@@ -79,7 +79,7 @@ public class FileHandler{
 		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
 			error("No files have been selected","Empty list");
-			if(!logApplicationErrors)
+			if(logApplicationErrors)
 				log("No files selected to copy");
 			return;
 		}
