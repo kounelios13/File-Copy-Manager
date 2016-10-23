@@ -39,6 +39,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	public static String sep = File.separator + File.separator;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
+
 	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
@@ -49,7 +50,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
 	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
 	private JButton 
-	        saveSettings  =  new JButton("Save & apply settings"),
+	        saveAndApplySettings  =  new JButton("Save & apply settings"),
 			//applySettings =  new JButton("Apply Settings"),
 			loadSettings  =  new JButton("Load settings"),
 			chooseColors  =  new JButton("Choose colors"),
@@ -79,7 +80,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	}
 	private void initUIElements() {
 		createFontList();
-		saveSettings.addActionListener((e) -> savePreferences());
+		saveAndApplySettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());
 
 		fontCombo.addActionListener((e) -> {
@@ -113,7 +114,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		prefPanel.add(lblSample, "cell 1 4,alignx center");
 		prefPanel.add(loadSettings, "flowy,cell 0 5,growx,aligny top");
 		this.setContentPane(prefPanel);
-		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
+		prefPanel.add(saveAndApplySettings, "cell 0 7,growx,aligny top");
 		prefPanel.add(chooseColors, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -182,8 +183,17 @@ public class PreferencesManager extends View implements UIPreferences{
 			error( "IOException occured", "IO");
 			fh.log(io.getMessage());
 		}
-		if(settingsFile.exists())
-			applySettings();
+		if(!settingsFile.exists())
+		{
+			/**
+			 * Apply current settings even if we can't save them
+			 * but let the user know it
+			 * */
+			String msg = "Settings will be applied but they could not be saved.Next time you open the program these settings will not exist";
+			warning(msg);
+			fh.log(msg);
+		}
+		applySettings();
 		this.setVisible(false);
 	}
 	public void editPreferences() {
