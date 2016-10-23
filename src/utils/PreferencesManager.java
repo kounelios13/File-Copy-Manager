@@ -6,6 +6,7 @@ import gui.ApplicationScreen;
 import gui.CustomColorChooser;
 import gui.View;
 import interfaces.UIPreferences;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -38,7 +39,6 @@ public class PreferencesManager extends View implements UIPreferences{
 	public static String sep = File.separator + File.separator;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
-	private boolean settingsLoaded = false;
 	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
@@ -49,8 +49,8 @@ public class PreferencesManager extends View implements UIPreferences{
 	private DefaultComboBoxModel<String> fontModel = new DefaultComboBoxModel<String>();
 	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
 	private JButton 
-	        saveSettings  =  new JButton("Save settings"),
-			applySettings =  new JButton("Apply Settings"),
+	        saveSettings  =  new JButton("Save & apply settings"),
+			//applySettings =  new JButton("Apply Settings"),
 			loadSettings  =  new JButton("Load settings"),
 			chooseColors  =  new JButton("Choose colors"),
 				btnSample =  new JButton("Button Sample");
@@ -81,7 +81,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		createFontList();
 		saveSettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());
-		applySettings.addActionListener((e) ->	applySettings());
+
 		fontCombo.addActionListener((e) -> {
 			settings.setFontName((String) fontCombo.getSelectedItem());
 			updatePreview();
@@ -113,9 +113,8 @@ public class PreferencesManager extends View implements UIPreferences{
 		prefPanel.add(lblSample, "cell 1 4,alignx center");
 		prefPanel.add(loadSettings, "flowy,cell 0 5,growx,aligny top");
 		this.setContentPane(prefPanel);
-		prefPanel.add(chooseColors, "cell 1 5,growx,aligny top");
 		prefPanel.add(saveSettings, "cell 0 7,growx,aligny top");
-		prefPanel.add(applySettings, "cell 1 7,growx,aligny top");
+		prefPanel.add(chooseColors, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.pack();
@@ -130,9 +129,8 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
-		if(isNull(rc.getPreferences()) || settingsLoaded)
+		if(isNull(rc.getPreferences()))
 			return;
-		settingsLoaded = true;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
 			error(settings.getFontName()+" font is not available on this system.");
@@ -142,7 +140,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * Do not use buttonSlider.setValue(settings.getBtnSize())
 		 * First save the size in a variable and use the variable
 		 * */
-		int btnSize = settings.getBtnSize(),
+		int btnSize   = settings.getBtnSize(),
 			labelSize = settings.getLblSize();
 		labelSlider.setValue(labelSize);
 		buttonSlider.setValue(btnSize);
@@ -193,18 +191,18 @@ public class PreferencesManager extends View implements UIPreferences{
 	}
 	public void applySettings() {
 		setColors();
-		Font btn = settings.getButtonFont(),
-			 lbl = settings.getLabelFont();
+		Font btnFont = settings.getButtonFont(),
+			 lblFont = settings.getLabelFont();
 		Stream.of(appFrame.getButtons()).forEach(b->{
 			/**
 			 * We use a stream since we don't care about the order of the elements
 			 * */
-			b.setFont(btn);	
+			b.setFont(btnFont);	
 			b.setBackground(bgColor);
 			b.setForeground(fgColor);
 		});
 		Stream.of(appFrame.getLabels()).forEach(label->{
-			label.setFont(lbl);
+			label.setFont(lblFont);
 			label.setForeground(fgColor);
 		});
 		appFrame.pack();
@@ -238,7 +236,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		StringBuilder str = null;
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new File("app"));
-		chooser.setDialogTitle("Select a folder to export file");
+		chooser.setDialogTitle("Select a folder to export preferences report");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setApproveButtonText("Select");
 		int n = chooser.showOpenDialog(null);
@@ -246,12 +244,6 @@ public class PreferencesManager extends View implements UIPreferences{
 		 	info("Operation aborted");
 			return;
 		}
-		/*boolean html = JOptionPane.showConfirmDialog
-				(null,"Export preferences to an html file(requires python 3 or newer)?"+
-						"If you press cancel an rtf file will be created insted")==JOptionPane.OK_OPTION;
-		if(html){
-			return;
-		}*/
 		File f = new File(chooser.getSelectedFile() + File.separator
 				+ File.separator + "export.rtf");
 		if (!f.exists())
