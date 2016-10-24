@@ -62,8 +62,13 @@ public class FileHandler{
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
-				error("IOException :"+exc.getMessage());
-				if(logFile.exists())
+				if(!logFile.canWrite())
+				{
+					error("Cannot write to log file.Please change permissions");
+				}
+				else
+					error("IOException :"+exc.getMessage());
+				if(logFile.exists() && logFile.canWrite())
 					log(exc);
 			}
 	}

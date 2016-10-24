@@ -61,7 +61,7 @@ public class FileCopyManager extends ApplicationScreen{
 	private int selectedFileIndex = -1;
 	private JTextField dragPanel = new JTextField(20);
 	private JLabel dragLabel;
-	private File listFile = new File("app"+PreferencesManager.sep+"userList.dat");
+	private File listFile = new File("app/userList.dat");
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
 	private StatusFrame status = new StatusFrame(this);
