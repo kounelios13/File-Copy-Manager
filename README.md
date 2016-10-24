@@ -13,4 +13,3 @@ This script counts the total lines of every java file that <strong>I</strong> ha
 
 Current problems:
 * Can't copy files between PC and and MTP devices
-* Can't copy files which contain <code>+</code> character as part of their name
