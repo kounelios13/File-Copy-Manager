@@ -67,7 +67,6 @@ public class FileCopyManager extends ApplicationScreen{
 	private StatusFrame status = new StatusFrame(this);
 	private JLabel outputFolderLabel = new JLabel("Output Folder:None"),
 					selectedFileLabel = new JLabel("Selected File:None");
-	private JPanel currentStatusPanel = new JPanel();
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -162,8 +161,6 @@ public class FileCopyManager extends ApplicationScreen{
 		return new JButton(name);
 	}
 	private void initUIElements() {
-		currentStatusPanel.add(outputFolderLabel);
-		currentStatusPanel.add(selectedFileLabel);
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -377,8 +374,8 @@ public class FileCopyManager extends ApplicationScreen{
 				Message.warning(panel,"There are no files to remove from list");
 				return;
 			}
-			boolean go = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete tall files from list?") == JOptionPane.OK_OPTION;
-			if (go) {
+			boolean eraseList = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete all files from list?") == JOptionPane.OK_OPTION;
+			if (eraseList) {
 				files.clear();
 				model.removeAllElements();
 				fileNames.setVisible(false);
@@ -421,8 +418,6 @@ public class FileCopyManager extends ApplicationScreen{
 		 */
 		super(appName,535,391,false);
 		initUIElements();
-		//Set a transparent background color with RGBA
-		currentStatusPanel.setBackground(TRANSPARENT_COLOR);
 		panel.setLayout(new MigLayout("", "[113px][28px,grow][117px,grow][][]", "[23px][][][][][][][grow][][][27.00][][-11.00,grow]"));
 		panel.add(addFiles, "cell 0 0,alignx left,aligny top");
 		panel.add(fileNames, "cell 1 0,alignx left,aligny center");
