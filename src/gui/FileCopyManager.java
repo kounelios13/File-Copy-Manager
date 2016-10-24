@@ -467,7 +467,7 @@ class StatusFrame extends View{
 		return this.getClass().getName();
 	}
 	public StatusFrame(FileCopyManager fm){
-		super("Progress",600,200);
+		super("Progress",1000,200);
 		this.setContentPane(panel);
 		this.setVisible(false);
 		this.pack(); 
