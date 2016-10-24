@@ -64,7 +64,11 @@ public class FileHandler{
 			} catch (IOException exc) {
 				if(!logFile.canWrite())
 				{
-					error("Cannot write to log file.Please change permissions");
+					logFile.setWritable(true);
+					if(logFile.canWrite())
+						log(message);
+					else
+						error("Cannot write to log file.Please change permissions manually");
 				}
 				else
 					error("IOException :"+exc.getMessage());
