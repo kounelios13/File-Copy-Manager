@@ -6,7 +6,6 @@ import gui.ApplicationScreen;
 import gui.CustomColorChooser;
 import gui.View;
 import interfaces.UIPreferences;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.stream.Stream;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,9 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-
 import net.miginfocom.swing.MigLayout;
-
 import org.apache.commons.io.FileUtils;
 @SuppressWarnings({"static-access", "serial"})
 public class PreferencesManager extends View implements UIPreferences{
@@ -39,7 +35,6 @@ public class PreferencesManager extends View implements UIPreferences{
 	public static String sep = File.separator + File.separator;
 	private FileHandler fh = new FileHandler();
 	private ResourceLoader rc = new ResourceLoader(fh);
-
 	private JPanel  prefPanel 	 = new JPanel();
 	private JSlider buttonSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 18),
 					labelSlider  = new JSlider(JSlider.HORIZONTAL, 1, 100, 18);
@@ -82,7 +77,6 @@ public class PreferencesManager extends View implements UIPreferences{
 		createFontList();
 		saveAndApplySettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());
-
 		fontCombo.addActionListener((e) -> {
 			settings.setFontName((String) fontCombo.getSelectedItem());
 			updatePreview();

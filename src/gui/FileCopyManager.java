@@ -65,19 +65,11 @@ public class FileCopyManager extends ApplicationScreen{
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
 	private StatusFrame status = new StatusFrame(this);
-	private JLabel outputFolderLabel = new JLabel("Output Folder:None"),
-					selectedFileLabel = new JLabel("Selected File:None");
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
 	private void allowCopy(){
 		boolean condition = !files.isEmpty() && destinationPath != null;
-		if(destinationPath != null){
-			outputFolderLabel.setText("Output folder:"+destinationPath);
-		}
-		if(!files.isEmpty()){
-			selectedFileLabel.setText("Selected File:"+selectedFile.getName());
-		}
 		copyFile.setEnabled(condition);
 		copyFiles.setEnabled(condition);
 		openDestinationFolder.setEnabled(destinationPath != null);
@@ -401,7 +393,7 @@ public class FileCopyManager extends ApplicationScreen{
 		initDragAreas();
 	}
 	public JLabel[] getLabels() {
-		JLabel[] labels = {dragLabel,outputFolderLabel,selectedFileLabel};
+		JLabel[] labels = {dragLabel};
 		return labels;
 	}
 	public JButton[] getButtons() {
