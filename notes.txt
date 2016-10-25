@@ -1,4 +1,4 @@
-	../src/gui/FileCopyManager.java contains 514 lines of source code 
+	../src/gui/FileCopyManager.java contains 520 lines of source code 
 	../src/gui/View.java contains 18 lines of source code 
 	../src/gui/ApplicationScreen.java contains 27 lines of source code 
 	../src/gui/CustomColorChooser.java contains 54 lines of source code 
@@ -9,4 +9,4 @@
 	../src/interfaces/IView.java contains 4 lines of source code 
 	../src/utils/ResourceLoader.java contains 56 lines of source code 
 	../src/utils/FileHandler.java contains 179 lines of source code 
-	Total characters 34523. Total lines 1261
+	Total characters 34632. Total lines 1267

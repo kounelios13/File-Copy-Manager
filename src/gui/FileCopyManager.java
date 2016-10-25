@@ -482,17 +482,25 @@ class StatusFrame extends View{
 }
 class XString{
 	private StringBuilder text = new StringBuilder();
+	private int length = 0;
+	public int length(){
+		return length;
+	}
 	public void setText(String txt){
-		//Clear the current String Builder
-		this.text.delete(0,text.length());
-		//Then append the current received string
-		this.text.append(txt);
+		/**
+		 * Clear the current string builder and the append the received string
+		 * */
+		this.text.delete(0,text.length()).append(txt);
+		length = txt.length();
 	}
 	public String getText(){
 		return toString();
 	}
 	public XString append(String name) {
+		if(name == null)
+			throw new NullPointerException();
 		this.text.append(name);
+		length +=name.length(); 
 		return this;
 	}
 	public void newLine(){
@@ -512,16 +520,17 @@ class XString{
 	public XString(){}
 	public XString(String message){
 		this.text.append(message);
+		length = message.length();
 	}
 	public boolean isEmpty(){
-		return toString().length()<1;
+		return length < 1;
 	}
 }
 @SuppressWarnings("all")
 class InfoPage extends JFrame{
 	private static final long serialVersionUID = 1L;
-	JLabel nameLabel = new JLabel(FileCopyManager.appName),
-			copyrightLabel = new JLabel("Copyright ©2016. kounelios13");
+	JLabel  nameLabel 		 = new JLabel(FileCopyManager.appName),
+			copyrightLabel   = new JLabel("Copyright ©2016. kounelios13");
 	private JPanel mainPanel = new JPanel(){{
 		LayoutManager layout = new MigLayout();
 		add(nameLabel);

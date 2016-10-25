@@ -27,10 +27,11 @@ public class ResourceLoader {
 		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){
-		this.handler = handler;
+		if(handler==null)
+			throw new IllegalArgumentException("Provide a valid instance of FileHanlder");
 		// Maybe a null FileHandler is passed as an argument to the constructor
 		// Doesn't hurt checking it
-		this.handler = this.handler == null? new FileHandler():handler;
+		this.handler = handler;
 	}	
 	public Settings getPreferences(){
 		/** 
@@ -38,10 +39,10 @@ public class ResourceLoader {
 		*	may be invisible but Settings class of java.util is not.
 		*	That's how you fool the compiler :)
 		*/
-		Settings s=null;
+		Settings settings=null;
 		try {
 			inputStream = new ObjectInputStream(new FileInputStream(uiTheme));
-			s=(Settings)inputStream.readObject();
+			settings=(Settings)inputStream.readObject();
 			inputStream.close();
 		} catch (IOException exc) {
 			//handler.log(exc);
@@ -51,7 +52,7 @@ public class ResourceLoader {
 				"Invalid settings");
 			handler.log(ci);
 		}
-		return s;
+		return settings;
 	}
 	public ProgramState getAppState(){
 		/**
