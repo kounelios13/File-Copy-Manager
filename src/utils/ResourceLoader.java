@@ -20,24 +20,24 @@ public class ResourceLoader {
 		//new addition to changelog
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
-		//files.size() must be re executed every time the loop runs to avoid index out of bounds
 		// Remove any file from the arraylist if this file does not exist
 		files.removeIf(f->!f.exists());
 		files.trimToSize();
 		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){
-		if(handler==null)
-			throw new IllegalArgumentException("Provide a valid instance of FileHanlder");
 		// Maybe a null FileHandler is passed as an argument to the constructor
 		// Doesn't hurt checking it
+		if(handler==null)
+			throw new IllegalArgumentException("Provide a valid instance of FileHanlder");
 		this.handler = handler;
 	}	
 	public Settings getPreferences(){
 		/** 
 		*	Settings class of Preferences Manager
 		*	may be invisible but Settings class of java.util is not.
-		*	That's how you fool the compiler :)
+		*	That's how you fool the compiler to return a class that is visible only inside Preferences
+		*   manager :)
 		*/
 		Settings settings=null;
 		try {
@@ -76,7 +76,7 @@ public class ResourceLoader {
 		} catch (ClassNotFoundException cn) {
 			msg.error("Corrupted file found");
 			handler.log(cn);
-		}	
+		}
 		return programState;
 	}
 }
