@@ -226,9 +226,21 @@ public class FileCopyManager extends ApplicationScreen{
 			status.setVisible(true);
 			copyThreads[0]=new Thread(()->{
 				status.update(selectedFile);
-				fHandler.copy(selectedFile, destinationPath,true);
-				// File may have been copied or an error occurred
-				// No matter what hide progress
+				//Since there is no progress bar displayed to the user
+				//If there is only one file and is a directory
+				//it takes a while to copy
+				//Let the user know that the program actually copies the contents of the folder
+				//By showing them the whole process
+				if(files.size()==1 && selectedFile.isDirectory())
+					for(File f:selectedFile.listFiles())
+					{	status.update(f);
+						fHandler.copy(f, destinationPath+"/"+selectedFile.getName(),false);
+					}
+				else{
+					fHandler.copy(selectedFile, destinationPath,true);
+					// File may have been copied or an error occurred
+					// No matter what hide progress
+				}
 				status.dispose();
 			});
 			copyThreads[0].start();
@@ -243,11 +255,23 @@ public class FileCopyManager extends ApplicationScreen{
 				copyThreads[1]=
 				new Thread(()->{
 					status.setVisible(true);
-					for(File f:files){
-						int curIndex = files.indexOf(f);
-						fileNames.setSelectedIndex(curIndex);
-						status.update(f);
-						fHandler.copy(f, destinationPath, false);
+					//Since there is no progress bar displayed to the user
+					//If there is only one file and is a directory
+					//it takes a while to copy
+					//Let the user know that the program actually copies the contents of the folder
+					//By showing them the whole process
+					if(files.size()==1 && selectedFile.isDirectory())
+						for(File f:selectedFile.listFiles()){
+							status.update(f);
+							fHandler.copy(f, destinationPath+"/"+selectedFile.getName(),false);
+						}
+					else{
+						for(File f:files){
+							int curIndex = files.indexOf(f);
+							fileNames.setSelectedIndex(curIndex);
+							status.update(f);
+							fHandler.copy(f, destinationPath, false);
+						}
 					}
 					status.dispose();
 				});

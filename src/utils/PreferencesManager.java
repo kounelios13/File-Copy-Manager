@@ -124,7 +124,6 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
-		if(isNull(rc.getPreferences()))
 			return;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
