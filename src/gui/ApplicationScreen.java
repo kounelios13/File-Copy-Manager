@@ -12,19 +12,8 @@ public abstract class ApplicationScreen extends View {
 	}
 	public abstract JLabel[] getLabels();
 	public abstract JButton[] getButtons();
-	/*@Override
-	public JComponent[] getComponents(){
-		JButton[] btns = getButtons();
-		JLabel[] lbls = getLabels();
-		JComponent[] objects = new JComponent[btns.length+lbls.length];
-		int index=0;
-		for(int i = 0;i<btns.length;i++)
-		{
-			objects[index] = btns[index++];
-		}
-		for(int i=0;i<lbls.length;i++)
-			objects[index]=lbls[index++];
-		return objects;
-	}*/
+	/*
+	 * Restart method is useful when you apply new settings or you want to 'unload' any files
+	 * loaded*/
 	public abstract void restart();
 }
