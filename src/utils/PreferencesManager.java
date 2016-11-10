@@ -124,6 +124,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * Since we use a proxy if an exception is thrown the program will not start
 		 * so by returning if something happens we can start our program normally
 		 */
+		if(isNull(rc.getPreferences()) )
 			return;
 		settings = rc.getPreferences();
 		if(!settings.isFontAvailable() && !isNull(settings.getFontName()))
@@ -307,7 +308,11 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * */
 		if(!exists())
 		{
-			fh.log("There is no preferences file to load.");
+			/*
+			 * No need to create a log file.Maybe the user wants to just run the
+			 * app as it is without saving anything
+			 * */
+			//fh.log("There is no preferences file to load.");
 			return;
 		}
 		loadPreferences();
@@ -328,7 +333,7 @@ class Settings implements Serializable {
 		return false;	
 	}
 	public int getFontIndex(String name){
-		for(int i=0;i<fonts.length;i++)
+		for(int i=0,max=fonts.length;i<max;i++)
 			if(fonts[i].getFontName().equals(name))
 				return i;
 		return -1;	

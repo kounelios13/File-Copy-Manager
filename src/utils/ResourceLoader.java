@@ -14,7 +14,8 @@ public class ResourceLoader {
 	private FileHandler handler = null;
 	private String  separator   = File.separator+File.separator;
 	private Message msg 		= new Message();
-	private File uiTheme 		= new File("app"+separator+"settings.dat"),
+	private File appDir		    = new File("app"), 
+				 uiTheme 		= new File("app"+separator+"settings.dat"),
 				 listFile 		= new File("app"+separator+"userlist.dat");
 	public static  boolean filesRemoved(ArrayList<File>files){
 		//new addition to changelog
@@ -40,6 +41,8 @@ public class ResourceLoader {
 		*   manager :)
 		*/
 		Settings settings=null;
+		if(!appDir.exists())
+			return null;
 		try {
 			inputStream = new ObjectInputStream(new FileInputStream(uiTheme));
 			settings=(Settings)inputStream.readObject();
