@@ -1,8 +1,7 @@
 app
-bin
-bin/
-bin/gui/*.class
 demos
+*.iml
+.idea/
 notes.txt
 *.class
 dummy/*.bat

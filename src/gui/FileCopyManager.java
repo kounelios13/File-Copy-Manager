@@ -231,11 +231,12 @@ public class FileCopyManager extends ApplicationScreen{
 				//it takes a while to copy
 				//Let the user know that the program actually copies the contents of the folder
 				//By showing them the whole process
-				if(files.size()==1 && selectedFile.isDirectory())
-					for(File f:selectedFile.listFiles())
-					{	status.update(f);
-						fHandler.copy(f, destinationPath+"/"+selectedFile.getName(),false);
+				if(files.size()==1 && selectedFile.isDirectory()) {
+					for (File f : selectedFile.listFiles()) {
+						status.update(f);
+						fHandler.copy(f, destinationPath + "/" + selectedFile.getName(), false);
 					}
+				}
 				else{
 					fHandler.copy(selectedFile, destinationPath,true);
 					// File may have been copied or an error occurred
