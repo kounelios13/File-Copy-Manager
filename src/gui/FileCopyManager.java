@@ -35,7 +35,7 @@ public class FileCopyManager extends ApplicationScreen{
 	public static String appName  = "File Copy Manager v1.6.5.1";
 	public static final Color TRANSPARENT_COLOR = new Color(0,0,0,0);
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
-	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow dupliactes in list");
+	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow duplicates in list");
 	private Controller controller = new Controller();
 	private FileHandler fHandler  = new FileHandler();	
 	private JMenuBar menuBar   	  = new JMenuBar();
