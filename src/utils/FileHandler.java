@@ -15,6 +15,9 @@ import javax.swing.JOptionPane;
 import messages.Message;
 import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
+/*
+* This class is used to handle an file operations like copying
+* */
 public class FileHandler{
 	private static String sep = File.separator + File.separator;
 	private static boolean logApplicationErrors = true;

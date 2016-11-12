@@ -2,10 +2,10 @@ package gui;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 @SuppressWarnings("serial")
+//This class is responsible for creating the main GUI of a program
 public abstract class ApplicationScreen extends View {
 	public ApplicationScreen(String title, int width, int height) {
 		super(title, width, height);
-		// TODO Auto-generated constructor stub
 	}
 	public ApplicationScreen (String title,int width,int height,boolean resizable) {
 		super(title,width,height,resizable);

@@ -7,13 +7,13 @@ public interface UIPreferences{
 	 * An interface that defines basic rules that apply when you create a subprogram that changes UI settings such as colors(background,foreground)
 	 * or fonts
 	 */
-	final static Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+    Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 	/**
 	* Provide a way to the user for loading/saving preferences
 	**/
-	public void loadPreferences();
-	public void savePreferences();	
-	public void setBg(Color bg);
-	public void setFg(Color fg);
-	public void updatePreview();
+    void loadPreferences();
+	void savePreferences();
+	void setBg(Color bg);
+	void setFg(Color fg);
+	void updatePreview();
 }
