@@ -1,7 +1,7 @@
 # File Copy Manager
 Copy one or multiple files_(including directories)_ to another directory with ease.
 
-Save a list of these files to load it next time you opoen the program.
+Save a list of these files to load it next time you open the program.
 
 
 #How to use File Copy Manager
@@ -23,5 +23,4 @@ Inside <code>dummy</code> folder you will find a script called <code>lineCounter
 This script counts the total lines of every java file that <strong>I</strong> have written for this project.
 
 Current problems:
-
 * Can't copy files between PC and and MTP devices

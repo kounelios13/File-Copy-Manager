@@ -418,6 +418,7 @@ public class FileCopyManager extends ApplicationScreen{
 			}else
 				Message.error(panel,"Invalid destination");
 		});
+		dragPanel.setEditable(false);
 		initDragAreas();
 	}
 	public JLabel[] getLabels() {
