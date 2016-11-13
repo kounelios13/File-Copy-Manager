@@ -6,7 +6,7 @@ Save a list of these files to load it next time you open the program.
 
 #How to use File Copy Manager
 First download the executable jar from here:
-[File Copy Manager.jar](https://github.com/kounelios13/File-Copy-Manager/releases/download/v1.6.5.1/file-copy-manager-latest.jar)
+[File Copy Manager.jar](https://github.com/kounelios13/File-Copy-Manager/releases/download/v1.6.5.2/file-copy-manager-latest.jar)
 
 Then navigate to the folder you downloaded the jar open a terminal and type ```java -jar file-copy-manager-latest.jar``` to execute
 
