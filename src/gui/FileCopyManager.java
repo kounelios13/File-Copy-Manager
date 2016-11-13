@@ -476,7 +476,7 @@ public class FileCopyManager extends ApplicationScreen{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
 			try{
-				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+				UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
 			}
 			catch (Throwable e) {
 				FileHandler.log(e);
@@ -490,7 +490,6 @@ public class FileCopyManager extends ApplicationScreen{
 @SuppressWarnings("serial")
 class StatusFrame extends View{
 	JLabel fileNameLabel = new JLabel("Copying :");
-	
 	@Override
 	public String toString(){
 		return this.getClass().getName();
@@ -517,7 +516,6 @@ class StatusFrame extends View{
 	private void update(String fileName){
 		fileNameLabel.setText("Copying :"+fileName);
 	}
-	
 }
 class XString{
 	private StringBuilder text = new StringBuilder();
