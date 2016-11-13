@@ -155,7 +155,7 @@ public class FileCopyManager extends ApplicationScreen{
 	private JButton btn(String name){
 		return new JButton(name);
 	}
-	private void initUIElements() {
+	protected void initUIElements() {
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -490,19 +490,25 @@ public class FileCopyManager extends ApplicationScreen{
 @SuppressWarnings("serial")
 class StatusFrame extends View{
 	JLabel fileNameLabel = new JLabel("Copying :");
-	JPanel panel = new JPanel(){{
-		setLayout(new MigLayout());
-		add(fileNameLabel);
-	}};
+	
 	@Override
 	public String toString(){
 		return this.getClass().getName();
 	}
-	public StatusFrame(FileCopyManager fm){
-		super("Progress",1000,200);
+	@Override
+	protected void initUIElements() {
+		// TODO Auto-generated method stub
+		JPanel panel = new JPanel(){{
+			setLayout(new MigLayout());
+			add(fileNameLabel);
+		}};
 		this.setContentPane(panel);
 		this.setVisible(false);
 		this.pack(); 
+	}
+	public StatusFrame(FileCopyManager fm){
+		super("Progress",1000,200);
+		initUIElements();
 		this.setLocationRelativeTo(fm.getContentPane());
 	}
 	public void update(File file){
@@ -511,6 +517,7 @@ class StatusFrame extends View{
 	private void update(String fileName){
 		fileNameLabel.setText("Copying :"+fileName);
 	}
+	
 }
 class XString{
 	private StringBuilder text = new StringBuilder();
