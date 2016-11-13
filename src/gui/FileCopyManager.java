@@ -133,6 +133,7 @@ public class FileCopyManager extends ApplicationScreen{
 	public void updateList(File[] e){
 		for(File f:e){
 			if(!allowDuplicates)
+				//The file already exists in the list.Do not add it again
 				if(files.indexOf(f)!= -1)
 					continue;
 			files.add(f);

@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 @SuppressWarnings({"serial"})
-
 /*
 * This class is used to save information about the list of files a user has added and the destination folder
 * */
