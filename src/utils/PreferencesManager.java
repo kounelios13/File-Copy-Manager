@@ -46,9 +46,9 @@ public class PreferencesManager extends View implements UIPreferences{
 	private JComboBox<String> fontCombo = new JComboBox<String>(fontModel);
 	private JButton 
 	        saveAndApplySettings  =  new JButton("Save & apply settings"),
-			//applySettings =  new JButton("Apply Settings"),
 			loadSettings  =  new JButton("Load settings"),
 			chooseColors  =  new JButton("Choose colors"),
+				applyOnly =  new JButton("Apply settings"),
 				btnSample =  new JButton("Button Sample");
 	private JLabel lblButtonFontSize = new JLabel("Button font size"),
 				   lblLabelFontSize  = new JLabel("Label font size"),
@@ -87,6 +87,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		btnSample.addActionListener((e) ->{
 			info("Do not press me","Useless alert");
 		});
+		applyOnly.addActionListener((e)->applySettings());
 	}
 	/**
 	 * @wbp.parser.constructor
@@ -108,6 +109,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		prefPanel.add(lblSample, "cell 1 4,alignx center");
 		prefPanel.add(loadSettings, "flowy,cell 0 5,growx,aligny top");
 		this.setContentPane(prefPanel);
+		prefPanel.add(applyOnly,"cell 1 5,growx,aligny top");
 		prefPanel.add(saveAndApplySettings, "cell 0 7,growx,aligny top");
 		prefPanel.add(chooseColors, "cell 1 7,growx,aligny top");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

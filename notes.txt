@@ -3,10 +3,10 @@
 	../src/gui/ApplicationScreen.java contains 15 lines of source code 
 	../src/gui/CustomColorChooser.java contains 54 lines of source code 
 	../src/utils/Controller.java contains 19 lines of source code 
-	../src/utils/PreferencesManager.java contains 345 lines of source code 
+	../src/utils/PreferencesManager.java contains 348 lines of source code 
 	../src/utils/ProgramState.java contains 32 lines of source code 
 	../src/interfaces/UIPreferences.java contains 12 lines of source code 
 	../src/interfaces/IView.java contains 4 lines of source code 
 	../src/utils/ResourceLoader.java contains 60 lines of source code 
 	../src/utils/FileHandler.java contains 179 lines of source code 
-	Total characters 34831. Total lines 1278
+	Total characters 34977. Total lines 1281
