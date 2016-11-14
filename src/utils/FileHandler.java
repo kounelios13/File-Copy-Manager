@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 public class FileHandler{
 	private static String sep = File.separator + File.separator;
 	private static boolean logApplicationErrors = true;
+	private ResourceLoader loader = new ResourceLoader(this);
 	public static void setAdvancedLogs(boolean value){
 		/*
 		 * Decide if we want to log errors messages that were not caused by an exception
@@ -138,7 +139,7 @@ public class FileHandler{
 		return f.isFile()?f.getName()+(f.isDirectory()?" (Folder)":""):"";
 	}
 	public ProgramState loadList(DefaultComboBoxModel<String> mod,ArrayList<File> storage){
-		ProgramState temp = new ResourceLoader(this).getAppState();
+		ProgramState temp = loader.getAppState();
 		//isNull causes NullPointerException
 		if(isNull(temp)||isNull(temp.getFiles()))
 			return null;
@@ -198,5 +199,33 @@ public class FileHandler{
 			error("Could not open app folder");
 			log(e1);
 		}
+	}
+	public void saveLookAndFeel(String lookAndFeelName) {
+		File lookAndFeel = new File("app/lookAndFeel.dat");
+		try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(lookAndFeel) );
+			out.writeObject(lookAndFeelName);
+			out.close();
+		} catch (FileNotFoundException exc) {
+			try {
+				lookAndFeel.createNewFile();
+			} catch (IOException exc1) {
+				// TODO Auto-generated catch block
+				if(!lookAndFeel.exists()){
+					log("Couldn't create look and feel file");
+					return;
+				}
+				log(exc1);
+			}
+			finally{
+				saveLookAndFeel(lookAndFeelName);
+			}
+		} catch (IOException exc) {
+			// TODO Auto-generated catch block
+			log(exc);
+		}
+	}
+	public String getLookAndFeelName(){
+		return loader.getLookAndFeelName();
 	}
 }

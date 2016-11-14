@@ -2,10 +2,11 @@ package gui;
 import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 import com.jtattoo.plaf.aero.AeroLookAndFeel;
 import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
@@ -19,86 +20,100 @@ import com.jtattoo.plaf.mint.MintLookAndFeel;
 import com.jtattoo.plaf.noire.NoireLookAndFeel;
 import com.jtattoo.plaf.smart.SmartLookAndFeel;
 import com.jtattoo.plaf.texture.TextureLookAndFeel;
+import net.miginfocom.swing.MigLayout;
+import utils.Controller;
 @SuppressWarnings("all")
 public class ThemeChanger extends View{
 	private String[] lookAndFeelArray ={"Acryl","Aero","Aluminium",
 		"Bernstein","Fast","Graphite","HiFi","Luna","McWin","Mint",
 		"Noire","Smart","Texture"};
+	private Controller controller = new Controller();
 	private JComboBox<String> combo = new JComboBox(lookAndFeelArray);
+	private JLabel label = new JLabel("Look And Feel");
 	private Properties props = new Properties();
+	private JButton saveBtn = new JButton("Save and Apply Theme");
+	private ApplicationScreen frame;
+	private String lookAndFeelName = null;
+	private void initThemes(){
+		AcrylLookAndFeel.setTheme(props);
+		AeroLookAndFeel.setTheme(props);
+		AluminiumLookAndFeel.setTheme(props);
+		BernsteinLookAndFeel.setTheme(props);
+		FastLookAndFeel.setTheme(props);
+		GraphiteLookAndFeel.setTheme(props);
+		HiFiLookAndFeel.setTheme(props);
+		LunaLookAndFeel.setTheme(props);
+		McWinLookAndFeel.setTheme(props);
+		MintLookAndFeel.setTheme(props);
+		NoireLookAndFeel.setTheme(props);
+		SmartLookAndFeel.setTheme(props);
+		TextureLookAndFeel.setTheme(props);
+	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return "Theme Changer";
 	}
-	public ThemeChanger(String title, int width, int height) {
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public ThemeChanger(ApplicationScreen frame,String title, int width, int height) {
 		super(title, width, height);
+		this.frame = frame;
 		initUIElements();
 	}
-	public ThemeChanger(String title, int width, int height,
+	public ThemeChanger(ApplicationScreen frame,String title, int width, int height,
 			boolean resizable) {
 		super(title, width, height, resizable);
+		this.frame = frame;
 		initUIElements();
 	}
 	public void update(String look){
 		String feel="com.jtattoo.plaf.";
 		switch(look){
 			case "Acryl":
-				AcrylLookAndFeel.setTheme(props);
 				feel+="acryl.AcrylLookAndFeel";
 				break;
 			case "Aero":
-				AeroLookAndFeel.setTheme(props);
 				feel+="aero.AeroLookAndFeel";
 				break;
 			case "Aluminium":
-				AluminiumLookAndFeel.setTheme(props);
 				feel+="aluminium.AluminiumLookAndFeel";
 				break;
 			case "Bernstein":
-				BernsteinLookAndFeel.setTheme(props);
 				feel+="bernstein.BernsteinLookAndFeel";
 				break;
 			case "Fast":
-				FastLookAndFeel.setTheme(props);
 				feel+="fast.FastLookAndFeel";
 				break;
 			case "Graphite":
-				GraphiteLookAndFeel.setTheme(props);
 				feel+="graphite.GraphiteLookAndFeel";
 				break;
 			case "HiFi":
-				HiFiLookAndFeel.setTheme(props);
 				feel+="hifi.HiFiLookAndFeel";
 				break;
 			case "Luna":
-				LunaLookAndFeel.setTheme(props);
 				feel+="luna.LunaLookAndFeel";
 				break;
 			case "McWin":
-				McWinLookAndFeel.setTheme(props);
 				feel+="mcwin.McWinLookAndFeel";
 				break;
 			case "Mint":
-				MintLookAndFeel.setTheme(props);
 				feel+="mint.MintLookAndFeel";
 				break;
 			case "Noire":
-				NoireLookAndFeel.setTheme(props);
 				feel+="noire.NoireLookAndFeel";
 				break;
 			case "Smart":
-				SmartLookAndFeel.setTheme(props);
 				feel+="smart.SmartLookAndFeel";
 				break;
 			case "Texture":
-				TextureLookAndFeel.setTheme(props);
 				feel+="texture.TextureLookAndFeel";
 				break;
 		}
 		try{
 			UIManager.setLookAndFeel(feel);
-			SwingUtilities.updateComponentTreeUI( this );
+			SwingUtilities.updateComponentTreeUI( this.frame==null?this:frame );
 		}
 		catch(Exception e){
 			//e.printStackTrace();
@@ -107,35 +122,38 @@ public class ThemeChanger extends View{
 	public void initUIElements(){
 		props.put("logoString","");
 		props.put("licenseKey","");
+		initThemes();
+		JPanel panel = new JPanel();
+		panel.setLayout(new MigLayout("", "[][][][][][]", "[][][][]"));
+		this.setContentPane(panel);
 		combo.addActionListener(e->{
 			update((String)combo.getSelectedItem());
 		});
+		saveBtn.addActionListener(e->{
+			controller.saveLookAndFeel(lookAndFeelName);
+		});
+		panel.add(label, "cell 1 0");
 		combo.setSelectedIndex(0);
-		JPanel panel = new JPanel();
-		JButton btn = new JButton("Sample");
-		panel.add(btn);
-		panel.add(combo);
-		this.setContentPane(panel);
+		panel.add(combo,"cell 5 0");
+		panel.add(saveBtn, "cell 2 1");
+		this.pack();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
+	}
+	public void activate(){
+		this.setVisible(true);
+	}
+	public void deactivate(){
+		this.setVisible(false);
 	}
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
 			 try {
 				UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
-				new ThemeChanger("Theme Changer",600,400);
-			 } catch (ClassNotFoundException exc) {
-				// TODO Auto-generated catch block
-				exc.printStackTrace();
-			} catch (InstantiationException exc) {
-				// TODO Auto-generated catch block
-				exc.printStackTrace();
-			} catch (IllegalAccessException exc) {
-				// TODO Auto-generated catch block
-				exc.printStackTrace();
-			} catch (UnsupportedLookAndFeelException exc) {
-				// TODO Auto-generated catch block
-				exc.printStackTrace();
+				new ThemeChanger(null,"Theme Changer",600,400);
+			 } 
+			catch(Exception npe){
+				System.out.println("Exception occured");
 			}
 		});
 	}

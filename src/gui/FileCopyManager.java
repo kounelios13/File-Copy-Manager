@@ -476,7 +476,7 @@ public class FileCopyManager extends ApplicationScreen{
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
 			try{
-				UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
 			catch (Throwable e) {
 				FileHandler.log(e);

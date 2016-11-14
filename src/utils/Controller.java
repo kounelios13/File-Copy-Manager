@@ -16,4 +16,10 @@ public class Controller {
 	public void openAppDirectory() {
 		handler.openAppDirectory();
 	}
+	public void saveLookAndFeel(String lookAndFeelName) {
+		handler.saveLookAndFeel(lookAndFeelName);
+	}
+	public String getLookAndFeelName(){
+		return handler.getLookAndFeelName();
+	}
 }
