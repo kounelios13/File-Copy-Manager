@@ -24,31 +24,16 @@ import net.miginfocom.swing.MigLayout;
 import utils.Controller;
 @SuppressWarnings("all")
 public class ThemeChanger extends View{
-	private String[] lookAndFeelArray ={"Acryl","Aero","Aluminium",
+	private String[] lookAndFeelArray ={"Nimbus","Acryl","Aero","Aluminium",
 		"Bernstein","Fast","Graphite","HiFi","Luna","McWin","Mint",
 		"Noire","Smart","Texture"};
 	private Controller controller = new Controller();
 	private JComboBox<String> combo = new JComboBox(lookAndFeelArray);
 	private JLabel label = new JLabel("Look And Feel");
-	private Properties props = new Properties();
-	private JButton saveBtn = new JButton("Save and Apply Theme");
+	private JButton saveBtn = new JButton("Save and Apply Theme"),
+				   closeBtn = new JButton("Close");
 	private ApplicationScreen frame;
 	private String lookAndFeelName = null;
-	private void initThemes(){
-		AcrylLookAndFeel.setTheme(props);
-		AeroLookAndFeel.setTheme(props);
-		AluminiumLookAndFeel.setTheme(props);
-		BernsteinLookAndFeel.setTheme(props);
-		FastLookAndFeel.setTheme(props);
-		GraphiteLookAndFeel.setTheme(props);
-		HiFiLookAndFeel.setTheme(props);
-		LunaLookAndFeel.setTheme(props);
-		McWinLookAndFeel.setTheme(props);
-		MintLookAndFeel.setTheme(props);
-		NoireLookAndFeel.setTheme(props);
-		SmartLookAndFeel.setTheme(props);
-		TextureLookAndFeel.setTheme(props);
-	}
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -68,9 +53,17 @@ public class ThemeChanger extends View{
 		this.frame = frame;
 		initUIElements();
 	}
+	public ThemeChanger(FileCopyManager fileCopyManager) {
+		super("Change Look And feel",600,400);
+		this.frame = fileCopyManager;
+		initUIElements();
+	}
 	public void update(String look){
 		String feel="com.jtattoo.plaf.";
 		switch(look){
+			case "Nimbus":
+				feel = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
+				break;
 			case "Acryl":
 				feel+="acryl.AcrylLookAndFeel";
 				break;
@@ -112,49 +105,39 @@ public class ThemeChanger extends View{
 				break;
 		}
 		try{
+			FileCopyManager f = (FileCopyManager) frame;
+			f.updateLookAndFeel(feel);
 			UIManager.setLookAndFeel(feel);
-			SwingUtilities.updateComponentTreeUI( this.frame==null?this:frame );
+			//SwingUtilities.updateComponentTreeUI(this);
 		}
 		catch(Exception e){
 			//e.printStackTrace();
 		}
 	}	
 	public void initUIElements(){
-		props.put("logoString","");
-		props.put("licenseKey","");
-		initThemes();
 		JPanel panel = new JPanel();
 		panel.setLayout(new MigLayout("", "[][][][][][]", "[][][][]"));
 		this.setContentPane(panel);
 		combo.addActionListener(e->{
 			update((String)combo.getSelectedItem());
 		});
-		saveBtn.addActionListener(e->{
-			controller.saveLookAndFeel(lookAndFeelName);
-		});
 		panel.add(label, "cell 1 0");
 		combo.setSelectedIndex(0);
 		panel.add(combo,"cell 5 0");
-		panel.add(saveBtn, "cell 2 1");
+		saveBtn.addActionListener(e->{
+			controller.saveLookAndFeel(lookAndFeelName);
+		});
+		closeBtn.addActionListener(e->deactivate());
+		panel.add(saveBtn, "cell 1 1");
+		panel.add(closeBtn,"cell 5 1"); 
 		this.pack();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setVisible(true);
+		this.setLocationRelativeTo(null);
 	}
 	public void activate(){
 		this.setVisible(true);
 	}
 	public void deactivate(){
 		this.setVisible(false);
-	}
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(()->{
-			 try {
-				UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
-				new ThemeChanger(null,"Theme Changer",600,400);
-			 } 
-			catch(Exception npe){
-				System.out.println("Exception occured");
-			}
-		});
 	}
 }

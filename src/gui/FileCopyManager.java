@@ -5,6 +5,7 @@ import java.awt.LayoutManager;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -20,6 +21,19 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
+import com.jtattoo.plaf.aero.AeroLookAndFeel;
+import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
+import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
+import com.jtattoo.plaf.fast.FastLookAndFeel;
+import com.jtattoo.plaf.graphite.GraphiteLookAndFeel;
+import com.jtattoo.plaf.hifi.HiFiLookAndFeel;
+import com.jtattoo.plaf.luna.LunaLookAndFeel;
+import com.jtattoo.plaf.mcwin.McWinLookAndFeel;
+import com.jtattoo.plaf.mint.MintLookAndFeel;
+import com.jtattoo.plaf.noire.NoireLookAndFeel;
+import com.jtattoo.plaf.smart.SmartLookAndFeel;
+import com.jtattoo.plaf.texture.TextureLookAndFeel;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -47,6 +61,7 @@ public class FileCopyManager extends ApplicationScreen{
 			loadList           	  = new JMenuItem("Load queue"),
 			openAppDirectory   	  = new JMenuItem("Open app folder"),
 			showPreferences    	  = new JMenuItem("Preferences"),
+			changeLookAndFeel	  = new JMenuItem("Change Look & Feel"),
 			exportPreferences  	  = new JMenuItem("Export Preferences"),
 			deleteApp          	  = new JMenuItem("Delete app settings"),
 			restartApp		   	  = new JMenuItem("Restart Application"),
@@ -67,6 +82,7 @@ public class FileCopyManager extends ApplicationScreen{
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
 	private StatusFrame status = new StatusFrame(this);
+	private ThemeChanger themeEditor = new ThemeChanger(this);
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -130,6 +146,36 @@ public class FileCopyManager extends ApplicationScreen{
 	public String toString(){
 		return "FileCopyManager";
 	}
+	public  void initThemes(){
+		Properties props = new Properties();
+		props.put("logoString", "kounelios13");
+		props.put("licenseKey", "");
+		AcrylLookAndFeel.setTheme(props);
+		AeroLookAndFeel.setTheme(props);
+		AluminiumLookAndFeel.setTheme(props);
+		BernsteinLookAndFeel.setTheme(props);
+		FastLookAndFeel.setTheme(props);
+		GraphiteLookAndFeel.setTheme(props);
+		HiFiLookAndFeel.setTheme(props);
+		LunaLookAndFeel.setTheme(props);
+		McWinLookAndFeel.setTheme(props);
+		MintLookAndFeel.setTheme(props);
+		NoireLookAndFeel.setTheme(props);
+		SmartLookAndFeel.setTheme(props);
+		TextureLookAndFeel.setTheme(props);
+	}
+	public void updateLookAndFeel(String laf){
+		initThemes();
+		try{
+			UIManager.setLookAndFeel(laf);
+			SwingUtilities.updateComponentTreeUI(this);
+			SwingUtilities.updateComponentTreeUI(pManager);
+		}
+		catch(Exception e){
+			FileHandler.log(e);
+			e.printStackTrace();
+		}
+	}
 	public void updateList(File[] e){
 		for(File f:e){
 			if(!allowDuplicates)
@@ -156,6 +202,10 @@ public class FileCopyManager extends ApplicationScreen{
 		return new JButton(name);
 	}
 	protected void initUIElements() {
+		//Create the theme changer in a new Thread
+		SwingUtilities.invokeLater(()->{
+			themeEditor = new ThemeChanger(this);
+		});
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -163,6 +213,7 @@ public class FileCopyManager extends ApplicationScreen{
 		fileMenu.add(openAppDirectory);
 		fileMenu.addSeparator();
 		fileMenu.add(exit);
+		editMenu.add(changeLookAndFeel);
 		editMenu.add(showPreferences);
 		editMenu.add(exportPreferences);
 		editMenu.add(restartApp);
@@ -384,6 +435,7 @@ public class FileCopyManager extends ApplicationScreen{
 			showFiles();
 			this.pack();
 		});
+		changeLookAndFeel.addActionListener((e)->themeEditor.activate());
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
