@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import messages.Message;
+import serializable.ThemeInfo;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
 	/***
@@ -84,25 +85,22 @@ public class ResourceLoader {
 		}
 		return programState;
 	}
-	public String getLookAndFeelName(){
-		String name = "";
+	public ThemeInfo getThemeInfo(){
+		ThemeInfo info = null;
 		try {
 			inputStream = new ObjectInputStream(new FileInputStream(lookAndFeel));
-			inputStream.close();
 			try {
-				name =(String)inputStream.readObject();
+				info =(ThemeInfo)inputStream.readObject();
+				inputStream.close();
 			} catch (ClassNotFoundException exc) {
 				// TODO Auto-generated catch block
 				handler.log(exc);
-				name = "";
 			}
 		} catch (FileNotFoundException exc) {
-			name = "";
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
 			handler.log(exc);
-			name = "";
 		}
-		return name;
+		return info;
 	}
 }

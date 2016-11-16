@@ -173,7 +173,8 @@ public class FileCopyManager extends ApplicationScreen{
 		}
 		catch(Exception e){
 			FileHandler.log(e);
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println(laf);
 		}
 	}
 	public void updateList(File[] e){
@@ -548,7 +549,6 @@ class StatusFrame extends View{
 	}
 	@Override
 	protected void initUIElements() {
-		// TODO Auto-generated method stub
 		JPanel panel = new JPanel(){{
 			setLayout(new MigLayout());
 			add(fileNameLabel);

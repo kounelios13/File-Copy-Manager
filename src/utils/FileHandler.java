@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import messages.Message;
+import serializable.ThemeInfo;
 import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
 /*
@@ -200,12 +201,12 @@ public class FileHandler{
 			log(e1);
 		}
 	}
-	public void saveLookAndFeel(String lookAndFeelName) {
+	public void saveLookAndFeel(ThemeInfo info) {
 		File lookAndFeel = new File("app/lookAndFeel.dat");
+		ObjectOutputStream out = null;
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(lookAndFeel) );
-			out.writeObject(lookAndFeelName);
-			out.close();
+			out = new ObjectOutputStream(new FileOutputStream(lookAndFeel) );
+			out.writeObject(info);
 		} catch (FileNotFoundException exc) {
 			try {
 				lookAndFeel.createNewFile();
@@ -218,14 +219,20 @@ public class FileHandler{
 				log(exc1);
 			}
 			finally{
-				saveLookAndFeel(lookAndFeelName);
+				saveLookAndFeel(info);
 			}
 		} catch (IOException exc) {
 			// TODO Auto-generated catch block
 			log(exc);
 		}
+			try {
+				out.close();
+			} catch (IOException exc) {
+				// TODO Auto-generated catch block
+				log(exc);
+			}
 	}
-	public String getLookAndFeelName(){
-		return loader.getLookAndFeelName();
+	public ThemeInfo getThemeInfo(){
+		return loader.getThemeInfo();
 	}
 }

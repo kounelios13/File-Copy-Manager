@@ -11,3 +11,4 @@
 ../src/utils/ResourceLoader.java
 ../src/utils/FileHandler.java
 ../src/utils/FileUtils.java
+../src/serializable/ThemeInfo.java

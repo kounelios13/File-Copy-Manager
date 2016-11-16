@@ -1,27 +1,14 @@
 package gui;
-import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
-import com.jtattoo.plaf.aero.AeroLookAndFeel;
-import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
-import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
-import com.jtattoo.plaf.fast.FastLookAndFeel;
-import com.jtattoo.plaf.graphite.GraphiteLookAndFeel;
-import com.jtattoo.plaf.hifi.HiFiLookAndFeel;
-import com.jtattoo.plaf.luna.LunaLookAndFeel;
-import com.jtattoo.plaf.mcwin.McWinLookAndFeel;
-import com.jtattoo.plaf.mint.MintLookAndFeel;
-import com.jtattoo.plaf.noire.NoireLookAndFeel;
-import com.jtattoo.plaf.smart.SmartLookAndFeel;
-import com.jtattoo.plaf.texture.TextureLookAndFeel;
 import net.miginfocom.swing.MigLayout;
+import serializable.ThemeInfo;
 import utils.Controller;
+import utils.FileHandler;
+import utils.ResourceLoader;
 @SuppressWarnings("all")
 public class ThemeChanger extends View{
 	private String[] lookAndFeelArray ={"Nimbus","Acryl","Aero","Aluminium",
@@ -34,6 +21,7 @@ public class ThemeChanger extends View{
 				   closeBtn = new JButton("Close");
 	private ApplicationScreen frame;
 	private String lookAndFeelName = null;
+	private ThemeInfo info = new ThemeInfo("javax.swing.plaf.nimbus.NimbusLookAndFeel",0);
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -57,6 +45,21 @@ public class ThemeChanger extends View{
 		super("Change Look And feel",600,400);
 		this.frame = fileCopyManager;
 		initUIElements();
+	}
+	public void searchTheme(){
+		FileHandler fh = controller.getFileHandler();
+		ResourceLoader rc = new ResourceLoader(fh);
+		ThemeInfo temp = rc.getThemeInfo();
+		if(temp != null ){
+			((FileCopyManager)frame).updateLookAndFeel(temp.getThemeName());
+			combo.setSelectedIndex(temp.getThemeIndex());
+			info = temp;
+			System.out.println("index:"+temp.getThemeIndex());
+			System.out.println("name:"+temp.getThemeName());
+		}
+		else{
+			System.out.println("No theme was found");
+		}
 	}
 	public void update(String look){
 		String feel="com.jtattoo.plaf.";
@@ -105,6 +108,7 @@ public class ThemeChanger extends View{
 				break;
 		}
 		try{
+			info.setThemeName(feel);
 			FileCopyManager f = (FileCopyManager) frame;
 			f.updateLookAndFeel(feel);
 			UIManager.setLookAndFeel(feel);
@@ -115,17 +119,21 @@ public class ThemeChanger extends View{
 		}
 	}	
 	public void initUIElements(){
+		searchTheme();
 		JPanel panel = new JPanel();
 		panel.setLayout(new MigLayout("", "[][][][][][]", "[][][][]"));
 		this.setContentPane(panel);
 		combo.addActionListener(e->{
 			update((String)combo.getSelectedItem());
+			info.setThemeIndex(combo.getSelectedIndex());
 		});
 		panel.add(label, "cell 1 0");
-		combo.setSelectedIndex(0);
+		combo.setSelectedIndex(info.getThemeIndex());
 		panel.add(combo,"cell 5 0");
 		saveBtn.addActionListener(e->{
-			controller.saveLookAndFeel(lookAndFeelName);
+			System.out.println("Index to save:"+info.getThemeIndex());
+			System.out.println("Theme name:"+info.getThemeName());
+			controller.saveLookAndFeel(info);
 		});
 		closeBtn.addActionListener(e->deactivate());
 		panel.add(saveBtn, "cell 1 1");
