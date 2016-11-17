@@ -497,6 +497,8 @@ public class FileCopyManager extends ApplicationScreen{
 	}
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
+			//Hackish way to overcome
+			//the problem of partial apply of custom look and feel class
 			new FileCopyManager(appName).restart();
 		 });
 	}
