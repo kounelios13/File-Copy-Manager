@@ -1,15 +1,18 @@
 package utils;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import messages.Message;
+import serializable.ThemeInfo;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
 	/***
 	 * Handle loading of app related files
 	 * */
+	private File lookAndFeel = new File("app/lookAndFeel.dat");
 	private ObjectInputStream inputStream;
 	private FileHandler handler = null;
 	private String  separator   = File.separator+File.separator;
@@ -81,5 +84,23 @@ public class ResourceLoader {
 			handler.log(cn);
 		}
 		return programState;
+	}
+	public ThemeInfo getThemeInfo(){
+		ThemeInfo info = null;
+		try {
+			inputStream = new ObjectInputStream(new FileInputStream(lookAndFeel));
+			try {
+				info =(ThemeInfo)inputStream.readObject();
+				inputStream.close();
+			} catch (ClassNotFoundException exc) {
+				// TODO Auto-generated catch block
+				handler.log(exc);
+			}
+		} catch (FileNotFoundException exc) {
+		} catch (IOException exc) {
+			// TODO Auto-generated catch block
+			handler.log(exc);
+		}
+		return info;
 	}
 }

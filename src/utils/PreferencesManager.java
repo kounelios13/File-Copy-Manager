@@ -73,7 +73,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		for (Font f : fonts)
 			fontModel.addElement(f.getFontName());
 	}
-	private void initUIElements() {
+	protected void initUIElements() {
 		createFontList();
 		saveAndApplySettings.addActionListener((e) -> savePreferences());
 		loadSettings.addActionListener((e) -> loadPreferences());

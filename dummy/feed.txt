@@ -1,3 +1,4 @@
+../src/gui/ThemeChanger.java
 ../src/gui/FileCopyManager.java
 ../src/gui/View.java
 ../src/gui/ApplicationScreen.java
@@ -10,3 +11,4 @@
 ../src/utils/ResourceLoader.java
 ../src/utils/FileHandler.java
 ../src/utils/FileUtils.java
+../src/serializable/ThemeInfo.java

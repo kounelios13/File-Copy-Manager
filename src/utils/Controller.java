@@ -2,8 +2,12 @@ package utils;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
+import serializable.ThemeInfo;
 public class Controller {
 	private FileHandler handler = new FileHandler();
+	public FileHandler getFileHandler(){
+		return handler;
+	}
 	public void saveList(ProgramState ps,File d){
 		handler.saveList(ps,d);
 	}
@@ -15,5 +19,11 @@ public class Controller {
 	}
 	public void openAppDirectory() {
 		handler.openAppDirectory();
+	}
+	public void saveLookAndFeel(ThemeInfo info) {
+		handler.saveLookAndFeel(info);
+	}
+	public ThemeInfo getThemeInfo(){
+		return handler.getThemeInfo();
 	}
 }

@@ -15,5 +15,5 @@ public abstract class ApplicationScreen extends View {
 	/*
 	 * Restart method is useful when you apply new settings or you want to 'unload' any files
 	 * loaded*/
-	public abstract void restart();
+	public abstract ApplicationScreen restart();
 }

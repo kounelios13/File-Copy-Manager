@@ -47,6 +47,7 @@ public class FileCopyManager extends ApplicationScreen{
 			loadList           	  = new JMenuItem("Load queue"),
 			openAppDirectory   	  = new JMenuItem("Open app folder"),
 			showPreferences    	  = new JMenuItem("Preferences"),
+			changeLookAndFeel	  = new JMenuItem("Change Look & Feel"),
 			exportPreferences  	  = new JMenuItem("Export Preferences"),
 			deleteApp          	  = new JMenuItem("Delete app settings"),
 			restartApp		   	  = new JMenuItem("Restart Application"),
@@ -67,6 +68,7 @@ public class FileCopyManager extends ApplicationScreen{
 	private boolean allowDuplicates = false;
 	private Thread[] copyThreads = new Thread[2];
 	private StatusFrame status = new StatusFrame(this);
+	private ThemeChanger themeEditor = new ThemeChanger(this);
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
@@ -130,6 +132,18 @@ public class FileCopyManager extends ApplicationScreen{
 	public String toString(){
 		return "FileCopyManager";
 	}
+	public void updateLookAndFeel(String laf){
+		try{
+			UIManager.setLookAndFeel(laf);
+			SwingUtilities.updateComponentTreeUI(this);
+			SwingUtilities.updateComponentTreeUI(pManager);
+		}
+		catch(Exception e){
+			FileHandler.log(e);
+			//e.printStackTrace();
+			System.out.println(laf);
+		}
+	}
 	public void updateList(File[] e){
 		for(File f:e){
 			if(!allowDuplicates)
@@ -146,16 +160,22 @@ public class FileCopyManager extends ApplicationScreen{
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
 	}
-	public void restart(){
+	public ApplicationScreen restart(){
 		//First close the current instance of the program
 		this.dispose();
 		//and create a new instance
-		new FileCopyManager(appName);
+		FileCopyManager fm = new FileCopyManager(appName);
+		fm.toggleUI();
+		return fm;
 	}
 	private JButton btn(String name){
 		return new JButton(name);
 	}
-	private void initUIElements() {
+	protected void initUIElements() {
+		//Create the theme changer in a new Thread
+		SwingUtilities.invokeLater(()->{
+			themeEditor = new ThemeChanger(this);
+		});
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
 		fileMenu.add(loadList);
@@ -163,6 +183,7 @@ public class FileCopyManager extends ApplicationScreen{
 		fileMenu.add(openAppDirectory);
 		fileMenu.addSeparator();
 		fileMenu.add(exit);
+		editMenu.add(changeLookAndFeel);
 		editMenu.add(showPreferences);
 		editMenu.add(exportPreferences);
 		editMenu.add(restartApp);
@@ -384,6 +405,7 @@ public class FileCopyManager extends ApplicationScreen{
 			showFiles();
 			this.pack();
 		});
+		changeLookAndFeel.addActionListener((e)->themeEditor.activate());
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
@@ -468,41 +490,39 @@ public class FileCopyManager extends ApplicationScreen{
 		*/
 		allowEdits();
 		pManager.prepareUI();
-		toggleUI();
+		//toggleUI();
 	}
 	public FileCopyManager() {
 		this(null);
 	}
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
-			try{
-				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			}
-			catch (Throwable e) {
-				FileHandler.log(e);
-			}
-			finally{
-				new FileCopyManager(appName);
-			}
+			//Hackish way to overcome
+			//the problem of partial apply of custom look and feel class
+			new FileCopyManager(appName).restart();
 		 });
 	}
 }
 @SuppressWarnings("serial")
 class StatusFrame extends View{
 	JLabel fileNameLabel = new JLabel("Copying :");
-	JPanel panel = new JPanel(){{
-		setLayout(new MigLayout());
-		add(fileNameLabel);
-	}};
 	@Override
 	public String toString(){
 		return this.getClass().getName();
 	}
-	public StatusFrame(FileCopyManager fm){
-		super("Progress",1000,200);
+	@Override
+	protected void initUIElements() {
+		JPanel panel = new JPanel(){{
+			setLayout(new MigLayout());
+			add(fileNameLabel);
+		}};
 		this.setContentPane(panel);
 		this.setVisible(false);
 		this.pack(); 
+	}
+	public StatusFrame(FileCopyManager fm){
+		super("Progress",1000,200);
+		initUIElements();
 		this.setLocationRelativeTo(fm.getContentPane());
 	}
 	public void update(File file){
@@ -522,7 +542,7 @@ class XString{
 		/**
 		 * Clear the current string builder and the append the received string
 		 * */
-		this.text.delete(0,text.length()).append(txt);
+		this.text.delete(0,length).append(txt);
 		length = txt.length();
 	}
 	public String getText(){
