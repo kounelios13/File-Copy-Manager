@@ -273,6 +273,12 @@ public class PreferencesManager extends View implements UIPreferences{
 		} catch (IOException exc) {
 			fh.log(exc);
 		}
+		finally {
+			if(f.exists())
+				info(prefPanel,"Preferences exported successfully");
+			else
+				error(prefPanel,"Preferences could not be exported");
+		}
 	}
 	public void deleteAppSettings() {
 		File dir = new File("app");

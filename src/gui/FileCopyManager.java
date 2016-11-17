@@ -37,7 +37,7 @@ public class FileCopyManager extends ApplicationScreen{
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow duplicates in list");
 	private Controller controller = new Controller();
-	private FileHandler fHandler  = new FileHandler();	
+	private FileHandler fHandler  = controller.getFileHandler();	
 	private JMenuBar menuBar   	  = new JMenuBar();
 	private JMenu   fileMenu   	  = new JMenu("File"),
 				    editMenu   	  = new JMenu("Edit"),
