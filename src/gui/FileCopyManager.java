@@ -5,7 +5,6 @@ import java.awt.LayoutManager;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -21,19 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
-import com.jtattoo.plaf.aero.AeroLookAndFeel;
-import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
-import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
-import com.jtattoo.plaf.fast.FastLookAndFeel;
-import com.jtattoo.plaf.graphite.GraphiteLookAndFeel;
-import com.jtattoo.plaf.hifi.HiFiLookAndFeel;
-import com.jtattoo.plaf.luna.LunaLookAndFeel;
-import com.jtattoo.plaf.mcwin.McWinLookAndFeel;
-import com.jtattoo.plaf.mint.MintLookAndFeel;
-import com.jtattoo.plaf.noire.NoireLookAndFeel;
-import com.jtattoo.plaf.smart.SmartLookAndFeel;
-import com.jtattoo.plaf.texture.TextureLookAndFeel;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -146,26 +132,7 @@ public class FileCopyManager extends ApplicationScreen{
 	public String toString(){
 		return "FileCopyManager";
 	}
-	public  void initThemes(){
-		Properties props = new Properties();
-		props.put("logoString", "kounelios13");
-		props.put("licenseKey", "");
-		AcrylLookAndFeel.setTheme(props);
-		AeroLookAndFeel.setTheme(props);
-		AluminiumLookAndFeel.setTheme(props);
-		BernsteinLookAndFeel.setTheme(props);
-		FastLookAndFeel.setTheme(props);
-		GraphiteLookAndFeel.setTheme(props);
-		HiFiLookAndFeel.setTheme(props);
-		LunaLookAndFeel.setTheme(props);
-		McWinLookAndFeel.setTheme(props);
-		MintLookAndFeel.setTheme(props);
-		NoireLookAndFeel.setTheme(props);
-		SmartLookAndFeel.setTheme(props);
-		TextureLookAndFeel.setTheme(props);
-	}
 	public void updateLookAndFeel(String laf){
-		initThemes();
 		try{
 			UIManager.setLookAndFeel(laf);
 			SwingUtilities.updateComponentTreeUI(this);
@@ -193,11 +160,13 @@ public class FileCopyManager extends ApplicationScreen{
 	public void showFiles() {
 		fileNames.setVisible(!files.isEmpty());
 	}
-	public void restart(){
+	public ApplicationScreen restart(){
 		//First close the current instance of the program
 		this.dispose();
 		//and create a new instance
-		new FileCopyManager(appName);
+		FileCopyManager fm = new FileCopyManager(appName);
+		fm.toggleUI();
+		return fm;
 	}
 	private JButton btn(String name){
 		return new JButton(name);
@@ -521,22 +490,14 @@ public class FileCopyManager extends ApplicationScreen{
 		*/
 		allowEdits();
 		pManager.prepareUI();
-		toggleUI();
+		//toggleUI();
 	}
 	public FileCopyManager() {
 		this(null);
 	}
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(()->{
-			try{
-				UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			}
-			catch (Throwable e) {
-				FileHandler.log(e);
-			}
-			finally{
-				new FileCopyManager(appName);
-			}
+			new FileCopyManager(appName).restart();
 		 });
 	}
 }
@@ -579,7 +540,7 @@ class XString{
 		/**
 		 * Clear the current string builder and the append the received string
 		 * */
-		this.text.delete(0,text.length()).append(txt);
+		this.text.delete(0,length).append(txt);
 		length = txt.length();
 	}
 	public String getText(){

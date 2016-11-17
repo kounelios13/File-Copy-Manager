@@ -1,9 +1,24 @@
 package gui;
+import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
+import com.jtattoo.plaf.aero.AeroLookAndFeel;
+import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
+import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
+import com.jtattoo.plaf.fast.FastLookAndFeel;
+import com.jtattoo.plaf.graphite.GraphiteLookAndFeel;
+import com.jtattoo.plaf.hifi.HiFiLookAndFeel;
+import com.jtattoo.plaf.luna.LunaLookAndFeel;
+import com.jtattoo.plaf.mcwin.McWinLookAndFeel;
+import com.jtattoo.plaf.mint.MintLookAndFeel;
+import com.jtattoo.plaf.noire.NoireLookAndFeel;
+import com.jtattoo.plaf.smart.SmartLookAndFeel;
+import com.jtattoo.plaf.texture.TextureLookAndFeel;
 import net.miginfocom.swing.MigLayout;
 import serializable.ThemeInfo;
 import utils.Controller;
@@ -54,56 +69,67 @@ public class ThemeChanger extends View{
 			((FileCopyManager)frame).updateLookAndFeel(temp.getThemeName());
 			combo.setSelectedIndex(temp.getThemeIndex());
 			info = temp;
-			System.out.println("index:"+temp.getThemeIndex());
-			System.out.println("name:"+temp.getThemeName());
-		}
-		else{
-			System.out.println("No theme was found");
 		}
 	}
 	public void update(String look){
+		Properties props = new Properties();
+		props.put("logoString", "");
+		props.put("licensekey", "");
 		String feel="com.jtattoo.plaf.";
 		switch(look){
 			case "Nimbus":
 				feel = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
 				break;
 			case "Acryl":
+				AcrylLookAndFeel.setCurrentTheme(props);
 				feel+="acryl.AcrylLookAndFeel";
 				break;
 			case "Aero":
+				AeroLookAndFeel.setCurrentTheme(props);
 				feel+="aero.AeroLookAndFeel";
 				break;
 			case "Aluminium":
+				AluminiumLookAndFeel.setCurrentTheme(props);
 				feel+="aluminium.AluminiumLookAndFeel";
 				break;
 			case "Bernstein":
+				BernsteinLookAndFeel.setCurrentTheme(props);
 				feel+="bernstein.BernsteinLookAndFeel";
 				break;
 			case "Fast":
+				FastLookAndFeel.setCurrentTheme(props);
 				feel+="fast.FastLookAndFeel";
 				break;
 			case "Graphite":
+				GraphiteLookAndFeel.setCurrentTheme(props);
 				feel+="graphite.GraphiteLookAndFeel";
 				break;
 			case "HiFi":
+				HiFiLookAndFeel.setCurrentTheme(props);
 				feel+="hifi.HiFiLookAndFeel";
 				break;
 			case "Luna":
+				LunaLookAndFeel.setCurrentTheme(props);
 				feel+="luna.LunaLookAndFeel";
 				break;
 			case "McWin":
+				McWinLookAndFeel.setCurrentTheme(props);
 				feel+="mcwin.McWinLookAndFeel";
 				break;
 			case "Mint":
+				MintLookAndFeel.setCurrentTheme(props);
 				feel+="mint.MintLookAndFeel";
 				break;
 			case "Noire":
+				NoireLookAndFeel.setCurrentTheme(props);
 				feel+="noire.NoireLookAndFeel";
 				break;
 			case "Smart":
+				SmartLookAndFeel.setCurrentTheme(props);
 				feel+="smart.SmartLookAndFeel";
 				break;
 			case "Texture":
+				TextureLookAndFeel.setCurrentTheme(props);
 				feel+="texture.TextureLookAndFeel";
 				break;
 		}
@@ -112,10 +138,9 @@ public class ThemeChanger extends View{
 			FileCopyManager f = (FileCopyManager) frame;
 			f.updateLookAndFeel(feel);
 			UIManager.setLookAndFeel(feel);
-			//SwingUtilities.updateComponentTreeUI(this);
+			SwingUtilities.updateComponentTreeUI(this);
 		}
 		catch(Exception e){
-			//e.printStackTrace();
 		}
 	}	
 	public void initUIElements(){
@@ -130,11 +155,7 @@ public class ThemeChanger extends View{
 		panel.add(label, "cell 1 0");
 		combo.setSelectedIndex(info.getThemeIndex());
 		panel.add(combo,"cell 5 0");
-		saveBtn.addActionListener(e->{
-			System.out.println("Index to save:"+info.getThemeIndex());
-			System.out.println("Theme name:"+info.getThemeName());
-			controller.saveLookAndFeel(info);
-		});
+		saveBtn.addActionListener(e->controller.saveLookAndFeel(info));
 		closeBtn.addActionListener(e->deactivate());
 		panel.add(saveBtn, "cell 1 1");
 		panel.add(closeBtn,"cell 5 1"); 
