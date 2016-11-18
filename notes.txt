@@ -1,4 +1,4 @@
-	../src/gui/ThemeChanger.java contains 168 lines of source code 
+	../src/gui/ThemeChanger.java contains 177 lines of source code 
 	../src/gui/FileCopyManager.java contains 555 lines of source code 
 	../src/gui/View.java contains 19 lines of source code 
 	../src/gui/ApplicationScreen.java contains 15 lines of source code 
@@ -11,4 +11,4 @@
 	../src/utils/ResourceLoader.java contains 79 lines of source code 
 	../src/utils/FileHandler.java contains 212 lines of source code 
 	../src/serializable/ThemeInfo.java contains 22 lines of source code 
-	Total characters 42261. Total lines 1555
+	Total characters 42559. Total lines 1564
