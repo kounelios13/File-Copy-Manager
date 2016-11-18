@@ -1,5 +1,6 @@
 package gui;
 import java.util.Properties;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -24,13 +25,16 @@ import serializable.ThemeInfo;
 import utils.Controller;
 import utils.FileHandler;
 import utils.ResourceLoader;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 @SuppressWarnings("all")
 public class ThemeChanger extends View{
 	private String[] lookAndFeelArray ={"Nimbus","Acryl","Aero","Aluminium",
 		"Bernstein","Fast","Graphite","HiFi","Luna","McWin","Mint",
 		"Noire","Smart","Texture"};
 	private Controller controller = new Controller();
-	private JComboBox<String> combo = new JComboBox(lookAndFeelArray);
+	private DefaultComboBoxModel<String> themeModel = new DefaultComboBoxModel<String>();
+	private JComboBox<String> combo = new JComboBox();
 	private JLabel label = new JLabel("Look And Feel");
 	private JButton saveBtn = new JButton("Save and Apply Theme"),
 				   closeBtn = new JButton("Close");
@@ -144,13 +148,18 @@ public class ThemeChanger extends View{
 		}
 	}	
 	public void initUIElements(){
+		for(String theme:lookAndFeelArray)
+			themeModel.addElement(theme);
+		combo.setModel(themeModel);
 		searchTheme();
 		JPanel panel = new JPanel();
 		panel.setLayout(new MigLayout("", "[][][][][][]", "[][][][]"));
 		this.setContentPane(panel);
 		combo.addActionListener(e->{
-			update((String)combo.getSelectedItem());
-			info.setThemeIndex(combo.getSelectedIndex());
+			SwingUtilities.invokeLater(()->{
+				update((String)combo.getSelectedItem());
+				info.setThemeIndex(combo.getSelectedIndex());
+			});
 		});
 		panel.add(label, "cell 1 0");
 		combo.setSelectedIndex(info.getThemeIndex());
