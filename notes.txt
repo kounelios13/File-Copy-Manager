@@ -1,5 +1,8 @@
-	../src/gui/ThemeChanger.java contains 177 lines of source code 
-	../src/gui/FileCopyManager.java contains 555 lines of source code 
+	../src/extra/InfoPage.java contains 44 lines of source code 
+	../src/extra/StatusFrame.java contains 36 lines of source code 
+	../src/extra/XString.java contains 44 lines of source code 
+	../src/gui/ThemeChanger.java contains 181 lines of source code 
+	../src/gui/FileCopyManager.java contains 445 lines of source code 
 	../src/gui/View.java contains 19 lines of source code 
 	../src/gui/ApplicationScreen.java contains 15 lines of source code 
 	../src/gui/CustomColorChooser.java contains 54 lines of source code 
@@ -9,6 +12,6 @@
 	../src/interfaces/UIPreferences.java contains 12 lines of source code 
 	../src/interfaces/IView.java contains 4 lines of source code 
 	../src/utils/ResourceLoader.java contains 79 lines of source code 
-	../src/utils/FileHandler.java contains 212 lines of source code 
+	../src/utils/FileHandler.java contains 217 lines of source code 
 	../src/serializable/ThemeInfo.java contains 22 lines of source code 
-	Total characters 42559. Total lines 1564
+	Total characters 43086. Total lines 1587

@@ -1,3 +1,6 @@
+../src/extra/InfoPage.java
+../src/extra/StatusFrame.java
+../src/extra/XString.java
 ../src/gui/ThemeChanger.java
 ../src/gui/FileCopyManager.java
 ../src/gui/View.java

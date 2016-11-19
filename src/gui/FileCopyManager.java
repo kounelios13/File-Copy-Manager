@@ -1,16 +1,12 @@
 package gui;
 import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.LayoutManager;
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -20,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import extra.InfoPage;
+import extra.StatusFrame;
+import extra.XString;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import utils.Controller;
@@ -501,117 +500,5 @@ public class FileCopyManager extends ApplicationScreen{
 			//the problem of partial apply of custom look and feel class
 			new FileCopyManager(appName).restart();
 		 });
-	}
-}
-@SuppressWarnings("serial")
-class StatusFrame extends View{
-	JLabel fileNameLabel = new JLabel("Copying :");
-	@Override
-	public String toString(){
-		return this.getClass().getName();
-	}
-	@Override
-	protected void initUIElements() {
-		JPanel panel = new JPanel(){{
-			setLayout(new MigLayout());
-			add(fileNameLabel);
-		}};
-		this.setContentPane(panel);
-		this.setVisible(false);
-		this.pack(); 
-	}
-	public StatusFrame(FileCopyManager fm){
-		super("Progress",1000,200);
-		initUIElements();
-		this.setLocationRelativeTo(fm.getContentPane());
-	}
-	public void update(File file){
-		update(file.getName());
-	}
-	private void update(String fileName){
-		fileNameLabel.setText("Copying :"+fileName);
-	}
-}
-class XString{
-	private StringBuilder text = new StringBuilder();
-	private int length = 0;
-	public int length(){
-		return length;
-	}
-	public void setText(String txt){
-		/**
-		 * Clear the current string builder and the append the received string
-		 * */
-		this.text.delete(0,length).append(txt);
-		length = txt.length();
-	}
-	public String getText(){
-		return toString();
-	}
-	public XString append(String name) {
-		if(name == null)
-			throw new NullPointerException();
-		this.text.append(name);
-		length +=name.length(); 
-		return this;
-	}
-	public void newLine(){
-		this.text.append("\n");
-	}
-	public void newLine(int times){
-		for(int i=0;i<Math.abs(times);i++)
-			newLine();
-	}
-	public StringBuilder reverse(){
-		return text.reverse();
-	}
-	@Override
-	public String toString(){
-		return text.toString();
-	}
-	public XString(){}
-	public XString(String message){
-		this.text.append(message);
-		length = message.length();
-	}
-	public boolean isEmpty(){
-		return length < 1;
-	}
-}
-@SuppressWarnings("all")
-class InfoPage extends JFrame{
-	private static final long serialVersionUID = 1L;
-	JLabel  nameLabel 		 = new JLabel(FileCopyManager.appName),
-			copyrightLabel   = new JLabel("Copyright ©2016. kounelios13");
-	private JPanel mainPanel = new JPanel(){{
-		LayoutManager layout = new MigLayout();
-		add(nameLabel);
-		add(copyrightLabel,"wrap");
-		JButton btn = new JButton("Visit my GitHub page");
-		btn.addActionListener(e->{
-			URL url;
-			try {
-				url= new URL("https://github.com/kounelios13");
-				Desktop.getDesktop().browse(url.toURI());
-			} catch (Exception exc) {
-				Message.error("Cannot open GitHub profila page.");
-			}
-		});
-		add(btn,"cell 1 0");
-	}};
-	public JLabel[] getLabels (){
-		return new JLabel[]{nameLabel,copyrightLabel};
-	}
-	private void initUI(){
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setContentPane(mainPanel);
-		setSize(250,120);
-		setLocationRelativeTo(null);
-		setResizable(false);
-		setVisible(true);
-	}
-	public InfoPage(){
-		super("About");
-		initUI();
 	}
 }

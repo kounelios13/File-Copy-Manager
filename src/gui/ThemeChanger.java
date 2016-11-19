@@ -20,6 +20,7 @@ import com.jtattoo.plaf.mint.MintLookAndFeel;
 import com.jtattoo.plaf.noire.NoireLookAndFeel;
 import com.jtattoo.plaf.smart.SmartLookAndFeel;
 import com.jtattoo.plaf.texture.TextureLookAndFeel;
+import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import serializable.ThemeInfo;
 import utils.Controller;
@@ -164,7 +165,10 @@ public class ThemeChanger extends View{
 		panel.add(label, "cell 1 0");
 		combo.setSelectedIndex(info.getThemeIndex());
 		panel.add(combo,"cell 5 0");
-		saveBtn.addActionListener(e->controller.saveLookAndFeel(info));
+		saveBtn.addActionListener(e->{
+			controller.saveLookAndFeel(info);
+			Message.warning("If you notice some graphic corruption or glitch select 'Edit->Restart application'", "New theme applied");
+		});
 		closeBtn.addActionListener(e->deactivate());
 		panel.add(saveBtn, "cell 1 1");
 		panel.add(closeBtn,"cell 5 1"); 
