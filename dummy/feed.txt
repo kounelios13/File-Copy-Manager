@@ -8,10 +8,11 @@
 ../src/gui/CustomColorChooser.java
 ../src/utils/Controller.java
 ../src/utils/PreferencesManager.java
-../src/utils/ProgramState.java
 ../src/interfaces/UIPreferences.java
 ../src/interfaces/IView.java
 ../src/utils/ResourceLoader.java
 ../src/utils/FileHandler.java
 ../src/utils/FileUtils.java
 ../src/serializable/ThemeInfo.java
+../src/serializable/ProgramState.java
+../src/serializable/Settings.java

@@ -21,11 +21,11 @@ import extra.StatusFrame;
 import extra.XString;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
+import serializable.ProgramState;
 import utils.Controller;
 import utils.FileDrop;
 import utils.FileHandler;
 import utils.PreferencesManager;
-import utils.ProgramState;
 import utils.ResourceLoader;
 @SuppressWarnings({"serial"})
 //This is the main class of the program

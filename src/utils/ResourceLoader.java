@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import messages.Message;
+import serializable.ProgramState;
+import serializable.Settings;
 import serializable.ThemeInfo;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
