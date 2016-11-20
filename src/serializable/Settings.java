@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.Serializable;
 import interfaces.UIPreferences;
-@SuppressWarnings({"serial"})
 public class Settings implements Serializable {
 	private Color bg, fg;
 	private String fontName;

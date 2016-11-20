@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import gui.FileCopyManager;
 import gui.View;
 import net.miginfocom.swing.MigLayout;
-@SuppressWarnings("serial")
 public class StatusFrame extends View{
 	JLabel fileNameLabel = new JLabel("Copying :");
 	@Override

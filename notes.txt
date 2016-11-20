@@ -1,5 +1,5 @@
 	../src/extra/InfoPage.java contains 44 lines of source code 
-	../src/extra/StatusFrame.java contains 36 lines of source code 
+	../src/extra/StatusFrame.java contains 35 lines of source code 
 	../src/extra/XString.java contains 44 lines of source code 
 	../src/gui/ThemeChanger.java contains 181 lines of source code 
 	../src/gui/FileCopyManager.java contains 445 lines of source code 
@@ -10,9 +10,9 @@
 	../src/utils/PreferencesManager.java contains 299 lines of source code 
 	../src/interfaces/UIPreferences.java contains 12 lines of source code 
 	../src/interfaces/IView.java contains 4 lines of source code 
-	../src/utils/ResourceLoader.java contains 81 lines of source code 
+	../src/utils/ResourceLoader.java contains 87 lines of source code 
 	../src/utils/FileHandler.java contains 218 lines of source code 
 	../src/serializable/ThemeInfo.java contains 22 lines of source code 
 	../src/serializable/ProgramState.java contains 32 lines of source code 
-	../src/serializable/Settings.java contains 60 lines of source code 
-	Total characters 43360. Total lines 1596
+	../src/serializable/Settings.java contains 59 lines of source code 
+	Total characters 43510. Total lines 1600

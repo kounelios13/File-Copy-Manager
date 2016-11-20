@@ -27,8 +27,15 @@ public class ResourceLoader {
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
 		// Remove any file from the arraylist if this file does not exist
+		StringBuffer buffer = new StringBuffer();
+		files.stream().filter(f->!f.exists()).forEach(f->{
+			buffer.append("File missing:"+f.getName()+" \n");
+		});
 		files.removeIf(f->!f.exists());
 		files.trimToSize();
+		//If there are deleted files find their name and log it
+		if(files.size() != initSize)
+			FileHandler.log(buffer.toString());
 		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){
@@ -39,12 +46,9 @@ public class ResourceLoader {
 		this.handler = handler;
 	}	
 	public Settings getPreferences(){
-		/** 
-		*	Settings class of Preferences Manager
-		*	may be invisible but Settings class of java.util is not.
-		*	That's how you fool the compiler to return a class that is visible only inside Preferences
-		*   manager :)
-		*/
+		/*
+		 * Return ui preferences of the program
+		 * **/
 		Settings settings=null;
 		if(!appDir.exists())
 			return null;
