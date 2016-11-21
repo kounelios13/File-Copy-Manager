@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import extra.XString;
 import messages.Message;
 import serializable.ProgramState;
 import serializable.Settings;
@@ -27,15 +28,21 @@ public class ResourceLoader {
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
 		// Remove any file from the arraylist if this file does not exist
-		StringBuffer buffer = new StringBuffer();
-		files.stream().filter(f->!f.exists()).forEach(f->{
-			buffer.append("File missing:"+f.getName()+" \n");
+		XString buffer = new XString("");
+		//Find the files that have been deleted since last time
+		files.stream().filter(f->!f.exists())
+			.sorted()
+				.forEach(f->{
+					buffer.append("File missing:"+f.getName());
+					buffer.newLine();
 		});
 		files.removeIf(f->!f.exists());
 		files.trimToSize();
 		//If there are deleted files find their name and log it
-		if(files.size() != initSize)
+		if(files.size() != initSize){
+			buffer.append("Number of missing files:"+(initSize-files.size()));
 			FileHandler.log(buffer.toString());
+		}
 		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){

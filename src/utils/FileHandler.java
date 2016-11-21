@@ -216,7 +216,8 @@ public class FileHandler{
 				if(!lookAndFeel.exists()){
 					log("Couldn't create look and feel file");
 					try {
-						out.close();
+						if(out!= null)
+							out.close();
 					} catch (IOException exc2) {
 						// TODO Auto-generated catch block
 						log(exc2);

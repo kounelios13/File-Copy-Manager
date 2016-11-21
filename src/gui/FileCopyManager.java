@@ -1,5 +1,6 @@
 package gui;
 import java.awt.Color;
+import java.awt.Frame;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -162,6 +163,11 @@ public class FileCopyManager extends ApplicationScreen{
 	public ApplicationScreen restart(){
 		//First close the current instance of the program
 		this.dispose();
+		/**
+		 * Dispose all Frames before restarting the application
+		 * */
+		for(Frame frame:Frame.getFrames())
+			frame.dispose();
 		//and create a new instance
 		FileCopyManager fm = new FileCopyManager(appName);
 		fm.toggleUI();
@@ -358,26 +364,20 @@ public class FileCopyManager extends ApplicationScreen{
 				return;
 			allowDuplicates = state.allowDuplicates();
 			allowDuplicatesOption.setSelected(allowDuplicates);
-			int oldSize = files.size();
 			if(ResourceLoader.filesRemoved(files)){
 				/**
 				 * More of a warning here since there is not an error
 				 * */
 				//selectedFileIndex = !files.isEmpty()?0:-1;
-				int missingNum = oldSize - files.size();
-				XString missingFiles = new XString("Number of files missing:"+missingNum+"\n");
-				for(File f:files)
-					if(!f.exists())
-						missingFiles.append(f.getName()+"\n");
-				String message 
-						= !files.isEmpty()?
+				XString message 
+						= new XString(!files.isEmpty()?
 						"Some of the files you saved last time do not exist and have been deleted from your list."
-						:"None of the files you saved last time is available.";
+						:"None of the files you saved last time is available.");
+				message.append("\n See log file for more");
 				if(!files.isEmpty())
-					Message.warning(panel,message);
+					Message.warning(panel,message.toString());
 				else
-					Message.error(panel,message);
-				FileHandler.log(message+"\n"+missingFiles.toString());
+					Message.error(panel,message.toString());
 			}
 			/**
 			 * While loading the list 
