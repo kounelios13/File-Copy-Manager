@@ -23,7 +23,7 @@ public class ResourceLoader {
 	private File appDir		    = new File("app"), 
 				 uiTheme 		= new File("app"+separator+"settings.dat"),
 				 listFile 		= new File("app"+separator+"userlist.dat");
-	public static  boolean filesRemoved(ArrayList<File>files){
+	public static  boolean checkFileExistence(ArrayList<File>files){
 		//new addition to changelog
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
@@ -40,6 +40,15 @@ public class ResourceLoader {
 		files.trimToSize();
 		//If there are deleted files find their name and log it
 		if(files.size() != initSize){
+			XString message 
+						= new XString(!files.isEmpty()?
+						"Some of the files you saved last time do not exist and have been deleted from your list."
+						:"None of the files you saved last time is available.");
+				message.append("\n See log file for more");
+				if(!files.isEmpty())
+					Message.warning(message.toString());
+				else
+					Message.error(message.toString());
 			buffer.append("Number of missing files:"+(initSize-files.size()));
 			FileHandler.log(buffer.toString());
 		}

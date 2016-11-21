@@ -353,21 +353,7 @@ public class FileCopyManager extends ApplicationScreen{
 				return;
 			allowDuplicates = state.allowDuplicates();
 			allowDuplicatesOption.setSelected(allowDuplicates);
-			if(ResourceLoader.filesRemoved(files)){
-				/**
-				 * More of a warning here since there is not an error
-				 * */
-				//selectedFileIndex = !files.isEmpty()?0:-1;
-				XString message 
-						= new XString(!files.isEmpty()?
-						"Some of the files you saved last time do not exist and have been deleted from your list."
-						:"None of the files you saved last time is available.");
-				message.append("\n See log file for more");
-				if(!files.isEmpty())
-					Message.warning(panel,message.toString());
-				else
-					Message.error(panel,message.toString());
-			}
+			ResourceLoader.checkFileExistence(files);
 			/**
 			 * While loading the list 
 			 * check if the saved destination folder exists
