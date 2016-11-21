@@ -91,6 +91,22 @@ public class FileHandler{
 				log("No destination folder has been selected");
 			return;
 		}
+		File dir = destFile.getParentFile();
+		if(!dir.exists())
+			if(!dir.mkdirs())
+			{
+				error("Couldn't create app folder");
+				return;
+			}
+		if(!destFile.exists()){
+			try {
+				destFile.createNewFile();
+			} catch (IOException exc) {
+				if(!destFile.exists())
+					error("Could not save list");
+				log(exc.getMessage());
+			}
+		}
 		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
 			error("No files have been selected","Empty list");

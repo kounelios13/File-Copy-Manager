@@ -344,17 +344,6 @@ public class FileCopyManager extends ApplicationScreen{
 				Message.error(err);
 				return;
 			}
-			File dir = listFile.getParentFile();
-			if (!dir.exists())
-				dir.mkdirs();
-			if (!listFile.exists()) {
-				try {
-					listFile.createNewFile();
-				} catch (Exception e1) {
-					Message.error(panel, "Cannot save list.");
-					FileHandler.log(e1);
-				}
-			}
 			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
 			controller.saveList(ps, listFile);
 		});
