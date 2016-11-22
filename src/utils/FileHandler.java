@@ -92,6 +92,7 @@ public class FileHandler{
 			return;
 		}
 		File dir = destFile.getParentFile();
+		//Check if the destination folder exists and create it
 		if(!dir.exists())
 			if(!dir.mkdirs())
 			{
@@ -141,10 +142,8 @@ public class FileHandler{
 		try {
 			if(f.isDirectory()){
 				FileUtils.copyDirectory(f,destFile);
-				//info("copy completed");
 			}else{
 				FileUtils.copyFile(f, destFile);
-				//info("copy completed");
 			}	
 		} catch (FileNotFoundException exc) {
 			log(exc);
@@ -249,12 +248,12 @@ public class FileHandler{
 			// TODO Auto-generated catch block
 			log(exc);
 		}
-			try {
-				out.close();
-			} catch (IOException exc) {
+		try {
+			out.close();
+		} catch (IOException exc) {
 				// TODO Auto-generated catch block
-				log(exc);
-			}
+			log(exc);
+		}
 	}
 	public ThemeInfo getThemeInfo(){
 		return loader.getThemeInfo();

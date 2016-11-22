@@ -167,7 +167,13 @@ public class ThemeChanger extends View{
 		panel.add(combo,"cell 5 0");
 		saveBtn.addActionListener(e->{
 			controller.saveLookAndFeel(info);
-			Message.warning("If you notice some graphic corruption or glitch select 'Edit->Restart application'", "New theme applied");
+			if(info.getThemeName().equals("javax.swing.plaf.nimbus.NimbusLookAndFeel")){
+				Message.warning("In order to properly apply the new theme File Copy Manager will restart.\nPress OK");
+				frame.restart();
+			}
+			else{
+				Message.warning("If you notice any glitch press 'Edit->Restart Application'");
+			}
 		});
 		closeBtn.addActionListener(e->deactivate());
 		panel.add(saveBtn, "cell 1 1");

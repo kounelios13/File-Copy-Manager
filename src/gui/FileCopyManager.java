@@ -19,7 +19,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import extra.InfoPage;
 import extra.StatusFrame;
-import extra.XString;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import serializable.ProgramState;
