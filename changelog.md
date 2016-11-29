@@ -1,4 +1,12 @@
 # <center>changelog</center>
+## v1.6.5.3
+	* Apply new fonts and colors without saving them
+	* Change look and feel of your program
+	* New behaviour when there is only one file to copy and is a directory
+	* Settings can be applied  even if preferences file can't be created
+	* Added ```About``` page
+	* Inform user about if any of the files they saved have been deleted
+	* Current release closes #15 , #16 and #18
 ## v1.6.4.0
 	*   `destinationPath` set to null by default
 	*  `selectedFileIndex` set to -1 by default

@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import extra.XString;
 import messages.Message;
+import serializable.ProgramState;
+import serializable.Settings;
 import serializable.ThemeInfo;
 @SuppressWarnings({"static-access"})
 public class ResourceLoader {
@@ -20,13 +23,35 @@ public class ResourceLoader {
 	private File appDir		    = new File("app"), 
 				 uiTheme 		= new File("app"+separator+"settings.dat"),
 				 listFile 		= new File("app"+separator+"userlist.dat");
-	public static  boolean filesRemoved(ArrayList<File>files){
+	public static  boolean checkFileExistence(ArrayList<File>files){
 		//new addition to changelog
 		// See if any of the files saved ,has been deleted
 		int initSize = files.size();
 		// Remove any file from the arraylist if this file does not exist
+		XString buffer = new XString("");
+		//Find the files that have been deleted since last time
+		files.stream().filter(f->!f.exists())
+			.sorted()
+				.forEach(f->{
+					buffer.append("File missing:"+f.getName());
+					buffer.appendNewLine();
+		});
 		files.removeIf(f->!f.exists());
 		files.trimToSize();
+		//If there are deleted files find their name and log it
+		if(files.size() != initSize){
+			XString message 
+						= new XString(!files.isEmpty()?
+						"Some of the files you saved last time do not exist and have been deleted from your list."
+						:"None of the files you saved last time is available.");
+				message.append("\n See log file for more");
+				if(!files.isEmpty())
+					Message.warning(message.toString());
+				else
+					Message.error(message.toString());
+			buffer.append("Number of missing files:"+(initSize-files.size()));
+			FileHandler.log(buffer.toString());
+		}
 		return initSize != files.size();
 	}
 	public ResourceLoader(FileHandler handler){
@@ -37,12 +62,9 @@ public class ResourceLoader {
 		this.handler = handler;
 	}	
 	public Settings getPreferences(){
-		/** 
-		*	Settings class of Preferences Manager
-		*	may be invisible but Settings class of java.util is not.
-		*	That's how you fool the compiler to return a class that is visible only inside Preferences
-		*   manager :)
-		*/
+		/*
+		 * Return ui preferences of the program
+		 * **/
 		Settings settings=null;
 		if(!appDir.exists())
 			return null;
