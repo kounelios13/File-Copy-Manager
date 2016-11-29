@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import org.apache.commons.io.FileUtils;
+import extra.XString;
 import gui.ApplicationScreen;
 import gui.CustomColorChooser;
 import gui.View;
@@ -239,7 +240,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			error(prefPanel, "There are no setiings saved by user");
 			return;
 		}
-		StringBuilder str = null;
+		XString str = null;
 		JFileChooser chooser = new JFileChooser();
 		chooser.setCurrentDirectory(new File("app"));
 		chooser.setDialogTitle("Select a folder to export preferences report");
@@ -262,7 +263,7 @@ public class PreferencesManager extends View implements UIPreferences{
 		try {
 			String ls ="\n";
 			BufferedWriter writer = new BufferedWriter(new FileWriter(f));		
-			str = new StringBuilder(); 
+			str = new XString(); 
 			str.append("------File Copy Manager Preferences------\n\n");
 			str.append("\tFont name:" + settings.getFontName()+ls+ "\tButton Font Size:"+ settings.getBtnSize()+ls);
 			str.append("\tLabel Font Size:"+ settings.getLblSize()+ls);
@@ -300,7 +301,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			error( "Could not delete app settings");
 		}
 		if (!dir.exists())
-			info(prefPanel, "App settings deleted", "Success");
+			info(prefPanel, "App settings deleted");
 		else{
 			String msg = "App settings could not be deleted";
 			warning(msg);

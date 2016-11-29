@@ -179,6 +179,7 @@ public class FileCopyManager extends ApplicationScreen{
 		//Create the theme changer in a new Thread
 		SwingUtilities.invokeLater(()->{
 			themeEditor = new ThemeChanger(this);
+			themeEditor.setResizable(false);
 		});
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);

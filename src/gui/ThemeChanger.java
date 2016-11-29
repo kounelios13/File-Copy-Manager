@@ -182,6 +182,8 @@ public class ThemeChanger extends View{
 	public void deactivate(){
 		this.setVisible(false);
 	}
+	@SuppressWarnings("unused")
+	//For future use
 	private boolean isNimbusTheme(String theme){
 		return theme.equals("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 	}

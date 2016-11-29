@@ -11,6 +11,14 @@ public abstract class View extends JFrame implements IView{
 		this(title,width,height);
 		this.setResizable(resizable);
 	}
+	public View(String title,int width,int height,int default_close_operation){
+		this(title,width,height);
+		this.setDefaultCloseOperation(default_close_operation);
+	}
+	public View(String title,int width,int height,boolean resizable,int default_close_operation){
+		this(title,width,height,resizable);
+		this.setDefaultCloseOperation(default_close_operation);
+	}
 	public abstract String toString();
 	protected abstract void initUIElements();
 	public void toggleUI(){

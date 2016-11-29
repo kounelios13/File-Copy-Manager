@@ -34,7 +34,7 @@ public class ResourceLoader {
 			.sorted()
 				.forEach(f->{
 					buffer.append("File missing:"+f.getName());
-					buffer.newLine();
+					buffer.appendNewLine();
 		});
 		files.removeIf(f->!f.exists());
 		files.trimToSize();
