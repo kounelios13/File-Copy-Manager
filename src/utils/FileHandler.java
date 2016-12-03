@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import messages.Message;
+import serializable.ProgramState;
 import serializable.ThemeInfo;
 import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
@@ -90,6 +91,23 @@ public class FileHandler{
 				log("No destination folder has been selected");
 			return;
 		}
+		File dir = destFile.getParentFile();
+		//Check if the destination folder exists and create it
+		if(!dir.exists())
+			if(!dir.mkdirs())
+			{
+				error("Couldn't create app folder");
+				return;
+			}
+		if(!destFile.exists()){
+			try {
+				destFile.createNewFile();
+			} catch (IOException exc) {
+				if(!destFile.exists())
+					error("Could not save list");
+				log(exc.getMessage());
+			}
+		}
 		if(isNull(ps.getFiles()) || ps.getFiles().isEmpty())
 		{
 			error("No files have been selected","Empty list");
@@ -124,10 +142,8 @@ public class FileHandler{
 		try {
 			if(f.isDirectory()){
 				FileUtils.copyDirectory(f,destFile);
-				//info("copy completed");
 			}else{
 				FileUtils.copyFile(f, destFile);
-				//info("copy completed");
 			}	
 		} catch (FileNotFoundException exc) {
 			log(exc);
@@ -214,6 +230,13 @@ public class FileHandler{
 				// TODO Auto-generated catch block
 				if(!lookAndFeel.exists()){
 					log("Couldn't create look and feel file");
+					try {
+						if(out!= null)
+							out.close();
+					} catch (IOException exc2) {
+						// TODO Auto-generated catch block
+						log(exc2);
+					}
 					return;
 				}
 				log(exc1);
@@ -225,12 +248,12 @@ public class FileHandler{
 			// TODO Auto-generated catch block
 			log(exc);
 		}
-			try {
-				out.close();
-			} catch (IOException exc) {
+		try {
+			out.close();
+		} catch (IOException exc) {
 				// TODO Auto-generated catch block
-				log(exc);
-			}
+			log(exc);
+		}
 	}
 	public ThemeInfo getThemeInfo(){
 		return loader.getThemeInfo();

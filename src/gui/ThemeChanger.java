@@ -1,5 +1,6 @@
 package gui;
 import java.util.Properties;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -19,27 +20,28 @@ import com.jtattoo.plaf.mint.MintLookAndFeel;
 import com.jtattoo.plaf.noire.NoireLookAndFeel;
 import com.jtattoo.plaf.smart.SmartLookAndFeel;
 import com.jtattoo.plaf.texture.TextureLookAndFeel;
+import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import serializable.ThemeInfo;
 import utils.Controller;
 import utils.FileHandler;
 import utils.ResourceLoader;
-@SuppressWarnings("all")
 public class ThemeChanger extends View{
 	private String[] lookAndFeelArray ={"Nimbus","Acryl","Aero","Aluminium",
 		"Bernstein","Fast","Graphite","HiFi","Luna","McWin","Mint",
 		"Noire","Smart","Texture"};
 	private Controller controller = new Controller();
-	private JComboBox<String> combo = new JComboBox(lookAndFeelArray);
+	private DefaultComboBoxModel<String> themeModel = new DefaultComboBoxModel<String>();
+	private JComboBox<String> combo = new JComboBox<>();
 	private JLabel label = new JLabel("Look And Feel");
 	private JButton saveBtn = new JButton("Save and Apply Theme"),
 				   closeBtn = new JButton("Close");
 	private ApplicationScreen frame;
-	private String lookAndFeelName = null;
+	private String lookAndFeelName = null,
+			currentTheme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
 	private ThemeInfo info = new ThemeInfo("javax.swing.plaf.nimbus.NimbusLookAndFeel",0);
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "Theme Changer";
 	}
 	/**
@@ -69,93 +71,104 @@ public class ThemeChanger extends View{
 			((FileCopyManager)frame).updateLookAndFeel(temp.getThemeName());
 			combo.setSelectedIndex(temp.getThemeIndex());
 			info = temp;
+			currentTheme = info.getThemeName();
 		}
 	}
 	public void update(String look){
 		Properties props = new Properties();
 		props.put("logoString", "");
 		props.put("licensekey", "");
-		String feel="com.jtattoo.plaf.";
+		lookAndFeelName="com.jtattoo.plaf.";
 		switch(look){
 			case "Nimbus":
-				feel = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
+				lookAndFeelName = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
 				break;
 			case "Acryl":
 				AcrylLookAndFeel.setCurrentTheme(props);
-				feel+="acryl.AcrylLookAndFeel";
+				lookAndFeelName+="acryl.AcrylLookAndFeel";
 				break;
 			case "Aero":
 				AeroLookAndFeel.setCurrentTheme(props);
-				feel+="aero.AeroLookAndFeel";
+				lookAndFeelName+="aero.AeroLookAndFeel";
 				break;
 			case "Aluminium":
 				AluminiumLookAndFeel.setCurrentTheme(props);
-				feel+="aluminium.AluminiumLookAndFeel";
+				lookAndFeelName+="aluminium.AluminiumLookAndFeel";
 				break;
 			case "Bernstein":
 				BernsteinLookAndFeel.setCurrentTheme(props);
-				feel+="bernstein.BernsteinLookAndFeel";
+				lookAndFeelName+="bernstein.BernsteinLookAndFeel";
 				break;
 			case "Fast":
 				FastLookAndFeel.setCurrentTheme(props);
-				feel+="fast.FastLookAndFeel";
+				lookAndFeelName+="fast.FastLookAndFeel";
 				break;
 			case "Graphite":
 				GraphiteLookAndFeel.setCurrentTheme(props);
-				feel+="graphite.GraphiteLookAndFeel";
+				lookAndFeelName+="graphite.GraphiteLookAndFeel";
 				break;
 			case "HiFi":
 				HiFiLookAndFeel.setCurrentTheme(props);
-				feel+="hifi.HiFiLookAndFeel";
+				lookAndFeelName+="hifi.HiFiLookAndFeel";
 				break;
 			case "Luna":
 				LunaLookAndFeel.setCurrentTheme(props);
-				feel+="luna.LunaLookAndFeel";
+				lookAndFeelName+="luna.LunaLookAndFeel";
 				break;
 			case "McWin":
 				McWinLookAndFeel.setCurrentTheme(props);
-				feel+="mcwin.McWinLookAndFeel";
+				lookAndFeelName+="mcwin.McWinLookAndFeel";
 				break;
 			case "Mint":
 				MintLookAndFeel.setCurrentTheme(props);
-				feel+="mint.MintLookAndFeel";
+				lookAndFeelName+="mint.MintLookAndFeel";
 				break;
 			case "Noire":
 				NoireLookAndFeel.setCurrentTheme(props);
-				feel+="noire.NoireLookAndFeel";
+				lookAndFeelName+="noire.NoireLookAndFeel";
 				break;
 			case "Smart":
 				SmartLookAndFeel.setCurrentTheme(props);
-				feel+="smart.SmartLookAndFeel";
+				lookAndFeelName+="smart.SmartLookAndFeel";
 				break;
 			case "Texture":
 				TextureLookAndFeel.setCurrentTheme(props);
-				feel+="texture.TextureLookAndFeel";
+				lookAndFeelName+="texture.TextureLookAndFeel";
 				break;
 		}
 		try{
-			info.setThemeName(feel);
+			currentTheme = lookAndFeelName;
 			FileCopyManager f = (FileCopyManager) frame;
-			f.updateLookAndFeel(feel);
-			UIManager.setLookAndFeel(feel);
+			f.updateLookAndFeel(lookAndFeelName);
+			UIManager.setLookAndFeel(lookAndFeelName);
 			SwingUtilities.updateComponentTreeUI(this);
 		}
 		catch(Exception e){
 		}
 	}	
 	public void initUIElements(){
+		for(String theme:lookAndFeelArray)
+			themeModel.addElement(theme);
+		combo.setModel(themeModel);
 		searchTheme();
 		JPanel panel = new JPanel();
 		panel.setLayout(new MigLayout("", "[][][][][][]", "[][][][]"));
 		this.setContentPane(panel);
 		combo.addActionListener(e->{
-			update((String)combo.getSelectedItem());
-			info.setThemeIndex(combo.getSelectedIndex());
+			SwingUtilities.invokeLater(()->{
+				update((String)combo.getSelectedItem());
+				info.setThemeIndex(combo.getSelectedIndex());
+			});
 		});
 		panel.add(label, "cell 1 0");
 		combo.setSelectedIndex(info.getThemeIndex());
 		panel.add(combo,"cell 5 0");
-		saveBtn.addActionListener(e->controller.saveLookAndFeel(info));
+		saveBtn.addActionListener(e->{
+			info.setThemeName(currentTheme);
+			controller.saveLookAndFeel(info);
+			Message.warning("In order to properly apply the new theme File Copy Manager will restart.\nPress OK");
+			frame.restart();
+		});
 		closeBtn.addActionListener(e->deactivate());
 		panel.add(saveBtn, "cell 1 1");
 		panel.add(closeBtn,"cell 5 1"); 
@@ -168,5 +181,10 @@ public class ThemeChanger extends View{
 	}
 	public void deactivate(){
 		this.setVisible(false);
+	}
+	@SuppressWarnings("unused")
+	//For future use
+	private boolean isNimbusTheme(String theme){
+		return theme.equals("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 	}
 }

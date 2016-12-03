@@ -1,16 +1,13 @@
 package gui;
 import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.LayoutManager;
+import java.awt.Frame;
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -20,13 +17,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import extra.InfoPage;
+import extra.StatusFrame;
+import extra.XString;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
+import serializable.ProgramState;
 import utils.Controller;
 import utils.FileDrop;
 import utils.FileHandler;
 import utils.PreferencesManager;
-import utils.ProgramState;
 import utils.ResourceLoader;
 @SuppressWarnings({"serial"})
 //This is the main class of the program
@@ -37,7 +37,7 @@ public class FileCopyManager extends ApplicationScreen{
 	private PreferencesManager pManager 		    = new PreferencesManager(this);
 	private JCheckBoxMenuItem allowDuplicatesOption = new JCheckBoxMenuItem("Allow duplicates in list");
 	private Controller controller = new Controller();
-	private FileHandler fHandler  = new FileHandler();	
+	private FileHandler fHandler  = controller.getFileHandler();	
 	private JMenuBar menuBar   	  = new JMenuBar();
 	private JMenu   fileMenu   	  = new JMenu("File"),
 				    editMenu   	  = new JMenu("Edit"),
@@ -163,6 +163,11 @@ public class FileCopyManager extends ApplicationScreen{
 	public ApplicationScreen restart(){
 		//First close the current instance of the program
 		this.dispose();
+		/**
+		 * Dispose all Frames before restarting the application
+		 * */
+		for(Frame frame:Frame.getFrames())
+			frame.dispose();
 		//and create a new instance
 		FileCopyManager fm = new FileCopyManager(appName);
 		fm.toggleUI();
@@ -175,6 +180,7 @@ public class FileCopyManager extends ApplicationScreen{
 		//Create the theme changer in a new Thread
 		SwingUtilities.invokeLater(()->{
 			themeEditor = new ThemeChanger(this);
+			themeEditor.setResizable(false);
 		});
 		this.setJMenuBar(menuBar);
 		fileMenu.add(saveList);
@@ -332,23 +338,12 @@ public class FileCopyManager extends ApplicationScreen{
 		});
 		saveList.addActionListener((e) -> {
 			if(isNull(destinationPath) || files.isEmpty()){
-				String err = files.isEmpty() && isNull(destinationPath)?
+				XString err = new XString(files.isEmpty() && isNull(destinationPath)?
 						"Please add some files and select a destination folder.":files.isEmpty()?
 								"You haven't added any file.":"If you want to save your list please select"
-									+" a destination folder for your files.";
-				Message.error(err);
+									+" a destination folder for your files.");
+				Message.error(err.toString());
 				return;
-			}
-			File dir = listFile.getParentFile();
-			if (!dir.exists())
-				dir.mkdirs();
-			if (!listFile.exists()) {
-				try {
-					listFile.createNewFile();
-				} catch (Exception e1) {
-					Message.error(panel, "Cannot save list.");
-					FileHandler.log(e1);
-				}
 			}
 			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
 			controller.saveList(ps, listFile);
@@ -359,27 +354,7 @@ public class FileCopyManager extends ApplicationScreen{
 				return;
 			allowDuplicates = state.allowDuplicates();
 			allowDuplicatesOption.setSelected(allowDuplicates);
-			int oldSize = files.size();
-			if(ResourceLoader.filesRemoved(files)){
-				/**
-				 * More of a warning here since there is not an error
-				 * */
-				//selectedFileIndex = !files.isEmpty()?0:-1;
-				int missingNum = oldSize - files.size();
-				XString missingFiles = new XString("Number of files missing:"+missingNum+"\n");
-				for(File f:files)
-					if(!f.exists())
-						missingFiles.append(f.getName()+"\n");
-				String message 
-						= !files.isEmpty()?
-						"Some of the files you saved last time do not exist and have been deleted from your list."
-						:"None of the files you saved last time is available.";
-				if(!files.isEmpty())
-					Message.warning(panel,message);
-				else
-					Message.error(panel,message);
-				FileHandler.log(message+"\n"+missingFiles.toString());
-			}
+			ResourceLoader.checkFileExistence(files);
 			/**
 			 * While loading the list 
 			 * check if the saved destination folder exists
@@ -499,119 +474,8 @@ public class FileCopyManager extends ApplicationScreen{
 		SwingUtilities.invokeLater(()->{
 			//Hackish way to overcome
 			//the problem of partial apply of custom look and feel class
+			//Create an invisible frame,restart it and then make it visible
 			new FileCopyManager(appName).restart();
 		 });
-	}
-}
-@SuppressWarnings("serial")
-class StatusFrame extends View{
-	JLabel fileNameLabel = new JLabel("Copying :");
-	@Override
-	public String toString(){
-		return this.getClass().getName();
-	}
-	@Override
-	protected void initUIElements() {
-		JPanel panel = new JPanel(){{
-			setLayout(new MigLayout());
-			add(fileNameLabel);
-		}};
-		this.setContentPane(panel);
-		this.setVisible(false);
-		this.pack(); 
-	}
-	public StatusFrame(FileCopyManager fm){
-		super("Progress",1000,200);
-		initUIElements();
-		this.setLocationRelativeTo(fm.getContentPane());
-	}
-	public void update(File file){
-		update(file.getName());
-	}
-	private void update(String fileName){
-		fileNameLabel.setText("Copying :"+fileName);
-	}
-}
-class XString{
-	private StringBuilder text = new StringBuilder();
-	private int length = 0;
-	public int length(){
-		return length;
-	}
-	public void setText(String txt){
-		/**
-		 * Clear the current string builder and the append the received string
-		 * */
-		this.text.delete(0,length).append(txt);
-		length = txt.length();
-	}
-	public String getText(){
-		return toString();
-	}
-	public XString append(String name) {
-		if(name == null)
-			throw new NullPointerException();
-		this.text.append(name);
-		length +=name.length(); 
-		return this;
-	}
-	public void newLine(){
-		this.text.append("\n");
-	}
-	public void newLine(int times){
-		for(int i=0;i<Math.abs(times);i++)
-			newLine();
-	}
-	public StringBuilder reverse(){
-		return text.reverse();
-	}
-	@Override
-	public String toString(){
-		return text.toString();
-	}
-	public XString(){}
-	public XString(String message){
-		this.text.append(message);
-		length = message.length();
-	}
-	public boolean isEmpty(){
-		return length < 1;
-	}
-}
-@SuppressWarnings("all")
-class InfoPage extends JFrame{
-	private static final long serialVersionUID = 1L;
-	JLabel  nameLabel 		 = new JLabel(FileCopyManager.appName),
-			copyrightLabel   = new JLabel("Copyright ©2016. kounelios13");
-	private JPanel mainPanel = new JPanel(){{
-		LayoutManager layout = new MigLayout();
-		add(nameLabel);
-		add(copyrightLabel,"wrap");
-		JButton btn = new JButton("Visit my GitHub page");
-		btn.addActionListener(e->{
-			URL url;
-			try {
-				url= new URL("https://github.com/kounelios13");
-				Desktop.getDesktop().browse(url.toURI());
-			} catch (Exception exc) {
-				Message.error("Cannot open GitHub profila page.");
-			}
-		});
-		add(btn,"cell 1 0");
-	}};
-	public JLabel[] getLabels (){
-		return new JLabel[]{nameLabel,copyrightLabel};
-	}
-	private void initUI(){
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setContentPane(mainPanel);
-		setSize(250,120);
-		setLocationRelativeTo(null);
-		setResizable(false);
-		setVisible(true);
-	}
-	public InfoPage(){
-		super("About");
-		initUI();
 	}
 }
