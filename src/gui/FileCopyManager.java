@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import extra.InfoPage;
 import extra.StatusFrame;
+import extra.XString;
 import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import serializable.ProgramState;
@@ -337,11 +338,11 @@ public class FileCopyManager extends ApplicationScreen{
 		});
 		saveList.addActionListener((e) -> {
 			if(isNull(destinationPath) || files.isEmpty()){
-				String err = files.isEmpty() && isNull(destinationPath)?
+				XString err = new XString(files.isEmpty() && isNull(destinationPath)?
 						"Please add some files and select a destination folder.":files.isEmpty()?
 								"You haven't added any file.":"If you want to save your list please select"
-									+" a destination folder for your files.";
-				Message.error(err);
+									+" a destination folder for your files.");
+				Message.error(err.toString());
 				return;
 			}
 			ProgramState ps = new ProgramState(files, selectedFileIndex,destinationPath,allowDuplicates);
@@ -473,6 +474,7 @@ public class FileCopyManager extends ApplicationScreen{
 		SwingUtilities.invokeLater(()->{
 			//Hackish way to overcome
 			//the problem of partial apply of custom look and feel class
+			//Create an invisible frame,restart it and then make it visible
 			new FileCopyManager(appName).restart();
 		 });
 	}

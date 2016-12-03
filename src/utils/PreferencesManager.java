@@ -109,10 +109,10 @@ public class PreferencesManager extends View implements UIPreferences{
 		prefPanel.add(labelSlider, "cell 0 4,growx");
 		prefPanel.add(lblSample, "cell 1 4,alignx center");
 		prefPanel.add(loadSettings, "flowy,cell 0 5,growx,aligny top");
-		this.setContentPane(prefPanel);
 		prefPanel.add(applyOnly,"cell 1 5,growx,aligny top");
 		prefPanel.add(saveAndApplySettings, "cell 0 7,growx,aligny top");
 		prefPanel.add(chooseColors, "cell 1 7,growx,aligny top");
+		this.setContentPane(prefPanel);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.pack();
@@ -135,21 +135,23 @@ public class PreferencesManager extends View implements UIPreferences{
 		setColors();
 		/**
 		 * Important note:
-		 * Do not use buttonSlider.setValue(settings.getBtnSize())
+		 * <i>Do</i> <em>NOT</em> use buttonSlider.setValue(settings.getBtnSize())
 		 * First save the size in a variable and use the variable
 		 * */
 		int btnSize   = settings.getBtnSize(),
 			labelSize = settings.getLblSize();
 		labelSlider.setValue(labelSize);
 		buttonSlider.setValue(btnSize);
-		/*labelSlider.getModel().setValue(settings.getLblSize());
-		buttonSlider.getModel().setValue(settings.getBtnSize());*/
 		int i = 0;
 		for (Font f : fonts)
 			if (f.getFontName().equals(settings.getFontName()))
 				break;
 			else
 				i++;
+		/*
+		 * Arial font is fail safe 
+		 * So revert to that font if something goes wrong
+		 * **/
 		int backupFontIndex = settings.getFontIndex("Arial");
 		fontCombo.setSelectedIndex(i>=fonts.length?backupFontIndex:i);
 	}
@@ -317,11 +319,10 @@ public class PreferencesManager extends View implements UIPreferences{
 		 * */
 		if(!exists())
 		{
-			/*
+			/**
 			 * No need to create a log file.Maybe the user wants to just run the
 			 * app as it is without saving anything
 			 * */
-			//fh.log("There is no preferences file to load.");
 			return;
 		}
 		loadPreferences();
