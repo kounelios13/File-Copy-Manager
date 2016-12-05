@@ -186,7 +186,7 @@ public class ThemeChanger extends View{
 					"Lemmon-Small-Font","Lemmon-Large-Font","Lemmon-Giant-Font","Gray",
 					"Gray-Small-Font","Gray-Large-Font","Gray-Giant-Font"));
 			}
-			else if(look.equals("Texture")){
+			else{
 				themes.addAll(Arrays.asList("Rock","Rock-Small-Font","Rock-Large-Font","Rock-Giant-Font",
 					"Textile","Textile-Small-Font","Textile-Large-Font","Textile-Giant-Font","Snow",
 					"Snow-Small-Font","Snow-Large-Font","Snow-Giant-Font"));
@@ -243,7 +243,9 @@ public class ThemeChanger extends View{
 		});
 		themeCombo.addActionListener(e->{
 			SwingUtilities.invokeLater(()->{
-				System.out.println("Selected:"+(String)themeCombo.getSelectedItem());
+				String theme = (String)themeCombo.getSelectedItem(),
+						look = (String)combo.getSelectedItem();
+				updateTheme(look,theme);
 			});
 		});
 		panel.add(themeCombo,"cell 5 1");
@@ -254,6 +256,59 @@ public class ThemeChanger extends View{
 		this.pack();
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+	}
+	private void updateTheme(String look,String theme) {
+		switch(look){
+			case "Acryl":
+				AcrylLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Aero":
+				AeroLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Aluminium":
+				AluminiumLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Bernstein":
+				BernsteinLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Fast":
+				FastLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Graphite":
+				GraphiteLookAndFeel.setTheme(theme,"","");
+				break;
+			case "HiFi":
+				HiFiLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Luna":
+				LunaLookAndFeel.setTheme(theme,"","");
+				break;
+			case "McWin":
+				McWinLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Mint":
+				MintLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Noire":
+				NoireLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Smart":
+				SmartLookAndFeel.setTheme(theme,"","");
+				break;
+			case "Texture":
+				TextureLookAndFeel.setTheme(theme,"","");
+				break;
+			
+		}
+		try{
+			UIManager.setLookAndFeel(lookAndFeelName);
+		    SwingUtilities.updateComponentTreeUI(this);
+		    pack();
+		   
+		}
+		catch(Exception exc){
+			exc.printStackTrace();
+		}
 	}
 	public void activate(){
 		this.setVisible(true);
