@@ -12,10 +12,11 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
+import extra.XString;
 import messages.Message;
 import serializable.ProgramState;
 import serializable.ThemeInfo;
-import org.apache.commons.io.FileUtils;
 //@SuppressWarnings("unused")
 /*
 * This class is used to handle an file operations like copying
@@ -62,9 +63,10 @@ public class FileHandler{
 			}
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
-				StringBuilder str = new StringBuilder();
-				str.append(System.lineSeparator()+"\t||||--------_Log Message_-------||||\n");
-				str.append(System.lineSeparator()+message);
+				XString str = new XString();
+				str.append("\r\n\t||||--------_Log Message_-------||||\r\n");
+				str.appendNewLine();
+				str.append(message);
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {

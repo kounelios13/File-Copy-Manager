@@ -140,8 +140,6 @@ public class FileCopyManager extends ApplicationScreen{
 		}
 		catch(Exception e){
 			FileHandler.log(e);
-			//e.printStackTrace();
-			System.out.println(laf);
 		}
 	}
 	public void updateList(File[] e){

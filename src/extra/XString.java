@@ -25,12 +25,14 @@ public class XString{
 		length +=name.length(); 
 		return this;
 	}
-	public void appendNewLine(){
-		this.text.append("\n");
+	public XString appendNewLine(){
+		this.text.append("\r\n");
+		return this;
 	}
-	public void appendNewLine(int times){
+	public XString appendNewLine(int times){
 		for(int i=0;i<Math.abs(times);i++)
 			appendNewLine();
+		return this;
 	}
 	public XString reverse(){
 		 text.reverse();

@@ -92,6 +92,7 @@ public class PreferencesManager extends View implements UIPreferences{
 	}
 	/**
 	 * @wbp.parser.constructor
+	 * @param frame An instance of ApplicationFrame(JFrame) to work on
 	 */
 	public PreferencesManager(ApplicationScreen frame) {
 		super("Preferences",600,800,false);
@@ -263,12 +264,13 @@ public class PreferencesManager extends View implements UIPreferences{
 				return;
 			}
 		try {
-			String ls ="\n";
+			// \r\n is the new line character recognized by NotePad
+			String ls ="\r\n";
 			BufferedWriter writer = new BufferedWriter(new FileWriter(f));		
 			str = new XString(); 
-			str.append("------File Copy Manager Preferences------\n\n");
-			str.append("\tFont name:" + settings.getFontName()+ls+ "\tButton Font Size:"+ settings.getBtnSize()+ls);
-			str.append("\tLabel Font Size:"+ settings.getLblSize()+ls);
+			str.append("------File Copy Manager Preferences------\n\n")
+			.append("\tFont name:" + settings.getFontName()+ls+ "\tButton Font Size:"+ settings.getBtnSize()+ls)
+			.append("\tLabel Font Size:"+ settings.getLblSize()+ls);
 			str.append("\tBackground color:"+ toCol(bgColor)+ls);
 			str.append("\tForeground color:"+ toCol(fgColor) +ls);
 			writer.write(str.toString());
