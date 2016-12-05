@@ -298,13 +298,11 @@ public class ThemeChanger extends View{
 			case "Texture":
 				TextureLookAndFeel.setTheme(theme,"","");
 				break;
-			
 		}
 		try{
 			UIManager.setLookAndFeel(lookAndFeelName);
 		    SwingUtilities.updateComponentTreeUI(this);
 		    pack();
-		   
 		}
 		catch(Exception exc){
 			exc.printStackTrace();
