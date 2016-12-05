@@ -1,12 +1,12 @@
 package gui;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -48,7 +48,17 @@ public class ThemeChanger extends View{
 	private ApplicationScreen frame;
 	private String lookAndFeelName = null,
 			currentTheme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
-	private ThemeInfo info = new ThemeInfo("javax.swing.plaf.nimbus.NimbusLookAndFeel",0);
+	private ThemeInfo info = ThemeInfo.getDummyThemInfo();
+	private ArrayList<String> themes = 
+			new ArrayList<>(Arrays.asList("Default","Small-Font","Large-Font","Giant-Font"));
+	private void cleanupThemeList(){
+		//Cleanup themes list
+		themes.clear();
+		themeCombo.removeAllItems();
+		themes.addAll(Arrays.asList("Default","Small-Font","Large-Font","Giant-Font"));
+	}
+	private void createThemeList(String look){
+	}
 	@Override
 	public String toString() {
 		return "Theme Changer";
@@ -72,15 +82,34 @@ public class ThemeChanger extends View{
 		this.frame = fileCopyManager;
 		initUIElements();
 	}
+	private void updateLookAndFeelScreens(Component[] screens){
+		try{
+			for(Component screen:screens){
+				SwingUtilities.updateComponentTreeUI(screen);
+				((JFrame)screen).pack();
+			}
+		}
+		catch(Exception e){
+		}
+	}
 	public void searchTheme(){
 		FileHandler fh = controller.getFileHandler();
 		ResourceLoader rc = new ResourceLoader(fh);
 		ThemeInfo temp = rc.getThemeInfo();
 		if(temp != null ){
-			((FileCopyManager)frame).updateLookAndFeel(temp.getThemeName());
-			combo.setSelectedIndex(temp.getThemeIndex());
+			lookAndFeelName = temp.getLookAndFeelName();
+			String lookAndFeelName = temp.getLookAndFeelName(),
+					theme = temp.getThemeName();
+			((FileCopyManager)frame).updateLookAndFeel(lookAndFeelName);
+			combo.setSelectedIndex(temp.getLookAndFeelIndex());
+			SwingUtilities.invokeLater(()->{
+				updateTheme(lookAndFeelName,theme);
+				update(lookAndFeelName);
+				updateLookAndFeelScreens(((FileCopyManager)frame).getViewsToUpdate());
+				themeCombo.setSelectedIndex(temp.getThemeIndex());
+			});
 			info = temp;
-			currentTheme = info.getThemeName();
+			currentTheme = info.getLookAndFeelName();
 		}
 	}
 	public void update(String look){
@@ -157,7 +186,7 @@ public class ThemeChanger extends View{
 		if(standardThemeList){
 			themeCombo.setModel(new DefaultComboBoxModel<String>(defaultThemes));
 		}else{
-			ArrayList<String> themes =new ArrayList<>(Arrays.asList("Default","Small-Font","Large-Font","Giant-Font"));
+			cleanupThemeList();
 			if(look.equals("Acryl")){
 				themes.addAll(Arrays.asList("Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font"
 						,"Lemmmon","Lemmon-Small-Font","Lemmon-Large-Font","Lemmon-Giant-Font","Red",
@@ -204,8 +233,10 @@ public class ThemeChanger extends View{
 			}
 			else
 			{
+				//Hide theme list since nimbus does not support it
 				themeLabel.setVisible(false);
 				themeCombo.setVisible(false);
+				pack();
 			}
 		}
 		try{
@@ -229,14 +260,14 @@ public class ThemeChanger extends View{
 		combo.addActionListener(e->{
 			SwingUtilities.invokeLater(()->{
 				update((String)combo.getSelectedItem());
-				info.setThemeIndex(combo.getSelectedIndex());
+				info.setLookAndFeelIndex(combo.getSelectedIndex());
 			});
 		});
 		panel.add(label, "cell 1 0");
-		combo.setSelectedIndex(info.getThemeIndex());
+		combo.setSelectedIndex(info.getLookAndFeelIndex());
 		panel.add(themeLabel,"cell 1 1");
 		saveBtn.addActionListener(e->{
-			info.setThemeName(currentTheme);
+			info.setLookAndFeelName(currentTheme);
 			controller.saveLookAndFeel(info);
 			Message.warning("In order to properly apply the new theme File Copy Manager will restart.\nPress OK");
 			frame.restart();
@@ -246,6 +277,7 @@ public class ThemeChanger extends View{
 				String theme = (String)themeCombo.getSelectedItem(),
 						look = (String)combo.getSelectedItem();
 				updateTheme(look,theme);
+				info.setThemeIndex(themeCombo.getSelectedIndex());
 			});
 		});
 		panel.add(themeCombo,"cell 5 1");
@@ -302,10 +334,16 @@ public class ThemeChanger extends View{
 		try{
 			UIManager.setLookAndFeel(lookAndFeelName);
 		    SwingUtilities.updateComponentTreeUI(this);
+		    for(Component comp:((FileCopyManager)frame).getViewsToUpdate()){
+		    	SwingUtilities.updateComponentTreeUI(comp);
+		    	((JFrame)comp).pack();
+		    }
 		    pack();
 		}
 		catch(Exception exc){
 			exc.printStackTrace();
+		}
+		finally{
 		}
 	}
 	public void activate(){

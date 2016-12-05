@@ -1,5 +1,6 @@
 package gui;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +70,9 @@ public class FileCopyManager extends ApplicationScreen{
 	private Thread[] copyThreads = new Thread[2];
 	private StatusFrame status = new StatusFrame(this);
 	private ThemeChanger themeEditor = new ThemeChanger(this);
+	protected Component[] getViewsToUpdate(){
+		return new Component[]{this,pManager};
+	}
 	private static boolean isNull(Object...t){
 		return FileHandler.isNull(t);
 	}
