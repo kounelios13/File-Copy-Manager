@@ -386,7 +386,25 @@ public class FileCopyManager extends ApplicationScreen{
 		showPreferences.addActionListener((e) ->pManager.editPreferences());
 		exit.addActionListener((e)->System.exit(0));
 		exportPreferences.addActionListener((e)->pManager.exportSettings());
-		deleteApp.addActionListener((e)->pManager.deleteAppSettings());
+		deleteApp.addActionListener((e)->{
+			pManager.deleteAppSettings();
+			File dir = new File("app");
+			//When deleting application and theme settings
+			//Make sure to revert back to nimbus look and feel
+			//To avoid glitches
+			// fixes #19
+			SwingUtilities.invokeLater(()->{
+				if(!dir.exists()){
+					try{
+						UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+						SwingUtilities.updateComponentTreeUI(this);
+						//If settings have been deleted restart the application
+						restart();
+					}
+					catch(Exception exc){}
+				}
+			});
+		});
 		restartApp.addActionListener((e)->restart());
 		showAboutInfo.addActionListener((e)->{
 			SwingUtilities.invokeLater(()->new InfoPage());

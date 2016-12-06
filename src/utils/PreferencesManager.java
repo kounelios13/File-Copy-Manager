@@ -312,7 +312,6 @@ public class PreferencesManager extends View implements UIPreferences{
 			fh.log(msg);
 		}
 		loadPreferences();
-		appFrame.restart();
 	}
 	public void prepareUI(){
 		/**
