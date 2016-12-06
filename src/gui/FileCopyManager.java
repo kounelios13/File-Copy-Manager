@@ -392,7 +392,7 @@ public class FileCopyManager extends ApplicationScreen{
 			//When deleting application and theme settings
 			//Make sure to revert back to nimbus look and feel
 			//To avoid glitches
-			// fixes #19
+			// fixes #19 and #21
 			SwingUtilities.invokeLater(()->{
 				if(!dir.exists()){
 					try{
