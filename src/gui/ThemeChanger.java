@@ -54,6 +54,7 @@ public class ThemeChanger extends View{
 	private void cleanupThemeList(){
 		//Cleanup themes list
 		themes.clear();
+		themeModel.removeAllElements();
 		themeCombo.removeAllItems();
 		themes.addAll(Arrays.asList("Default","Small-Font","Large-Font","Giant-Font"));
 	}
