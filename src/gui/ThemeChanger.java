@@ -39,6 +39,7 @@ public class ThemeChanger extends View{
 	private Controller controller = new Controller();
 	private DefaultComboBoxModel<String> lookAndFeelModel = new DefaultComboBoxModel<String>();
 	private DefaultComboBoxModel<String> themeModel       = new DefaultComboBoxModel<String>();
+	private DefaultComboBoxModel<String> defaultThemeModel = new DefaultComboBoxModel<String>(defaultThemes);
 	private JComboBox<String> combo      = new JComboBox<>();
 	private JComboBox<String> themeCombo = new JComboBox<>();
 	private JLabel label = new JLabel("Look And Feel"),
@@ -56,9 +57,67 @@ public class ThemeChanger extends View{
 		themes.clear();
 		themeModel.removeAllElements();
 		themeCombo.removeAllItems();
-		themes.addAll(Arrays.asList("Default","Small-Font","Large-Font","Giant-Font"));
+		themes.addAll(Arrays.asList(defaultThemes));
 	}
 	private void createThemeList(String look){
+		boolean isNimbus = isNimbusTheme(lookAndFeelName);
+		if(look.equals("Aluminium")|| look.equals("Bernstein")|| look.equals("HiFi")
+				|| look.equals("Luna")||look.equals("Mint")||look.equals("Noire")){
+			themeCombo.setModel(defaultThemeModel);
+		}
+		else{
+			if(look.equals("Acryl")){
+				themes.addAll(Arrays.asList("Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font"
+						,"Lemmmon","Lemmon-Small-Font","Lemmon-Large-Font","Lemmon-Giant-Font","Red",
+						"Red-Small-Font","Red-Large-Font","Red-Giant-Font"));
+			}
+			else if(look.equals("Aero")){
+				themes.addAll(Arrays.asList("Gold","Gold-Small-Font","Gold-Large-Font","Gold-Giant-Font","Green",
+						"Green-Small-Font","Green-Large-Font","Green-Giant-Font"));
+			}
+			else if(look.equals("Fast")){
+				themes.addAll(Arrays.asList("Blue","Blue-Small-Font","Blue-Large-Font","Blue-Giant-Font",
+					"Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font"));
+			}
+			else if(look.equals("Graphite")){
+				themes.addAll(Arrays.asList("Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font",
+					"Blue","Blue-Small-Font","Blue-Large-Font","Blue-Giant-Font"));
+			}
+			else if(look.equals("McWin")){
+				themes.addAll(Arrays.asList("Modern","Modern-Small-Font","Modern-Large-Font","Modern-Giant-Font","Pink",
+					"Pink-Small-Font","Pink-Large-Font","Pink-Giant-Font"));
+			}
+			else if(look.equals("Smart")){
+				themes.addAll(Arrays.asList("Gold","Gold-Small-Font","Gold-Large-Font","Gold-Giant-Font",
+					"Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font","Brown",
+					"Brown-Small-Font","Brown-Large-Font","Brown-Giant-Font","Lemmmon",
+					"Lemmon-Small-Font","Lemmon-Large-Font","Lemmon-Giant-Font","Gray",
+					"Gray-Small-Font","Gray-Large-Font","Gray-Giant-Font"));
+			}
+			else{
+				themes.addAll(Arrays.asList("Rock","Rock-Small-Font","Rock-Large-Font","Rock-Giant-Font",
+					"Textile","Textile-Small-Font","Textile-Large-Font","Textile-Giant-Font","Snow",
+					"Snow-Small-Font","Snow-Large-Font","Snow-Giant-Font"));
+			}
+			if(!isNimbus){
+				/**
+				 * Nimbus does not need any themes
+				 * */
+				for(String theme :themes)
+					themeModel.addElement(theme);
+				themeCombo.setModel(themeModel);
+				themeCombo.setVisible(true);
+				themeLabel.setVisible(true);
+				this.pack();
+			}
+			else
+			{
+				//Hide theme list since nimbus does not support it
+				themeLabel.setVisible(false);
+				themeCombo.setVisible(false);
+				pack();
+			}
+		}
 	}
 	@Override
 	public String toString() {
@@ -105,9 +164,16 @@ public class ThemeChanger extends View{
 			combo.setSelectedIndex(temp.getLookAndFeelIndex());
 			SwingUtilities.invokeLater(()->{
 				updateTheme(lookAndFeelName,theme);
-				update(lookAndFeelName);
+				createThemeList((String)combo.getSelectedItem());
 				updateLookAndFeelScreens(((FileCopyManager)frame).getViewsToUpdate());
-				themeCombo.setSelectedIndex(temp.getThemeIndex());
+				int themeIndex = temp.getThemeIndex();
+				try{
+					themeCombo.setSelectedIndex(themeIndex);
+				}
+				catch(IllegalArgumentException iae){
+					fh.log("Tried to set an invalid index for theme list");
+					themeCombo.setSelectedIndex(0);
+				}
 			});
 			info = temp;
 			currentTheme = info.getLookAndFeelName();
@@ -184,62 +250,7 @@ public class ThemeChanger extends View{
 				lookAndFeelName+="texture.TextureLookAndFeel";
 				break;
 		}
-		if(standardThemeList){
-			themeCombo.setModel(new DefaultComboBoxModel<String>(defaultThemes));
-		}else{
-			cleanupThemeList();
-			if(look.equals("Acryl")){
-				themes.addAll(Arrays.asList("Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font"
-						,"Lemmmon","Lemmon-Small-Font","Lemmon-Large-Font","Lemmon-Giant-Font","Red",
-						"Red-Small-Font","Red-Large-Font","Red-Giant-Font"));
-			}
-			else if(look.equals("Aero")){
-				themes.addAll(Arrays.asList("Gold","Gold-Small-Font","Gold-Large-Font","Gold-Giant-Font","Green",
-						"Green-Small-Font","Green-Large-Font","Green-Giant-Font"));
-			}
-			else if(look.equals("Fast")){
-				themes.addAll(Arrays.asList("Blue","Blue-Small-Font","Blue-Large-Font","Blue-Giant-Font",
-					"Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font"));
-			}
-			else if(look.equals("Graphite")){
-				themes.addAll(Arrays.asList("Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font",
-					"Blue","Blue-Small-Font","Blue-Large-Font","Blue-Giant-Font"));
-			}
-			else if(look.equals("McWin")){
-				themes.addAll(Arrays.asList("Modern","Modern-Small-Font","Modern-Large-Font","Modern-Giant-Font","Pink",
-					"Pink-Small-Font","Pink-Large-Font","Pink-Giant-Font"));
-			}
-			else if(look.equals("Smart")){
-				themes.addAll(Arrays.asList("Gold","Gold-Small-Font","Gold-Large-Font","Gold-Giant-Font",
-					"Green","Green-Small-Font","Green-Large-Font","Green-Giant-Font","Brown",
-					"Brown-Small-Font","Brown-Large-Font","Brown-Giant-Font","Lemmmon",
-					"Lemmon-Small-Font","Lemmon-Large-Font","Lemmon-Giant-Font","Gray",
-					"Gray-Small-Font","Gray-Large-Font","Gray-Giant-Font"));
-			}
-			else{
-				themes.addAll(Arrays.asList("Rock","Rock-Small-Font","Rock-Large-Font","Rock-Giant-Font",
-					"Textile","Textile-Small-Font","Textile-Large-Font","Textile-Giant-Font","Snow",
-					"Snow-Small-Font","Snow-Large-Font","Snow-Giant-Font"));
-			}
-			if(!isNimbus){
-				/**
-				 * Nimbus does not need any themes
-				 * */
-				for(String theme :themes)
-					themeModel.addElement(theme);
-				themeCombo.setModel(themeModel);
-				themeCombo.setVisible(true);
-				themeLabel.setVisible(true);
-				this.pack();
-			}
-			else
-			{
-				//Hide theme list since nimbus does not support it
-				themeLabel.setVisible(false);
-				themeCombo.setVisible(false);
-				pack();
-			}
-		}
+		createThemeList(look);
 		try{
 			currentTheme = lookAndFeelName;
 			FileCopyManager f = (FileCopyManager) frame;
