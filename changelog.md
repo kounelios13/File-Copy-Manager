@@ -1,4 +1,7 @@
 # <center>changelog</center>
+## v1.6.5.4
+	* Apply custom look and feel with themes(For more see JTatto Demo application)
+	* Current release fixes #19, #21
 ## v1.6.5.3
 	* Apply new fonts and colors without saving them
 	* Change look and feel of your program

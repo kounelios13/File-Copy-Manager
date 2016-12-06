@@ -396,10 +396,13 @@ public class FileCopyManager extends ApplicationScreen{
 			SwingUtilities.invokeLater(()->{
 				if(!dir.exists()){
 					try{
+						//Revert back to Nimbus Look And Feel
 						UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 						SwingUtilities.updateComponentTreeUI(this);
 						//If settings have been deleted restart the application
 						restart();
+						//There is no reason to restart 
+						//If settings have not been deleted
 					}
 					catch(Exception exc){}
 				}
