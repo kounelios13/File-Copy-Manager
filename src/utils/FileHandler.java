@@ -1,6 +1,5 @@
 package utils;
-import static messages.Message.error;
-import static messages.Message.info;
+import static com.Messages.Message.*;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,11 +9,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+
 import org.apache.commons.io.FileUtils;
+
+import com.Messages.Message;
+
 import extra.XString;
-import messages.Message;
 import serializable.ProgramState;
 import serializable.ThemeInfo;
 //@SuppressWarnings("unused")
@@ -37,6 +40,9 @@ public class FileHandler{
 			if(o==null)
 				return true;
 		return false;
+	}
+	public static void log(XString message){
+		log(message.toString());
 	}
 	public static void log(Throwable th){
 		log(th.getMessage());

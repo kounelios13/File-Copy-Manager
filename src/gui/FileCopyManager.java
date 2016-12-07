@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
 import java.util.ArrayList;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -13,15 +14,16 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+import com.Messages.Message;
+
 import extra.InfoPage;
 import extra.StatusFrame;
 import extra.XString;
-import messages.Message;
 import net.miginfocom.swing.MigLayout;
 import serializable.ProgramState;
 import utils.Controller;
@@ -417,7 +419,7 @@ public class FileCopyManager extends ApplicationScreen{
 				Message.warning(panel,"There are no files to remove from list");
 				return;
 			}
-			boolean eraseList = JOptionPane.showConfirmDialog(null,"Are you sure you want to delete all files from list?") == JOptionPane.OK_OPTION;
+			boolean eraseList = Message.confirm("Are you sure you want to delete all files from list?");
 			if (eraseList) {
 				files.clear();
 				model.removeAllElements();

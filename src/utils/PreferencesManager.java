@@ -1,7 +1,6 @@
 package utils;
-import static messages.Message.error;
-import static messages.Message.info;
-import static messages.Message.warning;
+import static com.Messages.Message.*;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -12,15 +11,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.stream.Stream;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+
 import org.apache.commons.io.FileUtils;
+
+import com.Messages.Message;
+
 import extra.XString;
 import gui.ApplicationScreen;
 import gui.CustomColorChooser;
@@ -291,9 +294,7 @@ public class PreferencesManager extends View implements UIPreferences{
 			error(prefPanel, "No files to delete");
 			return;
 		}
-		boolean delete = JOptionPane
-				.showConfirmDialog(null,
-						"Are you sure you want to delete settings and app related files?") == JOptionPane.OK_OPTION;
+		boolean delete =Message.confirm("Are you sure you want to delete settings and app related files?");
 		if (!delete) {
 			error(prefPanel, "Operation cancelled");
 			return;
