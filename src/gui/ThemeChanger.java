@@ -33,6 +33,7 @@ import serializable.ThemeInfo;
 import utils.Controller;
 import utils.FileHandler;
 import utils.ResourceLoader;
+import static utils.FileHandler.*;
 @SuppressWarnings("all")
 public class ThemeChanger extends View{
 	private String[] lookAndFeelArray ={"Nimbus","Acryl","Aero","Aluminium",
@@ -63,6 +64,7 @@ public class ThemeChanger extends View{
 		themes.addAll(Arrays.asList(defaultThemes));
 	}
 	private void createThemeList(String look){
+		cleanupThemeList();
 		boolean isNimbus = isNimbusTheme(lookAndFeelName);
 		if(look.equals("Aluminium")|| look.equals("Bernstein")|| look.equals("HiFi")
 				|| look.equals("Luna")||look.equals("Mint")||look.equals("Noire")){
@@ -159,7 +161,7 @@ public class ThemeChanger extends View{
 		FileHandler fh = controller.getFileHandler();
 		ResourceLoader rc = new ResourceLoader(fh);
 		ThemeInfo temp = rc.getThemeInfo();
-		if(temp != null ){
+		if(!isNull(temp) ){
 			lookAndFeelName = temp.getLookAndFeelName();
 			String lookAndFeelName = temp.getLookAndFeelName(),
 					theme = temp.getThemeName();
@@ -174,7 +176,7 @@ public class ThemeChanger extends View{
 					themeCombo.setSelectedIndex(themeIndex);
 				}
 				catch(IllegalArgumentException iae){
-					fh.log("Tried to set an invalid index for theme list");
+					log("Tried to set an invalid index for theme list");
 					themeCombo.setSelectedIndex(0);
 				}
 			});

@@ -1,5 +1,7 @@
 package utils;
-import static com.Messages.Message.*;
+import static com.Messages.Message.confirm;
+import static com.Messages.Message.error;
+import static com.Messages.Message.info;
 import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,14 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
-
 import org.apache.commons.io.FileUtils;
-
 import com.Messages.Message;
-
 import extra.XString;
 import serializable.ProgramState;
 import serializable.ThemeInfo;
@@ -70,9 +67,9 @@ public class FileHandler{
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFile,true));//Append to file
 				XString str = new XString();
-				str.append("\r\n\t||||--------_Log Message_-------||||\r\n");
-				str.appendNewLine();
-				str.append(message);
+				str.append("\r\n\t||||--------_Log Message_-------||||\r\n")
+				.appendNewLine()
+				.append(message);
 				writer.write(str.toString());
 				writer.close();
 			} catch (IOException exc) {
@@ -173,7 +170,7 @@ public class FileHandler{
 			* While loading old files we found out that there are new files
 			* so we ask the user if they want to keep them	 
 			*/
-			if(JOptionPane.showConfirmDialog(null,"Do you want to keep old files?")!=JOptionPane.OK_OPTION){
+			if(!confirm("Do you want to keep old files?")){
 				mod.removeAllElements();
 				storage.clear();
 			}

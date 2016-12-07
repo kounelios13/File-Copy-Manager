@@ -1,6 +1,5 @@
 package utils;
 import static com.Messages.Message.*;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedWriter;
@@ -11,7 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.stream.Stream;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,11 +17,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-
 import org.apache.commons.io.FileUtils;
-
 import com.Messages.Message;
-
 import extra.XString;
 import gui.ApplicationScreen;
 import gui.CustomColorChooser;

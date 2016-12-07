@@ -1,14 +1,11 @@
 package extra;
 import java.awt.Desktop;
 import java.net.URL;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import com.Messages.Message;
-
 import gui.FileCopyManager;
 public class InfoPage extends JFrame{
 	private static final long serialVersionUID = 1L;

@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
 import java.util.ArrayList;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -18,9 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import com.Messages.Message;
-
 import extra.InfoPage;
 import extra.StatusFrame;
 import extra.XString;
