@@ -162,13 +162,16 @@ public class ThemeChanger extends View{
 			lookAndFeelName = temp.getLookAndFeelName();
 			String lookAndFeelName = temp.getLookAndFeelName(),
 					theme = temp.getThemeName();
+			System.out.println("Loaded theme:"+theme);
+			System.out.println("Theme index:"+temp.getThemeIndex());
 			((FileCopyManager)frame).updateLookAndFeel(lookAndFeelName);
 			combo.setSelectedIndex(temp.getLookAndFeelIndex());
 			SwingUtilities.invokeLater(()->{
 				updateTheme(lookAndFeelName,theme);
 				createThemeList((String)combo.getSelectedItem());
-				updateLookAndFeelScreens(((FileCopyManager)frame).getViewsToUpdate());
+				
 				int themeIndex = temp.getThemeIndex();
+				updateLookAndFeelScreens(((FileCopyManager)frame).getViewsToUpdate());
 				try{
 					themeCombo.setSelectedIndex(themeIndex);
 				}
@@ -292,6 +295,7 @@ public class ThemeChanger extends View{
 						look = (String)combo.getSelectedItem();
 				updateTheme(look,theme);
 				info.setThemeIndex(themeCombo.getSelectedIndex());
+				info.setThemeName(theme);
 			});
 		});
 		panel.add(themeCombo,"cell 5 1");

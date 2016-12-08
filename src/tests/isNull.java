@@ -8,7 +8,7 @@ import java.io.File;
 import org.junit.Test;
 
 public class isNull {
-
+	
 	@Test
 	public void isNullTest(){
 		assertEquals(isNull(null,null,null),true);
