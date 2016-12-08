@@ -20,7 +20,7 @@ public class isNull {
 	}
 	@Test
 	public void fileTest(){
-		File f1=null,
+		File    f1=null,
 				f2=null,
 				f3=null,
 				f4=null;
