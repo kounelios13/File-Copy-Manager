@@ -6,6 +6,9 @@
 	<classpathentry kind="lib" path="libs/Message.jar"/>
 	<classpathentry kind="lib" path="libs/org.apache.commons.io.jar"/>
 	<classpathentry kind="lib" path="libs/JTattoo-1.6.11.jar"/>
+	<classpathentry kind="lib" path="lib/JTattoo-1.6.11.jar"/>
+	<classpathentry kind="lib" path="lib/Message.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.io.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

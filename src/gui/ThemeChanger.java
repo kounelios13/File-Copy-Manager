@@ -31,7 +31,7 @@ import utils.Controller;
 import utils.FileHandler;
 import utils.ResourceLoader;
 import static utils.FileHandler.*;
-@SuppressWarnings("all")
+//@SuppressWarnings("all")
 public class ThemeChanger extends View{
 	private String[] lookAndFeelArray ={"Nimbus","Acryl","Aero","Aluminium",
 		"Bernstein","Fast","Graphite","HiFi","Luna","McWin","Mint",
@@ -47,7 +47,7 @@ public class ThemeChanger extends View{
 			  themeLabel = new JLabel("Theme List");
 	private JButton saveBtn = new JButton("Save and Apply Theme"),
 				   closeBtn = new JButton("Close");
-	private ApplicationScreen frame;
+	private FileCopyManager frame;
 	private String lookAndFeelName = null,
 			currentTheme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
 	private ThemeInfo info = ThemeInfo.getDummyThemInfo();
@@ -61,7 +61,7 @@ public class ThemeChanger extends View{
 		themes.addAll(Arrays.asList(defaultThemes));
 	}
 	private void createThemeList(String look){
-		cleanupThemeList();
+		//cleanupThemeList();
 		boolean isNimbus = isNimbusTheme(lookAndFeelName);
 		if(look.equals("Aluminium")|| look.equals("Bernstein")|| look.equals("HiFi")
 				|| look.equals("Luna")||look.equals("Mint")||look.equals("Noire")){
@@ -105,9 +105,11 @@ public class ThemeChanger extends View{
 				/**
 				 * Nimbus does not need any themes
 				 * */
+				
+				DefaultComboBoxModel<String> curModel = new DefaultComboBoxModel<>();
 				for(String theme :themes)
-					themeModel.addElement(theme);
-				themeCombo.setModel(themeModel);
+					curModel.addElement(theme);
+				themeCombo.setModel(curModel);
 				themeCombo.setVisible(true);
 				themeLabel.setVisible(true);
 				this.pack();
@@ -128,12 +130,12 @@ public class ThemeChanger extends View{
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ThemeChanger(ApplicationScreen frame,String title, int width, int height) {
+	public ThemeChanger(FileCopyManager frame,String title, int width, int height) {
 		super(title, width, height);
 		this.frame = frame;
 		initUIElements();
 	}
-	public ThemeChanger(ApplicationScreen frame,String title, int width, int height,
+	public ThemeChanger(FileCopyManager frame,String title, int width, int height,
 			boolean resizable) {
 		super(title, width, height, resizable);
 		this.frame = frame;
@@ -164,7 +166,7 @@ public class ThemeChanger extends View{
 					theme = temp.getThemeName();
 			System.out.println("Loaded theme:"+theme);
 			System.out.println("Theme index:"+temp.getThemeIndex());
-			((FileCopyManager)frame).updateLookAndFeel(lookAndFeelName);
+			frame.updateLookAndFeel(lookAndFeelName);
 			combo.setSelectedIndex(temp.getLookAndFeelIndex());
 			SwingUtilities.invokeLater(()->{
 				updateTheme(lookAndFeelName,theme);
@@ -184,16 +186,13 @@ public class ThemeChanger extends View{
 			currentTheme = info.getLookAndFeelName();
 		}
 	}
-	public void update(String look){
+	public void updateLookAndFeelName(String look){
 		Properties props = new Properties();
 		props.put("logoString", "");
 		props.put("licensekey", "");
 		lookAndFeelName="com.jtattoo.plaf.";
-		boolean standardThemeList = false;
-		boolean isNimbus = false;
 		switch(look){
 			case "Nimbus":
-				isNimbus = true;
 				lookAndFeelName = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
 				break;
 			case "Acryl":
@@ -205,12 +204,10 @@ public class ThemeChanger extends View{
 				lookAndFeelName+="aero.AeroLookAndFeel";
 				break;
 			case "Aluminium":
-				standardThemeList = true;
 				AluminiumLookAndFeel.setCurrentTheme(props);
 				lookAndFeelName+="aluminium.AluminiumLookAndFeel";
 				break;
 			case "Bernstein":
-				standardThemeList = true;
 				BernsteinLookAndFeel.setCurrentTheme(props);
 				lookAndFeelName+="bernstein.BernsteinLookAndFeel";
 				break;
@@ -223,12 +220,10 @@ public class ThemeChanger extends View{
 				lookAndFeelName+="graphite.GraphiteLookAndFeel";
 				break;
 			case "HiFi":
-				standardThemeList = true;
 				HiFiLookAndFeel.setCurrentTheme(props);
 				lookAndFeelName+="hifi.HiFiLookAndFeel";
 				break;
 			case "Luna":
-				standardThemeList = true;
 				LunaLookAndFeel.setCurrentTheme(props);
 				lookAndFeelName+="luna.LunaLookAndFeel";
 				break;
@@ -237,12 +232,10 @@ public class ThemeChanger extends View{
 				lookAndFeelName+="mcwin.McWinLookAndFeel";
 				break;
 			case "Mint":
-				standardThemeList = true;
 				MintLookAndFeel.setCurrentTheme(props);
 				lookAndFeelName+="mint.MintLookAndFeel";
 				break;
 			case "Noire":
-				standardThemeList = true;
 				NoireLookAndFeel.setCurrentTheme(props);
 				lookAndFeelName+="noire.NoireLookAndFeel";
 				break;
@@ -255,11 +248,11 @@ public class ThemeChanger extends View{
 				lookAndFeelName+="texture.TextureLookAndFeel";
 				break;
 		}
+		cleanupThemeList();
 		createThemeList(look);
 		try{
 			currentTheme = lookAndFeelName;
-			FileCopyManager f = (FileCopyManager) frame;
-			f.updateLookAndFeel(lookAndFeelName);
+			frame.updateLookAndFeel(lookAndFeelName);
 			UIManager.setLookAndFeel(lookAndFeelName);
 			SwingUtilities.updateComponentTreeUI(this);
 		}
@@ -276,7 +269,7 @@ public class ThemeChanger extends View{
 		this.setContentPane(panel);
 		combo.addActionListener(e->{
 			SwingUtilities.invokeLater(()->{
-				update((String)combo.getSelectedItem());
+				updateLookAndFeelName((String)combo.getSelectedItem());
 				info.setLookAndFeelIndex(combo.getSelectedIndex());
 			});
 		});
@@ -293,8 +286,9 @@ public class ThemeChanger extends View{
 			SwingUtilities.invokeLater(()->{
 				String theme = (String)themeCombo.getSelectedItem(),
 						look = (String)combo.getSelectedItem();
+				int currentThemeIndex = themeCombo.getSelectedIndex();
 				updateTheme(look,theme);
-				info.setThemeIndex(themeCombo.getSelectedIndex());
+				info.setThemeIndex(currentThemeIndex);
 				info.setThemeName(theme);
 			});
 		});
@@ -352,7 +346,8 @@ public class ThemeChanger extends View{
 		try{
 			UIManager.setLookAndFeel(lookAndFeelName);
 		    SwingUtilities.updateComponentTreeUI(this);
-		    for(Component comp:((FileCopyManager)frame).getViewsToUpdate()){
+		    Component[] framesToUpdate = frame.getViewsToUpdate();
+		    for(Component comp:framesToUpdate){
 		    	SwingUtilities.updateComponentTreeUI(comp);
 		    	((JFrame)comp).pack();
 		    }
@@ -370,7 +365,6 @@ public class ThemeChanger extends View{
 	public void deactivate(){
 		this.setVisible(false);
 	}
-	@SuppressWarnings("unused")
 	//For future use
 	private boolean isNimbusTheme(String theme){
 		return theme.equals("javax.swing.plaf.nimbus.NimbusLookAndFeel");
