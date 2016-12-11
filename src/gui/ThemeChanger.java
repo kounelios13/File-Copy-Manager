@@ -65,7 +65,10 @@ public class ThemeChanger extends View{
 		boolean isNimbus = isNimbusTheme(lookAndFeelName);
 		if(look.equals("Aluminium")|| look.equals("Bernstein")|| look.equals("HiFi")
 				|| look.equals("Luna")||look.equals("Mint")||look.equals("Noire")){
-			themeCombo.setModel(defaultThemeModel);
+			themeCombo.removeAllItems();
+			themeCombo.setModel(new DefaultComboBoxModel<String>(defaultThemes));
+			
+			
 		}
 		else{
 			if(look.equals("Acryl")){
