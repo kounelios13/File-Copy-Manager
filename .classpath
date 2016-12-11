@@ -3,9 +3,6 @@
 	<classpathentry excluding="../app/*.*|../dummy/*.*|../src/experiments/*|../src/utils/*.py,../src/utils/*.html,../src/utils/HtmlCreator.java|app|dummy/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
-	<classpathentry kind="lib" path="libs/Message.jar"/>
-	<classpathentry kind="lib" path="libs/org.apache.commons.io.jar"/>
-	<classpathentry kind="lib" path="libs/JTattoo-1.6.11.jar"/>
 	<classpathentry kind="lib" path="lib/JTattoo-1.6.11.jar"/>
 	<classpathentry kind="lib" path="lib/Message.jar"/>
 	<classpathentry kind="lib" path="lib/org.apache.commons.io.jar"/>
