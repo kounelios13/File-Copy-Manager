@@ -40,7 +40,7 @@ public class ThemeChanger extends View{
 	private Controller controller = new Controller();
 	private DefaultComboBoxModel<String> lookAndFeelModel = new DefaultComboBoxModel<String>();
 	private DefaultComboBoxModel<String> themeModel       = new DefaultComboBoxModel<String>();
-	private DefaultComboBoxModel<String> defaultThemeModel = new DefaultComboBoxModel<String>(defaultThemes);
+	//private DefaultComboBoxModel<String> defaultThemeModel = new DefaultComboBoxModel<String>(defaultThemes);
 	private JComboBox<String> combo      = new JComboBox<>();
 	private JComboBox<String> themeCombo = new JComboBox<>();
 	private JLabel label = new JLabel("Look And Feel"),
@@ -50,7 +50,7 @@ public class ThemeChanger extends View{
 	private FileCopyManager frame;
 	private String lookAndFeelName = null,
 			currentTheme = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
-	private ThemeInfo info = ThemeInfo.getDummyThemInfo();
+	private ThemeInfo info = ThemeInfo.getDummyTheme();
 	private ArrayList<String> themes = 
 			new ArrayList<>(Arrays.asList("Default","Small-Font","Large-Font","Giant-Font"));
 	private void cleanupThemeList(){
@@ -67,8 +67,6 @@ public class ThemeChanger extends View{
 				|| look.equals("Luna")||look.equals("Mint")||look.equals("Noire")){
 			themeCombo.removeAllItems();
 			themeCombo.setModel(new DefaultComboBoxModel<String>(defaultThemes));
-			
-			
 		}
 		else{
 			if(look.equals("Acryl")){
@@ -108,7 +106,6 @@ public class ThemeChanger extends View{
 				/**
 				 * Nimbus does not need any themes
 				 * */
-				
 				DefaultComboBoxModel<String> curModel = new DefaultComboBoxModel<>();
 				for(String theme :themes)
 					curModel.addElement(theme);
@@ -174,7 +171,6 @@ public class ThemeChanger extends View{
 			SwingUtilities.invokeLater(()->{
 				updateTheme(lookAndFeelName,theme);
 				createThemeList((String)combo.getSelectedItem());
-				
 				int themeIndex = temp.getThemeIndex();
 				updateLookAndFeelScreens(((FileCopyManager)frame).getViewsToUpdate());
 				try{

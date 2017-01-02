@@ -1,7 +1,7 @@
 package serializable;
 import java.io.Serializable;
 public class ThemeInfo implements Serializable{
-	public static ThemeInfo getDummyThemInfo(){
+	public static ThemeInfo getDummyTheme(){
 		return new ThemeInfo("javax.swing.plaf.nimbus.NimbusLookAndFeel","Default",0,0);
 	}
 	private String lookAndFeelName,
@@ -37,10 +37,10 @@ public class ThemeInfo implements Serializable{
 	public void setThemeIndex(int index){
 		this.themeIndex = index;
 	}
-	public ThemeInfo fixUnsupportedThemeInfo(Object o){
-		ThemeInfo th = (ThemeInfo)o;
-		th.setThemeIndex(0);
-		th.setThemeName("Default");
-		return th;
+	public ThemeInfo fixUnsupportedThemeInfo(Object unsupportedThemeInfoObject){
+		ThemeInfo fixedThemInfoObject = (ThemeInfo)unsupportedThemeInfoObject;
+		fixedThemInfoObject.setThemeIndex(0);
+		fixedThemInfoObject.setThemeName("Default");
+		return fixedThemInfoObject;
 	}
 }
